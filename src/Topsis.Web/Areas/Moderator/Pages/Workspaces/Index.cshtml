@@ -1,0 +1,47 @@
+﻿@page
+@model Workspaces.IndexModel
+@{
+}
+
+<h2>Workspaces</h2>
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int i = 0; }
+        @foreach (var item in Model.Data)
+        {
+            <tr>
+                <td>
+                    @Html.Display(modelItem => modelItem.Data[i].Title)
+                </td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@item.Id.Hash()">Edit</a>
+                </td>
+            </tr>
+            i++;
+        }
+    </tbody>
+</table>
+
+@{ var prevDisabled = !Model.Data.HasPreviousPage ? "disabled" : "";
+                var nextDisabled = !Model.Data.HasNextPage ? "disabled" : ""; }
+
+<a asp-page="Index"
+   asp-route-pagenumber="@(Model.Data.PageNumber - 1)"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-page="Index"
+   asp-route-pagenumber="@(Model.Data.PageNumber + 1)"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>

@@ -1,0 +1,123 @@
+﻿@page
+@model Workspace.IndexModel
+@using Topsis.Domain.Common
+@{
+    var currentStatus = Model.Data.Workspace.CurrentStatus;
+    var hasReports = currentStatus == Domain.WorkspaceStatus.Finalized && Model.Data.Workspace.Reports?.Any() == true;
+    var noResultsMessage = string.Empty;
+    var canVote = currentStatus == Domain.WorkspaceStatus.AcceptingVotes;
+    switch (Model.Data.Workspace.CurrentStatus)
+    {
+        case Domain.WorkspaceStatus.Draft:
+            noResultsMessage = "Workspace is not ready yet.";
+            break;
+        case Domain.WorkspaceStatus.Published:
+            noResultsMessage = "Workspace voting not started yet.";
+            break;
+        case Domain.WorkspaceStatus.AcceptingVotes:
+            noResultsMessage = $"Workspace is currently accepting votes. If you've already voted, refresh this page in a few minutes.";
+            break;
+        case Domain.WorkspaceStatus.Finalized:
+            noResultsMessage = "Workspace voting completed. Waiting for the results.";
+            break;
+        case Domain.WorkspaceStatus.Archived:
+            noResultsMessage = "Workspace has archived.";
+            break;
+        default:
+            break;
+    }
+}
+
+@section HeadScripts
+{
+    <environment include="Development">
+        <script src="~/lib/chartjs/chart.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js" 
+                integrity="sha512-Wt1bJGtlnMtGP0dqNFH1xlkLBNpEodaiQ8ZN5JLA5wpc1sUlk/O5uuOMNgvzddzkpvZ9GLyYNa8w2s7rqiTk5Q==" 
+                asp-fallback-src="~/lib/chartjs/chart.min.js"
+                crossorigin="anonymous" 
+                referrerpolicy="no-referrer"></script>
+    </environment>
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <h2>@Model.Data.Workspace.Title</h2>
+        @if (hasReports == false)
+        {
+            <p class="text-danger">@noResultsMessage</p>
+        }
+
+        <p>@Model.Data.Workspace.Description</p>
+        @if (canVote)
+        {
+            <p>You can vote <a href="@Url.Page("Vote", new { id = Model.Data.Workspace.Id.Hash() })">here</a>.</p>
+        }
+    </div>
+    @if (hasReports)
+    {
+        <div class="col-md-6">
+
+            <div class="col-md-9 float-right">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            @*<th>Algorithm</th>*@
+                            <th>Created</th>
+                            <th>Finished</th>
+                            <th>Votes</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model.Data.Workspace.Reports)
+                        {
+                            <tr>
+                                @*<td>@item.Algorithm</td>*@
+                                <td>@item.CreatedAtUtc.FormatUtcDate("yyyy/MM/dd HH:mm")</td>
+                                <td>@item.CompletedAtUtc?.FormatUtcDate("yyyy/MM/dd HH:mm")</td>
+                                <td class="text-center">@item.VotesCount</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+
+        </div>
+    }
+</div>
+
+
+@if (hasReports)
+{
+<div class="row">
+
+    <div class="col-md-12">
+        <h3>Alternatives</h3>
+        <canvas id="chAlternatives"></canvas>
+    </div>
+</div>
+<div class="row">
+
+    <div class="col-md-12">
+        <h3>Consensus</h3>
+        <canvas id="chConsensus"></canvas>
+    </div>
+</div>
+}
+@section Scripts {
+
+    <script>
+        let configAlternatives = JSON.parse('@Html.Raw(Model.AlternativesReportJson)');
+        var altChart = new Chart(document.getElementById('chAlternatives'), configAlternatives);
+
+        let configConsensus = JSON.parse('@Html.Raw(Model.ConsensusReportJson)');
+        var conChart = new Chart(document.getElementById('chConsensus'), configConsensus);
+    </script>
+}
+

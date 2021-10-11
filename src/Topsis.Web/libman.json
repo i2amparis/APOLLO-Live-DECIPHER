@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "bootstrap@4.6.0",
+      "destination": "wwwroot/lib/bootstrap/"
+    },
+    {
+      "library": "jquery@3.6.0",
+      "destination": "wwwroot/lib/jquery/"
+    },
+    {
+      "library": "Chart.js@3.5.1",
+      "destination": "wwwroot/lib/chartjs"
+    },
+    {
+      "library": "jquery-validate@1.17.0",
+      "destination": "wwwroot/lib/jquery-validation"
+    },
+    {
+      "library": "jquery-validation-unobtrusive@3.2.9",
+      "destination": "jquery-validation-unobtrusive"
+    }
+  ]
+}

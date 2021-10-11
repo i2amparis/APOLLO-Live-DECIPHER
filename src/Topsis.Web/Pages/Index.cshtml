@@ -1,0 +1,65 @@
+﻿@page
+@using Domain.Common
+@model IndexModel
+@{
+    ViewData["Title"] = "Topsis";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to Topsis</h1>
+    
+</div>
+
+<div class="row pt-md-5">
+    <div class="col-md-8">
+        <h4>Workspaces</h4>
+
+        @foreach (var item in Model.Workspaces)
+        {
+        <div class="row m-md-1">
+            <div class="col-md-8">
+                <h4>@item.WorkspaceTitle</h4>
+                <p>@item.WorkspaceDescription</p>
+            </div>
+            <div class="col-md-3">
+                @if (item.VoteId.HasValue)
+                {
+                    <a href="@(Url.Page("/Workspace/Index", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
+                       role="button"
+                       class="btn btn-block btn-success">See Report</a>
+                }
+                else
+                {
+                    switch (item.CurrentStatus)
+                    {
+                        case Domain.WorkspaceStatus.Published:
+                            <span>Coming soon.</span>
+                            break;
+                        case Domain.WorkspaceStatus.AcceptingVotes:
+                            <a href="@(Url.Page("/Workspace/Vote", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
+                               role="button"
+                               class="btn btn-block btn-primary">Vote</a>
+                            break;
+                        case Domain.WorkspaceStatus.Finalized:
+                            <a href="@(Url.Page("/Workspace/Index", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
+                               role="button"
+                               class="btn btn-block btn-success">See Report</a>
+                            break;
+                        default:
+                            <span>Not available.</span>
+                            break;
+                    }
+
+                }
+            </div>
+        </div>
+    }
+    </div>
+    
+
+    <div class="col-md-3">
+        <a class="twitter-timeline" data-height="700" href="https://twitter.com/TwitterDev?ref_src=twsrc%5Etfw">Tweets by TwitterDev</a>
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </div>
+</div>
+

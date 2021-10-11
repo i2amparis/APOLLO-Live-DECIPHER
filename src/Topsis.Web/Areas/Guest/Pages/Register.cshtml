@@ -1,0 +1,36 @@
+﻿@page
+@model RegisterModel
+@using Topsis.Web.Infrastructure
+
+@inject CommonLocalizationService CommonLocalizer
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+}
+
+@{ ViewData["Title"] = CommonLocalizer.Get("Registration"); }
+
+<h2>@CommonLocalizer.Get("Registration")</h2>
+
+<h4>Profile</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" class="no-ajax">
+            @Html.ValidationDiv()
+            @Localizer["Country"]
+            @Html.FormBlock(m => m.Data.Country)
+            @Html.FormBlock(m => m.Data.JobCategory)
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <p>@CommonLocalizer.Get("todo: Your vote is anonymous.")</p>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

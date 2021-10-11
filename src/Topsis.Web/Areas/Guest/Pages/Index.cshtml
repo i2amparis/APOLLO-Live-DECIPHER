@@ -1,0 +1,40 @@
+﻿@page
+@using Domain.Common
+
+@model IndexModel
+@{
+}
+
+@{ ViewData["Title"] = "Guest"; }
+
+<h2>Your Anonymous Account</h2>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <h4>Workspaces</h4>
+
+        @foreach (var item in Model.Workspaces)
+        {
+            <div class="row m-md-1">
+                <div class="col-md-8">
+                    <h4>@item.WorkspaceTitle</h4>
+                    <p>@item.WorkspaceDescription</p>
+                </div>
+                <div class="col-md-2">
+                    @if (item.VoteId.HasValue)
+                    {
+                        <a href="@(Url.Page("/Workspace/Index", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
+                           role="button"
+                           class="btn btn-block btn-success">See Report</a>
+                    }
+                    else
+                    {
+                        <a href="@(Url.Page("/Workspace/Vote", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
+                           role="button"
+                           class="btn btn-block btn-primary">Vote</a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

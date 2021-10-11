@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  
+  mariadb-web:
+    image: mariadb:10.5
+    restart: 'always'
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: topsis-web
+      MYSQL_USER: dbuser
+      MYSQL_PASSWORD: password
+    logging:
+      options:
+        tag: "{{.DaemonName}}(image={{.ImageName}};name={{.Name}};id={{.ID}})"
+    ports:
+      - 3308:3306 
+    networks:
+      - backend
+    volumes:
+      - ./db:/var/lib/mysql
+
+  #mariadb-test:
+  #  image: mariadb:10.5
+  #  restart: 'always'
+  #  environment:
+  #    MYSQL_ROOT_PASSWORD: password
+  #    MYSQL_DATABASE: topsis-test
+  #    MYSQL_USER: dbuser
+  #    MYSQL_PASSWORD: password
+  #  logging:
+  #    options:
+  #      tag: "{{.DaemonName}}(image={{.ImageName}};name={{.Name}};id={{.ID}})"
+  #  ports:
+  #    - 3309:3306 
+  #  networks:
+  #    - backend
+  #  volumes:
+  #    - ./db:/var/lib/mysql/topsis-test
+
+networks:       
+  backend:
+    driver: bridge

@@ -1,0 +1,673 @@
+﻿@page
+@model Workspaces.EditModel
+@{
+    bool isDraft = Model.Data.CurrentStatus == Domain.WorkspaceStatus.Draft;
+    bool isAcceptingVotes = Model.Data.CurrentStatus == Domain.WorkspaceStatus.AcceptingVotes;
+
+    bool isFinalized = Model.Data.CurrentStatus == Domain.WorkspaceStatus.Finalized;
+    int iconWidth = 40;
+    var tableCls = "table  table-striped"; // table-responsive
+
+    var settings = Model.Data.Questionnaire.GetSettings();
+
+}
+
+<h1>@Model.Data.Title</h1>
+
+<div class="row pt-3">
+    <div class="col-md-5 float-right pb-3">
+
+        <h4>Status</h4>
+        <form asp-page-handler="changestatus" method="post" class="form-inline">
+            <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
+            <div class="form-group">
+                <select type="text" name="status" class="form-control ml-2">
+                    @foreach (var item in Model.StatusOptions)
+                    {
+                        if (item.Value)
+                        {
+                            <option value="@item.Key" selected="selected">@item.Key</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Key">@item.Key</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="form-group ml-3">
+                <input type="submit" value="Change Status" class="btn btn-info float-right" />
+            </div>
+        </form>
+
+        @if (isAcceptingVotes)
+        {
+            <div class="md-12 m-3">
+                <a target="_blank" asp-area="Guest" asp-page="/Workspace/Vote" asp-route-id="@Model.Data.Id.Hash()">Check vote form</a>
+            </div>
+        }
+
+        @if (isFinalized)
+        {
+            <div class="md-12 m-3">
+                <a target="_blank" asp-area="Guest" asp-page="/Workspace/Index" asp-route-id="@Model.Data.Id.Hash()">Check results</a>
+            </div>
+        }
+    </div>
+
+    <div class="col-md-5">
+        <h4>Information</h4>
+        <form asp-page-handler="changeinfo" method="post">
+            <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
+            <div class="form-group">
+                <label class="control-label">Title</label>
+                <input type="text" name="title" value="@Model.Data.Title" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Description</label>
+                <textarea name="description" class="form-control">@Model.Data.Description</textarea>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Change Info" class="btn btn-link float-right" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (isFinalized)
+{
+    <div class="row pb-5">
+        <div class="col-md-12">
+            <h4>Results</h4>
+
+            <div class="col-md-12">
+                <form asp-page-handler="calculateresults" class="form-inline">
+                    <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
+
+                    <div class="form-group">
+                        <label class="control-label mr-2">Algorithm</label>
+                        <select name="algorithm" class="form-control mr-2">
+                            @{
+                                var options = Enum.GetValues(typeof(Domain.AlgorithmType))
+                                    .Cast<Domain.AlgorithmType>().ToArray();
+                                for (int i = 0; i < options.Length; i++)
+                                {
+                                    var item = options[i];
+                                    <option selected="@(i==0 ? "selected" : "")" value="@(item)">@item.ToString()</option>
+
+                                }
+                            }
+
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Calculate" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+
+
+            <div class="col-md-6 pt-2">
+                <table class="@tableCls">
+                    <thead>
+                        <tr>
+                            <th scope="col">Votes</th>
+                            <th scope="col">Created At</th>
+                            <th scope="col">Completed At</th>
+                        </tr>
+
+                    </thead>
+                    @foreach (var item in Model.Data.Reports)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                @item.VotesCount
+                            </td>
+                            <td>
+                                @item.CreatedAtUtc.FormatUtcDate()
+                            </td>
+                            <td>
+                                @item.CompletedAtUtc?.FormatUtcDate()
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+                @if (Model.Data.Reports.Count == 0)
+                {
+                    <p>No calculation started. Select the appropriate algorithm and calculate the results.</p>
+                }
+            </div>
+
+        </div>
+    </div>
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <h4>Settings</h4>
+
+        <div class="col-md-12">
+            @{
+                var scaleLabels = Model.GetScaleLabels(settings);
+                var criteriaWeightsLabels = Model.GetWeightLabels(settings);
+            }
+            <form asp-page-handler="ChangeTopsisSettings">
+                <input type="hidden" name="WorkspaceId" value="@Model.Data.Id.Hash()" />
+
+                <table class="@tableCls">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="text-center w-25">Setting</th>
+                            <th scope="col" class="w-25">Value</th>
+                            <th scope="col" class="w-auto">Labels</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td class="text-right">Linquistic Scale</td>
+                            <td>
+                                @if (isDraft)
+                                {
+                                    <select type="text"
+                                            name="scale"
+                                            class="form-control" asp-items="Model.GetScaleOptions()">
+                                    </select>
+                                }
+                                else
+                                {
+                                    <span>@settings.Scale</span>
+                                }
+                            </td>
+                            <td class="text-wrap">
+                                @if (isDraft)
+                                {
+                                    <a href="#" data-toggle="modal" data-target="#settings-label-form" data-scale="@((short)settings.Scale)" title="@scaleLabels">@scaleLabels</a>
+                                }
+                                else
+                                {
+                                    <span>@scaleLabels</span>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">Rigorousness</td>
+                            <td>
+                                @if (isDraft)
+                                {
+                                    <input type="number" step="0.05" min="0" max="1" name="rigorousness" value="@settings.Rigorousness" class="form-control" />
+                                }
+                                else
+                                {
+                                    <span>@settings.Rigorousness</span>
+                                }
+                            </td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">Criteria Weight Range (1 - max)</td>
+                            <td>
+                                @if (isDraft)
+                                {
+                                    <input type="number" name="criterionWeightMax" step="1" min="2" max="10" value="@settings.CriterionWeightMax" class="form-control" />
+                                }
+                                else
+                                {
+                                    <span>@settings.CriterionWeightMax</span>
+                                }
+                            </td>
+                            <td class="text-wrap">
+                                @if (isDraft)
+                                {
+                                    <a href="#" data-toggle="modal" data-target="#settings-label-form" data-weight="@((short)settings.CriterionWeightMax)" title="@criteriaWeightsLabels">@criteriaWeightsLabels</a>
+                                }
+                                else
+                                {
+                                    <span>@criteriaWeightsLabels</span>
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                @if (isDraft)
+                {
+                    <div class="form-group">
+                        <input type="submit" value="Change Questionnaire Settings" class="btn btn-link float-right" />
+                    </div>
+                }
+
+            </form>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row pb-5">
+    <div class="col-md-12">
+        <h4>Criteria</h4>
+
+    </div>
+
+    <div class="col-md-12">
+
+        <div class="col-sm-8">
+            @if (isDraft)
+            {
+                <form asp-page-handler="addcriterion" method="post">
+                    <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
+                    <button class="btn btn-default btn-link">Add New</button>
+                </form>
+            }
+
+        </div>
+
+        <table class="@tableCls">
+            <thead>
+                <tr>
+                    @if (isDraft)
+                    {
+                        <th scope="col" width="@iconWidth">&nbsp;</th>
+                        <th scope="col" width="@iconWidth">&nbsp;</th>
+                    }
+
+                    <th scope="col">Type</th>
+                    <th scope="col">Title</th>
+                    <th scope="col" width="@iconWidth">&nbsp;</th>
+                    <th scope="col" width="@iconWidth">Order</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Data.Questionnaire.Criteria.OrderBy(x => x.Order))
+                {
+                    <tr>
+                        @if (isDraft)
+                        {
+                            <td>
+
+                                <form asp-page-handler="deletecriterion" method="post">
+                                    <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
+                                    <input type="hidden" name="criterionId" value="@item.Id" />
+                                    <button class="btn btn-default" title="Delete Criterion"><span class="material-icons">remove_circle_outline</span></button>
+                                </form>
+
+                            </td>
+                            <td>
+                                <button class="btn btn-link" data-toggle="modal" data-target="#criterion-title-form"
+                                        data-criterionid="@item.Id"
+                                        data-criteriontypeid="@item.Type.ToString()"
+                                        data-criterion-title="@item.Title">
+                                    <span class="material-icons">edit</span>
+                                </button>
+
+                            </td>
+                        }
+                        <td>
+                            @item.Type.ToString()
+                        </td>
+                        <td>
+                            @item.Title
+                        </td>
+
+                        <td>
+                            @if (item.Order != Model.Data.Questionnaire.Criteria.Count)
+                            {
+                                <form asp-page-handler="changeorder" method="post">
+                                    <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
+                                    <input type="hidden" name="criterionId" value="@item.Id" />
+                                    <input type="hidden" name="moveup" value="false" />
+                                    <button class="btn btn-default"><span class="material-icons">arrow_downward</span></button>
+                                </form>
+                            }
+
+                        </td>
+                        <td>
+                            @if (item.Order > 1)
+                            {
+                                <form asp-page-handler="changeorder" method="post">
+                                    <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
+                                    <input type="hidden" name="criterionId" value="@item.Id" />
+                                    <input type="hidden" name="moveup" value="true" />
+                                    <button class="btn btn-default"><span class="material-icons">arrow_upward</span></button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div class="row">
+    <h4>Alternatives</h4>
+
+    <div class="col-md-12">
+
+        <div class="col-md-7">
+            <h5>Info</h5>
+            @if (isDraft)
+            {
+                <div class="col md-6">
+                    <form asp-page-handler="addalternative" method="post">
+                        <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
+                        <button class="btn btn-default btn-link">Add New</button>
+                    </form>
+                </div>
+            }
+
+            <table class="@tableCls">
+                <thead>
+                    <tr>
+                        <th scope="col" width="@iconWidth">&nbsp;</th>
+                        <th scope="col" width="@iconWidth">&nbsp;</th>
+                        <th scope="col">Title</th>
+                        <th scope="col" width="@iconWidth">&nbsp;</th>
+                        <th scope="col" width="@iconWidth">Order</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Data.Questionnaire.Alternatives.OrderBy(x => x.Order))
+                    {
+                        <tr>
+
+                            <td>
+                                @if (Model.Data.CurrentStatus == Domain.WorkspaceStatus.Draft)
+                                {
+                                    <form asp-page-handler="deletealternative" method="post">
+                                        <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
+                                        <input type="hidden" name="criterionId" value="@item.Id" />
+                                        <button class="btn btn-default" title="Delete Criterion"><span class="material-icons">remove_circle_outline</span></button>
+                                    </form>
+                                }
+                            </td>
+                            <td>
+                                @if (isDraft)
+                                {
+                                    <button class="btn btn-link" data-toggle="modal" data-target="#criterion-title-form"
+                                            data-alternativeid="@item.Id" data-alternative-title="@item.Title">
+                                        <span class="material-icons">edit</span>
+                                    </button>
+                                }
+                            </td>
+                            <td>
+                                @item.Title
+                            </td>
+
+                            <td>
+                                @if (item.Order != Model.Data.Questionnaire.Alternatives.Count)
+                                {
+                                    <form asp-page-handler="changeorder" method="post">
+                                        <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
+                                        <input type="hidden" name="alternativeId" value="@item.Id" />
+                                        <input type="hidden" name="moveup" value="false" />
+                                        <button class="btn btn-default"><span class="material-icons">arrow_downward</span></button>
+                                    </form>
+                                }
+
+                            </td>
+                            <td>
+                                @if (item.Order > 1)
+                                {
+                                    <form asp-page-handler="changeorder" method="post">
+                                        <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
+                                        <input type="hidden" name="alternativeId" value="@item.Id" />
+                                        <input type="hidden" name="moveup" value="true" />
+                                        <button class="btn btn-default"><span class="material-icons">arrow_upward</span></button>
+                                    </form>
+                                }
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+</div>
+
+<div>
+    <!-- Modal -->
+    <div class="modal fade" id="criterion-title-form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title" id="exampleModalLabel">Change <span id="entity"></span></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="form-criterion" asp-page-handler="changecriterion" method="post">
+                    <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
+                    <input type="hidden" id="criterionid" name="criterionid" value="" />
+
+                    <div class="modal-body">
+
+                        <div class="clearfix">
+                            <label>Type</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input name="criteriontype" class="form-check-input" type="radio" id="radio-benefit" value="@((int)Domain.CriterionType.Benefit)">
+                            <label class="form-check-label" for="radio-benefit">@(Domain.CriterionType.Benefit)</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input name="criteriontype" class="form-check-input" type="radio" id="radio-cost" value="@((int)Domain.CriterionType.Cost)">
+                            <label class="form-check-label" for="radio-cost">@(Domain.CriterionType.Cost)</label>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="title">Title</label>
+                            <input type="text" name="title" class="form-control" id="criterion-title" aria-describedby="titleHelp" placeholder="Change title">
+                        </div>
+
+                    </div>
+                    <div class="modal-footer border-top-0 d-flex ">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+
+                <form id="form-alternative" asp-page-handler="changealternative" method="post">
+                    <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
+                    <input type="hidden" id="alternativeid" name="alternativeid" value="" />
+
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="title">Title</label>
+                            <input type="text" name="title" class="form-control" id="alternative-title" aria-describedby="titleHelp" placeholder="Change title">
+                            @*<small id="emailHelp" class="form-text text-muted">Your information is safe with us.</small>*@
+                        </div>
+                    </div>
+                    <div class="modal-footer border-top-0 d-flex ">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="settings-label-form" tabindex="-1" role="dialog" aria-labelledby="settingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title" id="settingsModalLabel">Change Labels</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="form-alternatives-range" asp-page-handler="ChangeAlternativesRange">
+                    <input type="hidden" name="WorkspaceId" value="@Model.Data.Id.Hash()" />
+
+                    <table class="@tableCls">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-center">Title</th>
+                                <th scope="col">Value</th>
+                                <th scope="col">&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var items = settings.AlternativeRange;
+
+                                @for (var i = 0; i < items.Count; i++)
+                                {
+                                    var item = items[i];
+                                    <tr>
+                                        <td>
+                                            <input type="text" name="range[@i].name" value="@item.Name" class="form-control" />
+                                        </td>
+                                        <td>
+                                            <label>@item.Value</label>
+                                            <input type="hidden" name="range[@i].value" value="@item.Value" class="form-control" required="required" />
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+                    <div class="form-group">
+                        <input type="submit" value="Change Alternatives Labels" class="btn btn-link float-right" />
+                    </div>
+                </form>
+
+                <form id="form-criteria-range" asp-page-handler="ChangeCriteriaWeightsRange">
+                    <input type="hidden" name="WorkspaceId" value="@Model.Data.Id.Hash()" />
+
+                    <table class="@tableCls">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-center">Title</th>
+                                <th scope="col">Value</th>
+                                <th scope="col">&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var weights = settings.CriteriaWeightRange;
+
+                                @for (var i = 0; i < weights.Count; i++)
+                                {
+                                    var item = weights[i];
+                                    <tr>
+                                        <td>
+                                            <input type="text" name="range[@i].name" value="@item.Name" class="form-control" />
+                                        </td>
+                                        <td>
+                                            <label>@item.Value</label>
+                                            <input type="hidden" name="range[@i].value" value="@item.Value" class="form-control" required="required" />
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+                    <div class="form-group">
+                        <input type="submit" value="Change Weight Labels" class="btn btn-link float-right" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section css{
+    <style type="text/css">
+        .small-box {
+            width: 65px;
+        }
+    </style>
+
+}
+
+@section scripts{
+
+    <script type="text/javascript">
+        $('.delete-criterion-option').on('click', function () {
+            var self = $(this);
+            var data = {
+                "id": self.data('id'),
+                "index": self.data('index'),
+                "__RequestVerificationToken": "@this.HttpContext.GetAntiforgeryToken()"
+            };
+
+            // send ajax
+            $.ajax({
+                url: '/Moderator/Workspaces/Edit?handler=DeleteCriterionOption', // url where to submit the request
+                type: "POST", // type of action POST || GET
+                dataType: 'json', // data type
+                data: data, // post data || get data
+                success: function (result) {
+                    // you can see the result from the console
+                    // tab of the developer tools
+                    window.location.reload();
+                },
+                error: function (xhr, resp, text) {
+                    console.log(xhr, resp, text);
+                }
+            })
+        });
+
+        $('#criterion-title-form').on('show.bs.modal', function (event) {
+            let button = $(event.relatedTarget);
+            let criterionId = button.data('criterionid');
+
+            let modal = $(this);
+            modal.find('#form-alternative').hide();
+            modal.find('#form-criterion').hide();
+
+            if (criterionId) {
+                let criterionTypeId = button.data('criteriontypeid');
+
+                modal.find('#form-criterion').show();
+                modal.find('#entity').text("Criterion");
+                let title = button.data('criterion-title');
+                modal.find('#criterion-title').val(title);
+
+                modal.find('#criterionid').val(criterionId);
+                let radioBtn = modal.find('#radio-' + criterionTypeId.toLowerCase())[0];
+                radioBtn.checked = true;
+
+            } else {
+                let alternativeId = button.data('alternativeid');
+                modal.find('#form-alternative').show();
+                modal.find('#alternativeid').val(alternativeId);
+                let title = button.data('alternative-title');
+                modal.find('#alternative-title').val(title);
+            }
+        });
+
+        $('#settings-label-form').on('show.bs.modal', function (event) {
+            let button = $(event.relatedTarget);
+            let alternativesRange = button.data('scale');
+            let criteriaWeightRange = button.data('weight');
+
+            let modal = $(this);
+            modal.find('#form-alternatives-range').hide();
+            modal.find('#form-criteria-range').hide();
+
+            if (alternativesRange) {
+                modal.find('#form-alternatives-range').show();
+
+            } else if(criteriaWeightRange) {
+                modal.find('#form-criteria-range').show();
+            }
+        });
+    </script>
+}
+

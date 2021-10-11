@@ -1,0 +1,100 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{500004A4-F9EB-49E3-B1B3-9B34B47D093E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D6FD4C93-F946-42EA-B377-3AFF456EF279}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Topsis.Web", "src\Topsis.Web\Topsis.Web.csproj", "{016301D6-0EC7-41CE-94F8-4A94001DAD4A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Adapters", "Adapters", "{4BE0FE38-C23C-4D39-A608-CC796474D030}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Topsis.Application", "src\Topsis.Application\Topsis.Application.csproj", "{A6896D9C-F339-4BB9-99B1-B0E086ABAE4E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Topsis.AcceptanceTests", "tests\Topsis.AcceptanceTests\Topsis.AcceptanceTests.csproj", "{1DB67B8E-76CC-46A9-8FCC-0D2B35F2CFA8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Topsis.Adapters.Algorithm", "src\Topsis.Adapters.Algorithm\Topsis.Adapters.Algorithm.csproj", "{894EF27F-3180-42D9-8587-60191DA6FB68}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Topsis.Adapters.Database", "src\Topsis.Adapters.Database\Topsis.Adapters.Database.csproj", "{AFD579E5-21CD-41D0-84AA-F6C2875AF62A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{387B8DF9-2AD9-4552-A356-688DCE6D42D7}"
+	ProjectSection(SolutionItems) = preProject
+		Docker\create.bat = Docker\create.bat
+		Docker\docker-compose.yaml = Docker\docker-compose.yaml
+		Docker\drop.bat = Docker\drop.bat
+		Docker\sh.bat = Docker\sh.bat
+		Docker\variables.env = Docker\variables.env
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Topsis.Adapters.Algorithm.Unit.Test", "tests\Topsis.Adapters.Algorithm.Unit.Test\Topsis.Adapters.Algorithm.Unit.Test.csproj", "{8361BFED-F5CD-489A-AD40-245958AC16ED}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Topsis.Adapters.Email", "src\Topsis.Adapters.Email\Topsis.Adapters.Email.csproj", "{CE0458A1-9B8D-48E1-B429-99C4DF607297}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Topsis.Domain", "src\Topsis.Domain\Topsis.Domain.csproj", "{EF88E312-9932-4C28-B298-9DC8C079C0CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Topsis.Adapters.Caching", "src\Topsis.Adapters.Caching\Topsis.Adapters.Caching.csproj", "{C2B664E5-B586-4EB7-96C9-F1F3D2D4908E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{016301D6-0EC7-41CE-94F8-4A94001DAD4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{016301D6-0EC7-41CE-94F8-4A94001DAD4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{016301D6-0EC7-41CE-94F8-4A94001DAD4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{016301D6-0EC7-41CE-94F8-4A94001DAD4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6896D9C-F339-4BB9-99B1-B0E086ABAE4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6896D9C-F339-4BB9-99B1-B0E086ABAE4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6896D9C-F339-4BB9-99B1-B0E086ABAE4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6896D9C-F339-4BB9-99B1-B0E086ABAE4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DB67B8E-76CC-46A9-8FCC-0D2B35F2CFA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DB67B8E-76CC-46A9-8FCC-0D2B35F2CFA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DB67B8E-76CC-46A9-8FCC-0D2B35F2CFA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DB67B8E-76CC-46A9-8FCC-0D2B35F2CFA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{894EF27F-3180-42D9-8587-60191DA6FB68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{894EF27F-3180-42D9-8587-60191DA6FB68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{894EF27F-3180-42D9-8587-60191DA6FB68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{894EF27F-3180-42D9-8587-60191DA6FB68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFD579E5-21CD-41D0-84AA-F6C2875AF62A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFD579E5-21CD-41D0-84AA-F6C2875AF62A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFD579E5-21CD-41D0-84AA-F6C2875AF62A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFD579E5-21CD-41D0-84AA-F6C2875AF62A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8361BFED-F5CD-489A-AD40-245958AC16ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8361BFED-F5CD-489A-AD40-245958AC16ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8361BFED-F5CD-489A-AD40-245958AC16ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8361BFED-F5CD-489A-AD40-245958AC16ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE0458A1-9B8D-48E1-B429-99C4DF607297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE0458A1-9B8D-48E1-B429-99C4DF607297}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE0458A1-9B8D-48E1-B429-99C4DF607297}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE0458A1-9B8D-48E1-B429-99C4DF607297}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF88E312-9932-4C28-B298-9DC8C079C0CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF88E312-9932-4C28-B298-9DC8C079C0CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF88E312-9932-4C28-B298-9DC8C079C0CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF88E312-9932-4C28-B298-9DC8C079C0CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2B664E5-B586-4EB7-96C9-F1F3D2D4908E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2B664E5-B586-4EB7-96C9-F1F3D2D4908E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2B664E5-B586-4EB7-96C9-F1F3D2D4908E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2B664E5-B586-4EB7-96C9-F1F3D2D4908E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{016301D6-0EC7-41CE-94F8-4A94001DAD4A} = {500004A4-F9EB-49E3-B1B3-9B34B47D093E}
+		{4BE0FE38-C23C-4D39-A608-CC796474D030} = {500004A4-F9EB-49E3-B1B3-9B34B47D093E}
+		{A6896D9C-F339-4BB9-99B1-B0E086ABAE4E} = {500004A4-F9EB-49E3-B1B3-9B34B47D093E}
+		{1DB67B8E-76CC-46A9-8FCC-0D2B35F2CFA8} = {D6FD4C93-F946-42EA-B377-3AFF456EF279}
+		{894EF27F-3180-42D9-8587-60191DA6FB68} = {4BE0FE38-C23C-4D39-A608-CC796474D030}
+		{AFD579E5-21CD-41D0-84AA-F6C2875AF62A} = {4BE0FE38-C23C-4D39-A608-CC796474D030}
+		{8361BFED-F5CD-489A-AD40-245958AC16ED} = {D6FD4C93-F946-42EA-B377-3AFF456EF279}
+		{CE0458A1-9B8D-48E1-B429-99C4DF607297} = {4BE0FE38-C23C-4D39-A608-CC796474D030}
+		{EF88E312-9932-4C28-B298-9DC8C079C0CA} = {500004A4-F9EB-49E3-B1B3-9B34B47D093E}
+		{C2B664E5-B586-4EB7-96C9-F1F3D2D4908E} = {4BE0FE38-C23C-4D39-A608-CC796474D030}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {42135D91-3E4C-4DF9-A766-7EEE2995ABC3}
+	EndGlobalSection
+EndGlobal
