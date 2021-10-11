@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Topsis.Adapters.Database.Services
 {
-    public class MigrationHostedService : IHostedService
+    public class MigrationHostedService : BackgroundService
     {
         // We need to inject the IServiceProvider so we can create 
         // the scoped service, MyDbContext
@@ -22,7 +22,7 @@ namespace Topsis.Adapters.Database.Services
             _logger = logger;
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _logger.LogDebug("Starting migration.");
 
@@ -50,7 +50,5 @@ namespace Topsis.Adapters.Database.Services
 
             _logger.LogDebug("Finished migration.");
         }
-
-        public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     }
 }

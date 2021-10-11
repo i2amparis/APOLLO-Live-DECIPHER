@@ -11,7 +11,7 @@ namespace Topsis.Adapters.Database.Seed
     {
         // https://stackoverflow.com/questions/50785009/how-to-seed-an-admin-user-in-ef-core-2-1-0
         private const string AdminUserId = "4E59CEA1-FC55-49F5-BF30-4BC46A0DDA70";
-        private const string AdminUserPassword = "password";
+        private const string AdminUserPassword = "!!4921Rfaw3!";
         private const string AdminEmail = "a.soursos@gmail.com";
 
         public static void ApplyTo(ModelBuilder builder)
