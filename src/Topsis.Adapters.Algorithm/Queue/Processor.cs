@@ -50,7 +50,8 @@ namespace Topsis.Adapters.Algorithm.Queue
             {
                 var workspace = await repository.GetByIdForCalculationAsync(reportKey.WorkspaceId);
                 var answers = await reports.GetAnswersForCalculationAsync(reportKey.WorkspaceId);
-                var result = await algorithm.AnalyzeAsync(workspace, answers);
+                var jobCategories = await reports.GetJobCategoriesAsync();
+                var result = await algorithm.AnalyzeAsync(workspace, jobCategories, answers);
 
                 // save
                 logger.LogDebug($"Finalizing workspace result: {reportKey}");

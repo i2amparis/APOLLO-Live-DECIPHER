@@ -7,6 +7,8 @@ namespace Topsis.Application.Contracts.Algorithm
 
     public interface ITopsisAlgorithm
     {
-        Task<WorkspaceAnalysisResult> AnalyzeAsync(Workspace workspace, IList<StakeholderAnswerDto> answers);
+        Task<WorkspaceAnalysisResult> AnalyzeAsync(Workspace workspace, 
+            IDictionary<int, string> jobCategories, 
+            IList<StakeholderAnswerDto> answers);
     }
 }

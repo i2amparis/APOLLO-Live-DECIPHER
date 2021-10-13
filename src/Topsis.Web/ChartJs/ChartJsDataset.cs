@@ -11,7 +11,15 @@ namespace Topsis.Web.ChartJs
             BorderColor = "rgb(255, 99, 132)";
             Data = new List<double>();
             Label = "My Chart";
+            Type = null;
+            Options = null;
         }
+
+        [JsonProperty("options")]
+        public ChartJsDatasetOptions Options { get; set; }
+
+        [JsonProperty("type")]
+        public string Type { get; set; }
 
         [JsonProperty("data")]
         public List<double> Data { get; set; }
@@ -32,5 +40,28 @@ namespace Topsis.Web.ChartJs
         public string PointHoverBackgroundColor { get; internal set; }
         [JsonProperty("pointHoverBorderColor")]
         public string PointHoverBorderColor { get; internal set; }
+    }
+
+    public class ChartJsDatasetOptions
+    {
+        [JsonProperty("elements")]
+        public ChartJsElement Elements { get; set; }
+
+        public class ChartJsElement
+        { 
+            [JsonProperty("bar")]
+            public ChartJsBarElement Bar { get; set; }
+        }
+
+        public class ChartJsBarElement
+        {
+            public ChartJsBarElement(string jsFunctionBackgroundColor)
+            {
+                BackgroundColor = jsFunctionBackgroundColor;
+            }
+
+            [JsonProperty("backgroundColor")]
+            public string BackgroundColor { get; set; }
+        }
     }
 }

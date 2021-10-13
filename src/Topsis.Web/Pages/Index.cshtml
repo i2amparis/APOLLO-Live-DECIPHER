@@ -14,7 +14,7 @@
     <div class="col-md-8">
         <h4>Workspaces</h4>
 
-        @foreach (var item in Model.Workspaces)
+        @foreach (var item in Model.Workspaces.GroupBy(x => x.WorkspaceId).Select(x => x.Last()))
         {
         <div class="row m-md-1">
             <div class="col-md-8">

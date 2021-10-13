@@ -12,5 +12,6 @@ namespace Topsis.Application.Contracts.Algorithm
         
         public double AnswerValue { get; set; }
         public int VoteId { get; set; }
+        public int? JobCategoryId { get; set; }
     }
 }

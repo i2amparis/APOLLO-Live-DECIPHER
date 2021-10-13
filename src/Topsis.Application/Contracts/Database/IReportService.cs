@@ -18,5 +18,6 @@ namespace Topsis.Application.Contracts.Database
 
         ValueTask<StakeholderVoteViewModel> GetStakeholderVoteViewModelAsync(IUserContext user, string workspaceId);
         ValueTask<WorkspaceReportViewModel> GetWorkspaceReportAsync(string id, IUserContext userContext);
+        ValueTask<IDictionary<int,string>> GetJobCategoriesAsync();
     }
 }

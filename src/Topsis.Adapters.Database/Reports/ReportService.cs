@@ -151,5 +151,10 @@ namespace Topsis.Adapters.Database.Reports
                 throw;
             }
         }
+
+        public async ValueTask<IDictionary<int, string>> GetJobCategoriesAsync()
+        {
+            return await _db.WsJobCategories.ToDictionaryAsync(x => x.Id, x => x.Title);
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace Topsis.Adapters.Algorithm
 {
     internal class TopsisConsensus
     {
-        public IDictionary<string,double> Consent(QuestionnaireSettings settings, IList<Domain.WorkspaceAnalysisResultItem> stakeholderAnswers)
+        public IDictionary<string,double> Calculate(QuestionnaireSettings settings, IList<StakeholderTopsis> stakeholderAnswers)
         {
             // Calculate topsis global - average of stakeholder alternatives topsis
             var globalTopsis = CalculateGlobalTopsis(stakeholderAnswers);
@@ -23,7 +23,7 @@ namespace Topsis.Adapters.Algorithm
 
         private void CalculateDissimilarity(QuestionnaireSettings settings,
             IDictionary<int, double> globalTopsisAverage, 
-            IList<WorkspaceAnalysisResultItem> stakeholderAnswers,
+            IList<StakeholderTopsis> stakeholderAnswers,
             IDictionary<string, double> stakeholderTotalConsensus)
         {
             var globalTopsisSum = globalTopsisAverage.Values.Sum();
@@ -41,9 +41,8 @@ namespace Topsis.Adapters.Algorithm
                     // =(ABS(GlobalTopsis-StakeholderTopsis)/(OutputLinquisticScale))^Rigorousness
 
                     var globalTopsis = globalTopsisAverage[stakeholderAlt.AlternativeId];
-                    var dissimilarity = 1 - Math.Pow(Math.Abs(globalTopsis - stakeholderAlt.MyTopsis) / (double)settings.Scale, settings.Rigorousness);
-                    stakeholderAlt.SetDissimilarity(dissimilarity);
-
+                    var dissimilarity = 1 - Math.Pow(Math.Abs(globalTopsis - stakeholderAlt.Topsis) / (double)settings.Scale, settings.Rigorousness);
+                    
                     productSum += globalTopsis * dissimilarity;
                 }
 
@@ -52,12 +51,12 @@ namespace Topsis.Adapters.Algorithm
         }
 
         #region [ Helpers ]
-        private IDictionary<int, double> CalculateGlobalTopsis(IList<WorkspaceAnalysisResultItem> stakeholderAnswers)
+        private IDictionary<int, double> CalculateGlobalTopsis(IList<StakeholderTopsis> stakeholderAnswers)
         {
             var result = new Dictionary<int, double>();
             foreach (var g in stakeholderAnswers.GroupBy(x => x.AlternativeId))
             {
-                result[g.Key] = g.Select(x => x.MyTopsis).Average();
+                result[g.Key] = g.Select(x => x.Topsis).Average();
             }
 
             return result;

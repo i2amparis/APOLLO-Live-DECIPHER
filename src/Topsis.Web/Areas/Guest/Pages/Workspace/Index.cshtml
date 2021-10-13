@@ -34,10 +34,10 @@
         <script src="~/lib/chartjs/chart.js"></script>
     </environment>
     <environment exclude="Development">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js" 
-                integrity="sha512-Wt1bJGtlnMtGP0dqNFH1xlkLBNpEodaiQ8ZN5JLA5wpc1sUlk/O5uuOMNgvzddzkpvZ9GLyYNa8w2s7rqiTk5Q==" 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"
+                integrity="sha512-Wt1bJGtlnMtGP0dqNFH1xlkLBNpEodaiQ8ZN5JLA5wpc1sUlk/O5uuOMNgvzddzkpvZ9GLyYNa8w2s7rqiTk5Q=="
                 asp-fallback-src="~/lib/chartjs/chart.min.js"
-                crossorigin="anonymous" 
+                crossorigin="anonymous"
                 referrerpolicy="no-referrer"></script>
     </environment>
 
@@ -95,29 +95,80 @@
 
 @if (hasReports)
 {
-<div class="row">
+    <div class="row">
 
-    <div class="col-md-12">
-        <h3>Alternatives</h3>
-        <canvas id="chAlternatives"></canvas>
-    </div>
-</div>
-<div class="row">
+        <div class="col-md-6">
+            <h3>Compare Consensus</h3>
+            <canvas id="chCompareConsensus"></canvas>
+        </div>
 
-    <div class="col-md-12">
-        <h3>Consensus</h3>
-        <canvas id="chConsensus"></canvas>
+        <div class="col-md-6">
+            <h3>Alternatives</h3>
+            <canvas id="chAlternatives"></canvas>
+        </div>
     </div>
-</div>
+
+
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <h3>Stakeholders Consensus</h3>
+            <canvas id="chConsensus2"></canvas>
+        </div>
+    </div>
+
+    @*<div class="row">
+
+        <div class="col-md-12">
+            <h3>Temp</h3>
+            <canvas id="chConsensus4"></canvas>
+        </div>
+    </div>*@
 }
 @section Scripts {
 
     <script>
+        function highlight() {
+            console.log('highlight');
+
+            return (ctx) => {
+                var v = ctx.parsed.y;
+                var c = v < -50 ? '#D60000'
+                    : v < 0 ? '#F46300'
+                        : v < 50 ? '#0358B6'
+                            : '#44DE28';
+
+                return Utils.transparentize(c, 1 - Math.abs(v / 150));
+            };
+        }
+
+        let configCompareConsensus = JSON.parse('@Html.Raw(Model.ConsensusCompareReportJson)');
+        var conChart = new Chart(document.getElementById('chCompareConsensus'), configCompareConsensus);
+
         let configAlternatives = JSON.parse('@Html.Raw(Model.AlternativesReportJson)');
         var altChart = new Chart(document.getElementById('chAlternatives'), configAlternatives);
 
         let configConsensus = JSON.parse('@Html.Raw(Model.ConsensusReportJson)');
-        var conChart = new Chart(document.getElementById('chConsensus'), configConsensus);
+        var conChart2 = new Chart(document.getElementById('chConsensus2'), configConsensus);
+
+        //let config = {
+        //    "type": "bar", "data": {
+        //        "labels": ["S1", "S2", "S3", "S4"],
+        //        "datasets": [{
+        //            "options":
+        //            {
+        //                "elements":
+        //                {
+        //                    "bar":
+        //                        { "backgroundColor": "grey" }
+        //                }
+        //            }, "type": "bar", "data": [0.983, 0.842, 0.658, 0.806], "label": "Consensus", "backgroundColor": "rgba(255, 99, 132, 0.2)", "borderColor": "rgb(255, 99, 132)", "fill": true, "pointBackgroundColor": "rgb(255, 99, 132)", "pointBorderColor": "#fff", "pointHoverBackgroundColor": "#fff", "pointHoverBorderColor": "rgb(255, 99, 132)"
+        //        }, { "options": null, "type": "line", "data": [0.82225, 0.82225, 0.82225, 0.82225], "label": "Average Consensus", "backgroundColor": "rgba(255, 99, 132, 0.2)", "borderColor": "rgb(255, 99, 132)", "fill": false, "pointBackgroundColor": null, "pointBorderColor": null, "pointHoverBackgroundColor": null, "pointHoverBorderColor": null }]
+        //    }
+        //};
+        //var conChart4 = new Chart(document.getElementById('chConsensus4'), configConsensus);
+
     </script>
 }
 

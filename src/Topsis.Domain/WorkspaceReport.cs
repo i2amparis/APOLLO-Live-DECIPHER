@@ -79,58 +79,46 @@ namespace Topsis.Domain
     {
         public WorkspaceAnalysisResult()
         {
-            StakeholderAnswers = new List<WorkspaceAnalysisResultItem>();
+            StakeholderTopsis = new List<StakeholderTopsis>();
+            GroupTopsis = new Dictionary<string, AlternativeTopsis[]>();
         }
 
-        [JsonPropertyName("items")]
-        [JsonProperty("items")]
-        public List<WorkspaceAnalysisResultItem> StakeholderAnswers { get; set; }
+        [JsonPropertyName("stakeholders")]
+        [JsonProperty("stakeholders")]
+        public List<StakeholderTopsis> StakeholderTopsis { get; set; }
+
+        [JsonPropertyName("groups")]
+        [JsonProperty("groups")]
+        public Dictionary<string, AlternativeTopsis[]> GroupTopsis { get; set; }
 
         [JsonPropertyName("consensus")]
         [JsonProperty("consensus")]
         public IDictionary<string, double> GroupConsensus { get; set; }
 
-        public void AddGroupAnalysis(IDictionary<string, double> stakeholdersConsensus)
+        public void AddConsensusAnalysis(IDictionary<string, double> stakeholdersConsensus)
         {
             GroupConsensus = stakeholdersConsensus;
         }
 
-        public void AddStakeholderAnalysis(IEnumerable<WorkspaceAnalysisResultItem> stakeholderTopsis)
+        public void AddGroupSolution(AlternativeTopsis[] groupTopsis, string groupName = null)
         {
-            StakeholderAnswers.AddRange(stakeholderTopsis);
+            GroupTopsis[groupName ?? Domain.StakeholderTopsis.DefaultGroupName] = groupTopsis;
+        }
+
+        public void AddStakeholderAnalysis(IEnumerable<StakeholderTopsis> stakeholderTopsis)
+        {
+            StakeholderTopsis.AddRange(stakeholderTopsis);
         }
     }
 
-    public class WorkspaceAnalysisResultItem
-    {
-        [JsonPropertyName("uid")]
-        [JsonProperty("uid")]
-        public string StakeholderId { get; set; }
+    public class AlternativeTopsis
+    { 
+        [JsonProperty("topsis")]
+        [JsonPropertyName("topsis")]
+        public double Topsis { get; set; }
+
         [JsonPropertyName("aid")]
         [JsonProperty("aid")]
         public int AlternativeId { get; set; }
-        [JsonPropertyName("mytopsis")]
-        [JsonProperty("mytopsis")]
-        public double MyTopsis { get; set; }
-        [JsonPropertyName("dis")]
-        [JsonProperty("dis")]
-        public double Dissimilarity { get; set; }
-
-        public static WorkspaceAnalysisResultItem Create(string stakeholderId,
-            int alternativeId,
-            double result)
-        {
-            return new WorkspaceAnalysisResultItem
-            {
-                AlternativeId = alternativeId,
-                StakeholderId = stakeholderId,
-                MyTopsis = Rounder.Round(result)
-            };
-        }
-
-        public void SetDissimilarity(double dissimilarity)
-        {
-            Dissimilarity = Rounder.Round(dissimilarity);
-        }
     }
 }

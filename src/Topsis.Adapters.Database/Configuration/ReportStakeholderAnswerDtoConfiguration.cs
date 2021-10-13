@@ -23,6 +23,7 @@ namespace Topsis.Adapters.Database.Configuration
 SELECT 
     latest.WorkspaceId,
     latest.ApplicationUserId as StakeholderId,
+    u.JobCategoryId,
     latest.VoteId,
 	sa.AlternativeId,
 	sa.CriterionId, 
@@ -34,6 +35,7 @@ inner join  WsCriteria                          c   on sa.CriterionId = c.Id
 INNER JOIN  (select MAX(v.Id) AS VoteId, v.WorkspaceId, v.ApplicationUserId
 				from WsStakeholderVotes v
 				GROUP BY v.WorkspaceId, v.ApplicationUserId)				latest	 ON sa.VoteId = latest.VoteId
+INNER JOIN  AspNetUsers                         u   on latest.ApplicationUserId = u.Id
 inner join  WsStakeholderCriteriaImportance     im  on sa.VoteId = im.VoteId and c.Id = im.CriterionId
 ";
 

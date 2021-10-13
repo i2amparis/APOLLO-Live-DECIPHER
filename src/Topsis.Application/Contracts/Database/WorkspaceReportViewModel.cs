@@ -13,6 +13,7 @@ namespace Topsis.Application.Contracts.Database
         public WorkspaceReportViewModel(Workspace workspace, IUserContext user)
         {
             Workspace = workspace;
+            UserId = user.UserId;
             var analysis = workspace.GetReportData();
             ChartAlternatives = BuildAlternativesChartData(workspace, analysis, user).ToArray();
             ChartConsensus = analysis?.GroupConsensus;
@@ -29,27 +30,32 @@ namespace Topsis.Application.Contracts.Database
 
             var alternativesDict = workspace.Questionnaire.Alternatives.ToDictionary(x => x.Id, x => x.Title);
 
-            foreach (var g in analysis.StakeholderAnswers.GroupBy(x => x.AlternativeId))
+            var groupAlternatives = analysis.GroupTopsis[StakeholderTopsis.DefaultGroupName]
+                .ToDictionary(x => x.AlternativeId, x => x.Topsis);
+
+            foreach (var g in analysis.StakeholderTopsis.GroupBy(x => x.AlternativeId))
             {
                 var votes = g.ToArray();
-                var avgTopsis = votes.Select(x => x.MyTopsis).Average();
-                var stakeHolderTopsis = votes.FirstOrDefault(x => x.StakeholderId == user?.UserId)?.MyTopsis;
+                var stakeHolderTopsis = votes.FirstOrDefault(x => x.StakeholderId == user?.UserId)?.Topsis;
                 var alternative = alternativesDict[g.Key];
-                yield return new AlternativeChartItem(alternative, stakeHolderTopsis, avgTopsis);
+
+                groupAlternatives.TryGetValue(g.Key, out var groupTopsis);
+                yield return new AlternativeChartItem(alternative, stakeHolderTopsis, groupTopsis);
             }
         }
 
         public Workspace Workspace { get; set; }
+        public string UserId { get; }
         public AlternativeChartItem[] ChartAlternatives { get; set; }
         public IDictionary<string, double> ChartConsensus { get; set; }
 
         public class AlternativeChartItem
         {
-            public AlternativeChartItem(string alternative, double? stakeholderTopsis, double averageTopsis)
+            public AlternativeChartItem(string alternative, double? stakeholderTopsis, double groupTopsis)
             {
                 Alternative = alternative;
                 StakeholderTopsis = stakeholderTopsis ?? 0;
-                AverageTopsis = averageTopsis;
+                GroupTopsis = groupTopsis;
             }
 
             [JsonPropertyName("alt")]
@@ -60,7 +66,7 @@ namespace Topsis.Application.Contracts.Database
             public double StakeholderTopsis { get; }
             [JsonPropertyName("grouptopsis")]
             [JsonProperty("grouptopsis")]
-            public double AverageTopsis { get; }
+            public double GroupTopsis { get; }
         }
     }
 

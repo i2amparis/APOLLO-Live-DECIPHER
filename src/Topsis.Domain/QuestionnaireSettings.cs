@@ -10,7 +10,7 @@ namespace Topsis.Domain
         private const int DefaultCriterionWeightMax = 4;
         
         private const int AlternativeRangeMin = 0;
-        public const int CriterionWeightMin = 1;
+        public const int CriterionWeightMin = 0;
 
         public QuestionnaireSettings()
         {
