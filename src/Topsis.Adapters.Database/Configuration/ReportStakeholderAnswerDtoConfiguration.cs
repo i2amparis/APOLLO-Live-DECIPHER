@@ -21,8 +21,9 @@ namespace Topsis.Adapters.Database.Configuration
         {
             FormattableString sql = $@"
 SELECT 
-    v.WorkspaceId,
-    v.ApplicationUserId as StakeholderId,
+    latest.WorkspaceId,
+    latest.ApplicationUserId as StakeholderId,
+    latest.VoteId,
 	sa.AlternativeId,
 	sa.CriterionId, 
     sa.Value as AnswerValue,
@@ -30,7 +31,9 @@ SELECT
 from
             WsStakeholderAnswers                sa
 inner join  WsCriteria                          c   on sa.CriterionId = c.Id
-inner join  WsStakeholderVotes                  v   on sa.VoteId = v.Id
+INNER JOIN  (select MAX(v.Id) AS VoteId, v.WorkspaceId, v.ApplicationUserId
+				from WsStakeholderVotes v
+				GROUP BY v.WorkspaceId, v.ApplicationUserId)				latest	 ON sa.VoteId = latest.VoteId
 inner join  WsStakeholderCriteriaImportance     im  on sa.VoteId = im.VoteId and c.Id = im.CriterionId
 ";
 

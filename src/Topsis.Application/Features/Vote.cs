@@ -69,12 +69,12 @@ namespace Topsis.Application.Features
         public class Handler : IRequestHandler<Command, string>
         {
             private readonly IUserContext _userContext;
-            private readonly IVoteRepository _repository;
+            private readonly IVoteRepository _votes;
 
-            public Handler(IUserContext userContext, IVoteRepository repository)
+            public Handler(IUserContext userContext, IVoteRepository votes)
             {
                 _userContext = userContext;
-                _repository = repository;
+                _votes = votes;
             }
 
             public async Task<string> Handle(Command command, CancellationToken cancellationToken)
@@ -88,8 +88,8 @@ namespace Topsis.Application.Features
                 };
                 
                 vote.Accept(command.Answers.Select(x => x.ToDomainModel()).ToArray(), command.CriteriaImportance);
-                await _repository.AddAsync(vote);
-                await _repository.UnitOfWork.SaveChangesAsync();
+                await _votes.AddAsync(vote);
+                await _votes.UnitOfWork.SaveChangesAsync();
 
                 return vote.Id.Hash();    
             }

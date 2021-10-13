@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 using Topsis.Application;
 using Topsis.Application.Contracts.Database;
@@ -30,7 +31,7 @@ namespace Topsis.Web.Areas.Guest.Pages.Workspace
 
             ViewModel = await reports.GetStakeholderVoteViewModelAsync(userContext, id);
 
-            if (ViewModel == null)
+            if (ViewModel == null || ViewModel.WorkspaceStatus != Domain.WorkspaceStatus.AcceptingVotes)
             {
                 return RedirectToPage("/Index");
             }

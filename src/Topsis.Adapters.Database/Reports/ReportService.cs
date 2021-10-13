@@ -48,20 +48,40 @@ namespace Topsis.Adapters.Database.Reports
         {
             var id = workspaceId.DehashInts().First();
 
-            var stakeholderVm = await _cache.GetOrCreateAsync($"__stakeholder_vote_{id}",
-                () => BuildStakeholderViewModel(id),
-                slidingExpiration: TimeSpan.FromSeconds(StakeholderVoteViewModelCacheIntervalInSeconds));
+            //var stakeholderVm = await _cache.GetOrCreateAsync($"__stakeholder_vote_{id}",
+            //    () => BuildStakeholderViewModelAsync(id),
+            //    slidingExpiration: TimeSpan.FromSeconds(StakeholderVoteViewModelCacheIntervalInSeconds));
 
-            var answers = await _db.WsStakeholderAnswers
-                .Include(x => x.Vote)
-                .Where(x => x.Vote.WorkspaceId == id && x.Vote.ApplicationUserId == user.UserId)
-                .ToArrayAsync();
+            var stakeholderVm = await BuildStakeholderViewModelAsync(id);
 
+            var allAnswers = await (from a in _db.WsStakeholderAnswers
+                                     join v in _db.WsStakeholderVotes on a.VoteId equals v.Id
+                                     join i in _db.WsStakeholderCriteriaImportance on
+                                        new { a.VoteId, a.CriterionId } equals new { i.VoteId, i.CriterionId }
+                                     where v.WorkspaceId == id && v.ApplicationUserId == user.UserId
+                                     select new StakeholderAnswerDto
+                                     { 
+                                         VoteId = v.Id,
+                                     AlternativeId = a.AlternativeId,
+                                     CriterionId = a.CriterionId,
+                                     CriterionWeight = i.Weight,
+                                     AnswerValue = a.Value,
+                                     StakeholderId = user.UserId,
+                                     WorkspaceId = id
+                                     }).ToListAsync();
+
+            //var answers = await _db.WsStakeholderAnswers
+            //    .Include(x => x.Vote)
+            //    .Where(x => x.Vote.WorkspaceId == id && x.Vote.ApplicationUserId == user.UserId)
+            //    .ToArrayAsync();
+            var answers = allAnswers.Any() 
+                ? allAnswers.GroupBy(x => x.VoteId).OrderBy(x => x.Key).LastOrDefault().ToList()
+                : new List<StakeholderAnswerDto>();
             stakeholderVm.AddStakeholderAnswers(answers);
             return stakeholderVm;
         }
 
-        private async Task<StakeholderVoteViewModel> BuildStakeholderViewModel(int workspaceId)
+        private async Task<StakeholderVoteViewModel> BuildStakeholderViewModelAsync(int workspaceId)
         {
 
             var workspace = await _db.WsWorkspaces
@@ -76,9 +96,10 @@ namespace Topsis.Adapters.Database.Reports
             return new StakeholderVoteViewModel
             {
                 WorkspaceId = workspace.Id.Hash(),
+                WorkspaceStatus = workspace.CurrentStatus,
                 WorkspaceTitle = workspace.Title,
                 AlternativeRange = settings.AlternativeRange,
-                CriteriaImportanceRange = settings.GetCriteriaImportanceRange(),
+                CriteriaImportanceRange = settings.CriteriaWeightRange,
                 CriteriaOrdered = workspace.Questionnaire.Criteria.OrderBy(x => x.Order).ToArray(),
                 AlternativesOrdered = workspace.Questionnaire.Alternatives.OrderBy(x => x.Order).Select(x => new KeyValuePair<int, string>(x.Id, x.Title)).ToArray()
             };

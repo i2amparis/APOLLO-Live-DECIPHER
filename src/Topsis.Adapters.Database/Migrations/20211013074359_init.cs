@@ -403,15 +403,15 @@ namespace Topsis.Adapters.Database.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "4E59CEA1-FC55-49F5-BF30-4BC46A0DDA7A", "b04fcd06-06e7-4a76-b71a-585418121efb", "admin", "ADMIN" },
-                    { "4E59CEA1-FC55-49F5-BF30-4BC46A0DDA7B", "605db19c-0dc8-45bf-9228-d1591f505a3e", "moderator", "MODERATOR" },
-                    { "4E59CEA1-FC55-49F5-BF30-4BC46A0DDA7C", "4b449d81-5beb-4d20-9086-e384e1b3bc96", "stakeholder", "STAKEHOLDER" }
+                    { "4E59CEA1-FC55-49F5-BF30-4BC46A0DDA7A", "d88c0309-8220-4b8b-bed8-c3fad4f31032", "admin", "ADMIN" },
+                    { "4E59CEA1-FC55-49F5-BF30-4BC46A0DDA7B", "81af51b3-0585-4657-9970-c787e11eb5c1", "moderator", "MODERATOR" },
+                    { "4E59CEA1-FC55-49F5-BF30-4BC46A0DDA7C", "2ee994ab-f1bb-4bce-8851-7818defdda9b", "stakeholder", "STAKEHOLDER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CountryId", "Email", "EmailConfirmed", "FirstName", "JobCategoryId", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "4E59CEA1-FC55-49F5-BF30-4BC46A0DDA70", 0, "5f150202-08ca-4ab9-9570-7284d9886209", null, "a.soursos@gmail.com", true, null, null, null, false, null, "a.soursos@gmail.com", "a.soursos@gmail.com", "AQAAAAEAACcQAAAAEJ0km/zrlMTQRDO1HE1WKhsWPfZs2GbkmWyap5gF/1yTNAjRQ6YyeSf5X4sEV7/sFA==", "", true, "e8778294-ab9e-42d0-9c7c-21200ab7eb57", false, "a.soursos@gmail.com" });
+                values: new object[] { "4E59CEA1-FC55-49F5-BF30-4BC46A0DDA70", 0, "5a707ad6-bd1c-4706-8323-bef16250ed1a", null, "a.soursos@gmail.com", true, null, null, null, false, null, "a.soursos@gmail.com", "a.soursos@gmail.com", "AQAAAAEAACcQAAAAEMMXtIDR5MY0QGKhlh5KxqWZ6YC1KkCnsh3ILk2xoKd6eKhbDB/T61n9kEoV7RRbIQ==", "", true, "7f0086e4-7718-491c-8627-18cdc291d491", false, "a.soursos@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "WsCountries",

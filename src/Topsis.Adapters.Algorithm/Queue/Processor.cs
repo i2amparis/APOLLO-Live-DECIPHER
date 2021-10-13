@@ -62,7 +62,7 @@ namespace Topsis.Adapters.Algorithm.Queue
             catch (System.Exception ex)
             {
                 logger.LogError(ex, ex.Message, reportKey);
-                throw;
+                //throw;
             }
         }
     }

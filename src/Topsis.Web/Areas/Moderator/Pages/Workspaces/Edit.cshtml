@@ -6,7 +6,7 @@
 
     bool isFinalized = Model.Data.CurrentStatus == Domain.WorkspaceStatus.Finalized;
     int iconWidth = 40;
-    var tableCls = "table  table-striped"; // table-responsive
+    var tableCls = "table  table-striped table-responsive-sm"; // table-responsive
 
     var settings = Model.Data.Questionnaire.GetSettings();
 
@@ -150,7 +150,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h4>Settings</h4>
+        <h4>Algorithm Settings</h4>
 
         <div class="col-md-12">
             @{
@@ -251,12 +251,9 @@
 </div>
 
 <div class="row pb-5">
+
     <div class="col-md-12">
         <h4>Criteria</h4>
-
-    </div>
-
-    <div class="col-md-12">
 
         <div class="col-sm-8">
             @if (isDraft)
@@ -348,12 +345,11 @@
 </div>
 
 <div class="row">
-    <h4>Alternatives</h4>
 
     <div class="col-md-12">
+        <h4>Alternatives</h4>
 
         <div class="col-md-7">
-            <h5>Info</h5>
             @if (isDraft)
             {
                 <div class="col md-6">
@@ -364,76 +360,76 @@
                 </div>
             }
 
-            <table class="@tableCls">
-                <thead>
-                    <tr>
-                        <th scope="col" width="@iconWidth">&nbsp;</th>
-                        <th scope="col" width="@iconWidth">&nbsp;</th>
-                        <th scope="col">Title</th>
-                        <th scope="col" width="@iconWidth">&nbsp;</th>
-                        <th scope="col" width="@iconWidth">Order</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Data.Questionnaire.Alternatives.OrderBy(x => x.Order))
-                    {
-                        <tr>
-
-                            <td>
-                                @if (Model.Data.CurrentStatus == Domain.WorkspaceStatus.Draft)
-                                {
-                                    <form asp-page-handler="deletealternative" method="post">
-                                        <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
-                                        <input type="hidden" name="criterionId" value="@item.Id" />
-                                        <button class="btn btn-default" title="Delete Criterion"><span class="material-icons">remove_circle_outline</span></button>
-                                    </form>
-                                }
-                            </td>
-                            <td>
-                                @if (isDraft)
-                                {
-                                    <button class="btn btn-link" data-toggle="modal" data-target="#criterion-title-form"
-                                            data-alternativeid="@item.Id" data-alternative-title="@item.Title">
-                                        <span class="material-icons">edit</span>
-                                    </button>
-                                }
-                            </td>
-                            <td>
-                                @item.Title
-                            </td>
-
-                            <td>
-                                @if (item.Order != Model.Data.Questionnaire.Alternatives.Count)
-                                {
-                                    <form asp-page-handler="changeorder" method="post">
-                                        <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
-                                        <input type="hidden" name="alternativeId" value="@item.Id" />
-                                        <input type="hidden" name="moveup" value="false" />
-                                        <button class="btn btn-default"><span class="material-icons">arrow_downward</span></button>
-                                    </form>
-                                }
-
-                            </td>
-                            <td>
-                                @if (item.Order > 1)
-                                {
-                                    <form asp-page-handler="changeorder" method="post">
-                                        <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
-                                        <input type="hidden" name="alternativeId" value="@item.Id" />
-                                        <input type="hidden" name="moveup" value="true" />
-                                        <button class="btn btn-default"><span class="material-icons">arrow_upward</span></button>
-                                    </form>
-                                }
-                            </td>
-
-                        </tr>
-                    }
-                </tbody>
-            </table>
         </div>
 
-    </div>
 
+        <table class="@tableCls">
+            <thead>
+                <tr>
+                    <th scope="col" width="@iconWidth">&nbsp;</th>
+                    <th scope="col" width="@iconWidth">&nbsp;</th>
+                    <th scope="col">Title</th>
+                    <th scope="col" width="@iconWidth">&nbsp;</th>
+                    <th scope="col" width="@iconWidth">Order</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Data.Questionnaire.Alternatives.OrderBy(x => x.Order))
+                {
+                    <tr>
+
+                        <td>
+                            @if (Model.Data.CurrentStatus == Domain.WorkspaceStatus.Draft)
+                            {
+                                <form asp-page-handler="deletealternative" method="post">
+                                    <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
+                                    <input type="hidden" name="criterionId" value="@item.Id" />
+                                    <button class="btn btn-default" title="Delete Criterion"><span class="material-icons">remove_circle_outline</span></button>
+                                </form>
+                            }
+                        </td>
+                        <td>
+                            @if (isDraft)
+                            {
+                                <button class="btn btn-link" data-toggle="modal" data-target="#criterion-title-form"
+                                        data-alternativeid="@item.Id" data-alternative-title="@item.Title">
+                                    <span class="material-icons">edit</span>
+                                </button>
+                            }
+                        </td>
+                        <td>
+                            @item.Title
+                        </td>
+
+                        <td>
+                            @if (item.Order != Model.Data.Questionnaire.Alternatives.Count)
+                            {
+                                <form asp-page-handler="changeorder" method="post">
+                                    <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
+                                    <input type="hidden" name="alternativeId" value="@item.Id" />
+                                    <input type="hidden" name="moveup" value="false" />
+                                    <button class="btn btn-default"><span class="material-icons">arrow_downward</span></button>
+                                </form>
+                            }
+
+                        </td>
+                        <td>
+                            @if (item.Order > 1)
+                            {
+                                <form asp-page-handler="changeorder" method="post">
+                                    <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
+                                    <input type="hidden" name="alternativeId" value="@item.Id" />
+                                    <input type="hidden" name="moveup" value="true" />
+                                    <button class="btn btn-default"><span class="material-icons">arrow_upward</span></button>
+                                </form>
+                            }
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 
 </div>
 

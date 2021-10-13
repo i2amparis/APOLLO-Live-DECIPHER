@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Topsis.Application.Contracts.Algorithm;
 using Topsis.Domain;
 
 namespace Topsis.Application.Contracts.Database
@@ -10,12 +12,14 @@ namespace Topsis.Application.Contracts.Database
         public List<NameValueOption> AlternativeRange { get; set; }
         public string WorkspaceTitle { get; set; }
         public string WorkspaceId { get; set; }
-        public int[] CriteriaImportanceRange { get; set; }
-        public StakeholderAnswer[] StakeholderAnswers { get; private set; }
+        public List<NameValueOption> CriteriaImportanceRange { get; set; }
+        public List<StakeholderAnswerDto> StakeholderAnswers { get; private set; }
+        public WorkspaceStatus WorkspaceStatus { get; set; }
 
-        public void AddStakeholderAnswers(StakeholderAnswer[] answers)
+        public void AddStakeholderAnswers(List<StakeholderAnswerDto> answers)
         {
             StakeholderAnswers = answers;
         }
+
     }
 }

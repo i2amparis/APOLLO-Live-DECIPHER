@@ -11,5 +11,6 @@ namespace Topsis.Application.Contracts.Algorithm
         public int CriterionWeight { get; set; }
         
         public double AnswerValue { get; set; }
+        public int VoteId { get; set; }
     }
 }

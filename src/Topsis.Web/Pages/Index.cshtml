@@ -35,15 +35,11 @@
                         case Domain.WorkspaceStatus.Published:
                             <span>Coming soon.</span>
                             break;
+                        case Domain.WorkspaceStatus.Finalized:
                         case Domain.WorkspaceStatus.AcceptingVotes:
                             <a href="@(Url.Page("/Workspace/Vote", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
                                role="button"
                                class="btn btn-block btn-primary">Vote</a>
-                            break;
-                        case Domain.WorkspaceStatus.Finalized:
-                            <a href="@(Url.Page("/Workspace/Index", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
-                               role="button"
-                               class="btn btn-block btn-success">See Report</a>
                             break;
                         default:
                             <span>Not available.</span>
@@ -58,7 +54,7 @@
     
 
     <div class="col-md-3">
-        <a class="twitter-timeline" data-height="700" href="https://twitter.com/TwitterDev?ref_src=twsrc%5Etfw">Tweets by TwitterDev</a>
+        <a class="twitter-timeline" data-height="700" href="https://twitter.com/ParisReinforce?ref_src=twsrc%5Etfw">Tweets by TwitterDev</a>
         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     </div>
 </div>

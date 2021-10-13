@@ -7,67 +7,69 @@
 <h5>Give us your feedback</h5>
 
 <div class="row pt-2">
-    <form method="post" class="no-ajax">
-        <input type="hidden" asp-for="Data.Id" />
+    <div class="col-md-8">
 
-        @foreach (var criterion in Model.ViewModel.CriteriaOrdered)
-        {
-            <div class="card mt-3">
-                <div class="card-body">
-                    <h5 class="card-title">@criterion.Title</h5>
+        <form method="post" class="no-ajax">
+            <input type="hidden" asp-for="Data.Id" />
 
-                    <table class="card-text table table-responsive table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">&nbsp;</th>
-                                @foreach (var answer in Model.ViewModel.AlternativeRange)
-                                {
-                                    <th width="13%">@(answer.Name ?? answer.Value.ToString())</th>
-                                }
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var alternative in Model.ViewModel.AlternativesOrdered)
-                            {
-                                var errorId = $"{criterion.Id}_{alternative.Key}_error";
-                                <tr class="">
-                                    <th scope="row">
-                                        @alternative.Value
-                                        <input type="hidden" name="Data.Answers[@answerIndex].CriterionId" value="@criterion.Id" />
-                                        <input type="hidden" name="Data.Answers[@answerIndex].AlternativeId" value="@alternative.Key" />
-                                        <div class="text-danger field-validation-valid" data-valmsg-for="Data.Answers[@answerIndex].Value" data-valmsg-replace="true"></div>
-                                    </th>
+            @foreach (var criterion in Model.ViewModel.CriteriaOrdered)
+            {
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h5 class="card-title">@criterion.Title</h5>
 
+                        <table class="card-text table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">&nbsp;</th>
                                     @foreach (var answer in Model.ViewModel.AlternativeRange)
                                     {
-                                        var id = $"{criterion.Id}_{alternative.Key}_{answer.Value}";
-                                        <td>
-                                            <input type="radio" value="@answer.Value" id="@id" data-val="true"
-                                                   data-val-required="*required"
-                                                   class="form-control" name="Data.Answers[@answerIndex].Value"
-                                                   aria-describedby="@errorId">
-
-                                        </td>
+                                        <th width="13%">@(answer.Name ?? answer.Value.ToString())</th>
                                     }
                                 </tr>
-                                answerIndex++;
+                            </thead>
+                            <tbody>
+                                @foreach (var alternative in Model.ViewModel.AlternativesOrdered)
+                                {
+                                    double? loadedAnswerValue = Model.ViewModel.StakeholderAnswers?.FirstOrDefault(x => x.CriterionId == criterion.Id && x.AlternativeId == alternative.Key)?.AnswerValue;
+                                    var errorId = $"{criterion.Id}_{alternative.Key}_error";
+                                    <tr class="">
+                                        <th scope="row">
+                                            @alternative.Value
+                                            <input type="hidden" name="Data.Answers[@answerIndex].CriterionId" value="@criterion.Id" />
+                                            <input type="hidden" name="Data.Answers[@answerIndex].AlternativeId" value="@alternative.Key" />
+                                            <div class="text-danger field-validation-valid" data-valmsg-for="Data.Answers[@answerIndex].Value" data-valmsg-replace="true"></div>
+                                        </th>
 
-                            }
-                        </tbody>
+                                        @foreach (var answer in Model.ViewModel.AlternativeRange)
+                                        {
 
-                    </table>
+                                            var id = $"{criterion.Id}_{alternative.Key}_{answer.Value}";
+                                            <td>
+                                                <input type="radio" value="@answer.Value" id="@id" data-val="true"
+                                                       data-val-required="*required"
+                                                       class="form-control" name="Data.Answers[@answerIndex].Value"
+                                                       aria-describedby="@errorId"
+                                                       @(loadedAnswerValue == answer.Value ? "checked='checked'" : "")>
+
+                                            </td>
+                                        }
+                                    </tr>
+                                    answerIndex++;
+
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
                 </div>
-            </div>
-        }
+            }
 
-        <div class="card mt-3">
-            <div class="card-body">
-                <h5 class="card-title">How important do you find each of the following criteria to be?</h5>
-                @{
-                    var importanceIndex = 0;
-                    foreach (var criterion in Model.ViewModel.CriteriaOrdered)
-                    {
-                        var errorId = $"importance_error_{criterion.Id}";
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">How important do you find each of the following criteria to be?</h5>
+                    @{
+                        var importanceIndex = 0;
 
                         <table class="card-text table table-striped">
                             <thead>
@@ -76,46 +78,55 @@
                                     <th scope="col">&nbsp;</th>
                                     @foreach (var importance in Model.ViewModel.CriteriaImportanceRange)
                                     {
-                                        <th scope="col" class="text-center">@(importance)</th>
+                                        <th scope="col" class="text-center">@(importance.Name)</th>
                                     }
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="">
-                                    <th scope="row">
-                                        @criterion.Title
-                                        <input type="hidden" name="Data.CriteriaImportance[@importanceIndex].Key" value="@criterion.Id" />
-                                        <div class="text-danger field-validation-valid" data-valmsg-for="Data.CriteriaImportance[@importanceIndex].Value" data-valmsg-replace="true"></div>
-                                    </th>
-                                    @foreach (var importance in Model.ViewModel.CriteriaImportanceRange)
-                                    {
-                                        var id = $"importance_{criterion.Id}_{importance}";
+                                @foreach (var criterion in Model.ViewModel.CriteriaOrdered)
+                                {
+                                    double? loadedCriterionWeight = Model.ViewModel.StakeholderAnswers?.FirstOrDefault(x => x.CriterionId == criterion.Id)?.CriterionWeight;
+                                    var errorId = $"importance_error_{criterion.Id}";
 
-                                        <td>
-                                            <input type="radio" value="@importance" id="@id" data-val="true"
-                                                   data-val-required="*required"
-                                                   class="form-control" name="Data.CriteriaImportance[@importanceIndex].Value"
-                                                   aria-describedby="@errorId">
+                                    <tr class="">
+                                        <th scope="row">
+                                            @criterion.Title
+                                            <input type="hidden" name="Data.CriteriaImportance[@importanceIndex].Key" value="@criterion.Id" />
+                                            <div class="text-danger field-validation-valid" data-valmsg-for="Data.CriteriaImportance[@importanceIndex].Value" data-valmsg-replace="true"></div>
+                                        </th>
+                                        @foreach (var importance in Model.ViewModel.CriteriaImportanceRange)
+                                        {
+                                            var id = $"importance_{criterion.Id}_{importance.Value}";
 
-                                        </td>
-                                    }
-                                </tr>
+                                            <td>
+                                                <input type="radio" value="@importance.Value" id="@id" data-val="true"
+                                                       data-val-required="*required"
+                                                       class="form-control" name="Data.CriteriaImportance[@importanceIndex].Value"
+                                                       aria-describedby="@errorId"
+                                                       @(loadedCriterionWeight == importance.Value ? "checked='checked'" : "")>
 
-                                @{importanceIndex++;}
+
+                                            </td>
+                                        }
+                                    </tr>
+
+                                    importanceIndex++;
+
+                                }
                             </tbody>
 
                         </table>
 
                     }
-                }
 
+                </div>
             </div>
-        </div>
 
-        <div class="form-group pt-3">
-            <input type="submit" value="Submit" class="btn btn-primary float-right" />
-        </div>
-    </form>
+            <div class="form-group pt-3">
+                <input type="submit" value="Submit" class="btn btn-primary float-right" />
+            </div>
+        </form>
+    </div>
 </div>
 
 @section Scripts {
