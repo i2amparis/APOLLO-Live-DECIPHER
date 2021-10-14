@@ -9,26 +9,26 @@ namespace Topsis.Adapters.Algorithm
 {
     internal class TopsisConsensus
     {
-        public IDictionary<string,double> Calculate(QuestionnaireSettings settings, IList<StakeholderTopsis> stakeholderAnswers)
+        public (IDictionary<string, double>, IDictionary<int, double>) Calculate(QuestionnaireSettings settings, IList<StakeholderTopsis> stakeholderAnswers)
         {
             // Calculate topsis global - average of stakeholder alternatives topsis
             var globalTopsis = CalculateGlobalTopsis(stakeholderAnswers);
 
             // Consensus
-            var stakeholdersConsensus = new Dictionary<string, double>();
-            CalculateDissimilarity(settings, globalTopsis, stakeholderAnswers, stakeholdersConsensus);
-
-            return stakeholdersConsensus;
+            return CalculateDissimilarity(settings, globalTopsis, stakeholderAnswers);
         }
 
-        private void CalculateDissimilarity(QuestionnaireSettings settings,
+        private (IDictionary<string,double>, IDictionary<int,double>) CalculateDissimilarity(
+            QuestionnaireSettings settings,
             IDictionary<int, double> globalTopsisAverage, 
-            IList<StakeholderTopsis> stakeholderAnswers,
-            IDictionary<string, double> stakeholderTotalConsensus)
+            IList<StakeholderTopsis> stakeholderTopsis)
         {
             var globalTopsisSum = globalTopsisAverage.Values.Sum();
 
-            foreach (var g in stakeholderAnswers.GroupBy(x => x.StakeholderId))
+            var alternativeDissimilarities = globalTopsisAverage.ToDictionary(x => x.Key, x => new List<double>());
+            var stakeholderTotalConsensus = new Dictionary<string, double>();
+
+            foreach (var g in stakeholderTopsis.GroupBy(x => x.StakeholderId))
             {
                 // =SUMPRODUCT(Data!$D$5:$D$18*Dissimilarity!E26:E39)/SUM(Data!$D$5:$D$18)
                 // sumproduct(globalTopsis*stakeholderDissimilarity)/sum(globalTopsis)
@@ -41,13 +41,24 @@ namespace Topsis.Adapters.Algorithm
                     // =(ABS(GlobalTopsis-StakeholderTopsis)/(OutputLinquisticScale))^Rigorousness
 
                     var globalTopsis = globalTopsisAverage[stakeholderAlt.AlternativeId];
-                    var dissimilarity = 1 - Math.Pow(Math.Abs(globalTopsis - stakeholderAlt.Topsis) / (double)settings.Scale, settings.Rigorousness);
-                    
-                    productSum += globalTopsis * dissimilarity;
+                    var dissimilarity = Math.Pow(Math.Abs(globalTopsis - stakeholderAlt.Topsis) / (double)settings.Scale, settings.Rigorousness);
+
+                    if (alternativeDissimilarities.TryGetValue(stakeholderAlt.AlternativeId, out var altDissimilarities))
+                    {
+                        altDissimilarities.Add(dissimilarity);
+                    }
+
+                    // Global Consensus
+                    productSum += globalTopsis * (1 - dissimilarity);
                 }
 
                 stakeholderTotalConsensus[g.Key] = Rounder.Round(productSum / globalTopsisSum);
             }
+
+            // Consensus Degree: =1-AVERAGE(E5:T5)
+            var consensusDegree = alternativeDissimilarities.ToDictionary(x => x.Key, x => Rounder.Round(1 - x.Value.Average()));
+
+            return (stakeholderTotalConsensus, consensusDegree);
         }
 
         #region [ Helpers ]

@@ -21,7 +21,7 @@ namespace Topsis.Adapters.Algorithm.Unit.Test
 
             Assert.NotNull(output);
             Assert.NotEmpty(output.StakeholderTopsis);
-            Assert.NotEmpty(output.GroupConsensus);
+            Assert.NotEmpty(output.StakeholdersConsensus);
         }
 
         [Fact]
@@ -35,7 +35,7 @@ namespace Topsis.Adapters.Algorithm.Unit.Test
 
             Assert.NotNull(output);
             Assert.NotEmpty(output.StakeholderTopsis);
-            Assert.NotEmpty(output.GroupConsensus);
+            Assert.NotEmpty(output.StakeholdersConsensus);
         }
 
         [Fact]

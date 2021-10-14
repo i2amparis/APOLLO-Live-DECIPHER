@@ -91,13 +91,19 @@ namespace Topsis.Domain
         [JsonProperty("groups")]
         public Dictionary<string, AlternativeTopsis[]> GroupTopsis { get; set; }
 
-        [JsonPropertyName("consensus")]
-        [JsonProperty("consensus")]
-        public IDictionary<string, double> GroupConsensus { get; set; }
+        [JsonPropertyName("consensus_stakeholders")]
+        [JsonProperty("consensus_stakeholders")]
+        public IDictionary<string, double> StakeholdersConsensus { get; set; }
 
-        public void AddConsensusAnalysis(IDictionary<string, double> stakeholdersConsensus)
+        [JsonPropertyName("consensus_degree")]
+        [JsonProperty("consensus_degree")]
+        public IDictionary<int, double> AlternativesConsensusDegree { get; set; }
+
+        public void AddConsensusAnalysis(IDictionary<string, double> stakeholdersConsensus, 
+            IDictionary<int, double> consensusDegree)
         {
-            GroupConsensus = stakeholdersConsensus;
+            StakeholdersConsensus = stakeholdersConsensus;
+            AlternativesConsensusDegree = consensusDegree;
         }
 
         public void AddGroupSolution(AlternativeTopsis[] groupTopsis, string groupName = null)

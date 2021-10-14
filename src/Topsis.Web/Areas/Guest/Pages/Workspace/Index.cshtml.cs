@@ -15,6 +15,7 @@ namespace Topsis.Web.Areas.Guest.Pages.Workspace
         public string ConsensusReportJson { get; set; }
         public string ConsensusCompareReportJson { get; set; }
         public string CategoriesReportJson { get; set; }
+        public object ConsensusDegreeJson { get; private set; }
 
         public async Task<IActionResult> OnGetAsync(string id,
             [FromServices] IUserContext userContext,
@@ -37,6 +38,8 @@ namespace Topsis.Web.Areas.Guest.Pages.Workspace
                 ConsensusReportJson = JsonConvert.SerializeObject(ChartJsReport.BuildConsensusReport(Data));
                 ConsensusCompareReportJson = JsonConvert.SerializeObject(ChartJsReport.BuildConsensusCompareReport(Data));
                 CategoriesReportJson = JsonConvert.SerializeObject(ChartJsReport.BuildCategoriesReport(Data));
+                ConsensusDegreeJson = JsonConvert.SerializeObject(ChartJsReport.BuildConsensusDegreeReport(Data));
+                
             }
 
             return Page();

@@ -9,6 +9,6 @@ namespace Topsis.Web.ChartJs
         [JsonProperty("labels")]
         public List<string> Labels { get; set; }
         [JsonProperty("datasets")]
-        public ChartJsDataset[] Datasets { get; set; }
+        public object[] Datasets { get; set; }
     }
 }

@@ -125,6 +125,13 @@
             <canvas id="chCategories"></canvas>
         </div>
     </div>
+
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h3>Consensus</h3>
+            <canvas id="chConsensusDegree"></canvas>
+        </div>
+    </div>
 }
 @section Scripts {
 
@@ -140,6 +147,9 @@
 
         let configCategories = JSON.parse('@Html.Raw(Model.CategoriesReportJson)');
         var categoriesChart = new Chart(document.getElementById('chCategories'), configCategories);
+
+        let configConsensusDegree = JSON.parse('@Html.Raw(Model.ConsensusDegreeJson)');
+        var chConsensusDegreeChart = new Chart(document.getElementById('chConsensusDegree'), configConsensusDegree);
     </script>
 }
 

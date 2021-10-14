@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Topsis.Application.Contracts.Database;
+using Topsis.Domain;
 
 namespace Topsis.Web.ChartJs
 {
@@ -21,6 +22,9 @@ namespace Topsis.Web.ChartJs
 
         [JsonProperty("data")]
         public ChartJsData Data { get; set; }
+
+        [JsonProperty("options")]
+        public ChartJsDatasetOptions Options { get; set; }
 
         public static ChartJsReport BuildAlternativesReport(WorkspaceReportViewModel vm)
         {
@@ -58,8 +62,63 @@ namespace Topsis.Web.ChartJs
             };
         }
 
+        internal static ChartJsReport BuildConsensusDegreeReport(WorkspaceReportViewModel vm)
+        {
+            if (vm.AlternativesConsensusDegree == null)
+            {
+                return null;
+            }
+
+            if (vm.ChartGroups.TryGetValue(StakeholderTopsis.DefaultGroupName, out var globalTopsis) == false)
+            {
+                return null;
+            }
+
+            var data = new List<ChartJsXY>();
+            var labels = new List<string>();
+            var globalTopsisDict = globalTopsis.ToDictionary(x => x.AlternativeId, x => x.Topsis);
+
+            foreach (var item in vm.Workspace.Questionnaire.Alternatives.OrderBy(x => x.Order))
+            {
+                if (vm.AlternativesConsensusDegree.TryGetValue(item.Id, out var consensusDegree) == false
+                    || globalTopsisDict.TryGetValue(item.Id, out var topsis) == false)
+                {
+                    continue;
+                }
+
+                data.Add(new ChartJsXY(topsis, consensusDegree));
+                labels.Add(item.Title);
+            }
+
+            return new ChartJsReport()
+            {
+                Data = new ChartJsData
+                {
+                    Labels = labels,
+                    Datasets = new object[] {
+                        new ChartJsDatasetXY
+                        {
+                            BackgroundColor = ColorPink,
+                            Label = "Consensus Degree",
+                            Data = data
+                        }
+                    }
+                },
+                Type = "scatter",
+                Options = new ChartJsDatasetOptions
+                {
+                    Scales = new ChartJsDatasetOptions.ChartJsScales("Group Topsis", "Degree")
+                }
+            };
+        }
+
         internal static ChartJsReport BuildCategoriesReport(WorkspaceReportViewModel vm)
         {
+            if (vm.ChartGroups == null)
+            {
+                return null;
+            }
+
             var datasets = vm.ChartGroups.Select(x => new ChartJsDataset
             {
                 Label = x.Key,
@@ -80,15 +139,7 @@ namespace Topsis.Web.ChartJs
             };
         }
 
-        private static string GetRandomColor()
-        {
-            var red = new Random().Next(5, 250);
-            var green = new Random().Next(5, 250);
-            var blue = new Random().Next(5, 250);
-            return $"rgba({red}, {green}, {blue}, 0.2)";
-        }
-
-        internal static object BuildConsensusCompareReport(WorkspaceReportViewModel vm)
+        internal static ChartJsReport BuildConsensusCompareReport(WorkspaceReportViewModel vm)
         {
             if (vm.ChartConsensus == null)
             {
@@ -181,6 +232,14 @@ namespace Topsis.Web.ChartJs
                         }
                 }
             };
+        }
+
+        private static string GetRandomColor()
+        {
+            var red = new Random().Next(5, 250);
+            var green = new Random().Next(5, 250);
+            var blue = new Random().Next(5, 250);
+            return $"rgba({red}, {green}, {blue}, 0.2)";
         }
     }
 }

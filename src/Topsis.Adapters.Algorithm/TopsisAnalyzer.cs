@@ -18,7 +18,7 @@ namespace Topsis.Adapters.Algorithm
 
             var result = new WorkspaceAnalysisResult();
             var stakeholders = answers.GroupBy(x => x.StakeholderId);
-            
+
             foreach (var s in stakeholders)
             {
                 var stakeholderAnswers = s.ToArray();
@@ -31,7 +31,26 @@ namespace Topsis.Adapters.Algorithm
 
             var settings = workspace.Questionnaire.GetSettings();
 
-            // Groups Topsis.
+            // Consensus Degree.
+
+            AddGroupTopsis(result, settings, jobCategories, answers);
+            AddGroupConsensus(result, settings);
+
+            return Task.FromResult(result);
+        }
+
+        private static void AddGroupConsensus(WorkspaceAnalysisResult result, QuestionnaireSettings settings)
+        {
+            var consensus = new TopsisConsensus();
+            var (stakeholdersConsent, consensusDegree) = consensus.Calculate(settings, result.StakeholderTopsis);
+            result.AddConsensusAnalysis(stakeholdersConsent, consensusDegree);
+        }
+
+        private static void AddGroupTopsis(WorkspaceAnalysisResult result, 
+            QuestionnaireSettings settings, 
+            IDictionary<int, string> jobCategories, 
+            IList<StakeholderAnswerDto> answers)
+        {
             var groupTopsis = new GroupTopsis(settings, result.StakeholderTopsis);
             var alternativeGroupItems = groupTopsis.Calculate().ToArray();
             result.AddGroupSolution(alternativeGroupItems);
@@ -47,13 +66,6 @@ namespace Topsis.Adapters.Algorithm
                     result.AddGroupSolution(alternativeSubgroupItems, $"{title} ({voteCount})");
                 }
             }
-
-            // Group Consensus.
-            var consensus = new TopsisConsensus();
-            var stakeholdersConsent = consensus.Calculate(settings, result.StakeholderTopsis);
-            result.AddConsensusAnalysis(stakeholdersConsent);
-
-            return Task.FromResult(result);
         }
 
         private IEnumerable<StakeholderTopsis> GetAlternativesResults(string stakeholderId, int? jobCategoryId, DataTable distancesTable)
