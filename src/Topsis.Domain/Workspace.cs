@@ -192,6 +192,12 @@ namespace Topsis.Domain
         {
             return Reports?.LastOrDefault()?.GetAnalysisResult();
         }
+
+        public bool HasReport()
+        {
+            return CurrentStatus == WorkspaceStatus.Finalized && Reports?.Any() == true;
+        }
+
         #endregion
 
         #region [ Helpers ]

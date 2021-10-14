@@ -43,7 +43,8 @@ namespace Topsis.Adapters.Algorithm
                     var subGroupAnswers = result.StakeholderTopsis.Where(x => x.JobCategoryId == jobCategoryId).ToList();
                     var subGroupTopsis = new GroupTopsis(settings, subGroupAnswers);
                     var alternativeSubgroupItems = subGroupTopsis.Calculate().ToArray();
-                    result.AddGroupSolution(alternativeSubgroupItems, title);
+                    var voteCount = subGroupAnswers.GroupBy(x => x.StakeholderId).Count();
+                    result.AddGroupSolution(alternativeSubgroupItems, $"{title} ({voteCount})");
                 }
             }
 

@@ -31,7 +31,7 @@ namespace Topsis.Web.Areas.Guest.Pages.Workspace
                 return RedirectToPage("Index");
             }
 
-            if (Data.Workspace.CurrentStatus == Domain.WorkspaceStatus.Finalized)
+            if (Data.Workspace.HasReport())
             {
                 AlternativesReportJson = JsonConvert.SerializeObject(ChartJsReport.BuildAlternativesReport(Data));
                 ConsensusReportJson = JsonConvert.SerializeObject(ChartJsReport.BuildConsensusReport(Data));
