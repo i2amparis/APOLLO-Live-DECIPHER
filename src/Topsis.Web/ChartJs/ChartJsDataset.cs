@@ -26,8 +26,12 @@ namespace Topsis.Web.ChartJs
 
         [JsonProperty("label")]
         public string Label { get; set; }
+
+        /// <summary>
+        /// "grey" or ["red", "green"]
+        /// </summary>
         [JsonProperty("backgroundColor")]
-        public string BackgroundColor { get; set; }
+        public object BackgroundColor { get; set; }
         [JsonProperty("borderColor")]
         public string BorderColor { get; set; }
         [JsonProperty("fill")]

@@ -17,6 +17,7 @@ namespace Topsis.Application.Contracts.Database
             var analysis = workspace.GetReportData();
             ChartAlternatives = BuildAlternativesChartData(workspace, analysis, user).ToArray();
             ChartConsensus = analysis?.GroupConsensus;
+            ChartGroups = analysis?.GroupTopsis;
         }
 
         private IEnumerable<AlternativeChartItem> BuildAlternativesChartData(Workspace workspace, 
@@ -48,6 +49,7 @@ namespace Topsis.Application.Contracts.Database
         public string UserId { get; }
         public AlternativeChartItem[] ChartAlternatives { get; set; }
         public IDictionary<string, double> ChartConsensus { get; set; }
+        public Dictionary<string, AlternativeTopsis[]> ChartGroups { get; }
 
         public class AlternativeChartItem
         {

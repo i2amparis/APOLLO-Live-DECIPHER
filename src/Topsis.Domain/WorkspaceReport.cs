@@ -40,9 +40,9 @@ namespace Topsis.Domain
         public void InitializeFrom(Workspace workspace)
         {
             CompletedAtUtc = null;
-            VotesCount = workspace.Votes.Count;
-            Criteria = string.Join(",", workspace.Questionnaire.Criteria.Select(x => x.Title).ToArray());
-            Alternatives = string.Join(",", workspace.Questionnaire.Alternatives.Select(x => x.Title).ToArray());
+            VotesCount = workspace.Votes.GroupBy(x => x.ApplicationUserId).Count();
+            Criteria = string.Join(",", workspace.Questionnaire.Criteria.OrderBy(x => x.Order).Select(x => x.Title).ToArray());
+            Alternatives = string.Join(",", workspace.Questionnaire.Alternatives.OrderBy(x => x.Order).Select(x => x.Title).ToArray());
         }
 
         public WorkspaceAnalysisResult GetAnalysisResult()

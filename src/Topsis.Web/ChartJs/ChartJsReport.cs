@@ -58,6 +58,36 @@ namespace Topsis.Web.ChartJs
             };
         }
 
+        internal static ChartJsReport BuildCategoriesReport(WorkspaceReportViewModel vm)
+        {
+            var datasets = vm.ChartGroups.Select(x => new ChartJsDataset
+            {
+                Label = x.Key,
+                BackgroundColor = GetRandomColor(),
+                Data = x.Value.OrderBy(x => x.AlternativeId).Select(x => x.Topsis).ToList()
+            }).ToArray();
+
+            var labels = vm.Workspace.Questionnaire.Alternatives.OrderBy(x => x.Id).Select(x => x.Title).ToList();
+
+            return new ChartJsReport()
+            {
+                Data = new ChartJsData
+                {
+                    Labels = labels,
+                    Datasets = datasets
+                },
+                Type = "bar"
+            };
+        }
+
+        private static string GetRandomColor()
+        {
+            var red = new Random().Next(5, 250);
+            var green = new Random().Next(5, 250);
+            var blue = new Random().Next(5, 250);
+            return $"rgba({red}, {green}, {blue}, 0.2)";
+        }
+
         internal static object BuildConsensusCompareReport(WorkspaceReportViewModel vm)
         {
             if (vm.ChartConsensus == null)
@@ -109,10 +139,20 @@ namespace Topsis.Web.ChartJs
                 return null;
             }
 
-            var stakeholdersData = vm.ChartConsensus.Values.ToList();
-            var labels = Enumerable.Range(1, stakeholdersData.Count).Select(x => $"S{x}").ToList();
-            var avgConsensus = stakeholdersData.Average();
-            var avgData = Enumerable.Range(1, stakeholdersData.Count).Select(x => avgConsensus).ToList();
+            var data = vm.ChartConsensus.Where(x => x.Key != vm.UserId).Select(x => x.Value).ToList();
+            var colors = Enumerable.Range(0, data.Count).Select(x => ColorBlue).ToList();
+            var labels = Enumerable.Range(1, data.Count).Select(x => $"S{x}").ToList();
+
+            if (vm.ChartConsensus.TryGetValue(vm.UserId, out var currentStakeHolderConsensus))
+            {
+                // add current stakeholder bar in different color.
+                data.Insert(0, currentStakeHolderConsensus);
+                colors.Insert(0, ColorPink);
+                labels.Insert(0, "Me");
+            }
+
+            var avgConsensus = data.Average();
+            var avgData = Enumerable.Range(1, data.Count).Select(x => avgConsensus).ToList();
             return new ChartJsReport()
             {
                 Data = new ChartJsData
@@ -122,21 +162,14 @@ namespace Topsis.Web.ChartJs
                             new ChartJsDataset
                             {
                                 Type = "bar",
-                                BackgroundColor = ColorPink,
+                                BackgroundColor = colors,
                                 Label = "Consensus",
-                                Data = stakeholdersData,
+                                Data = data,
                                 Fill = true,
                                 PointBackgroundColor = "rgb(255, 99, 132)",
                                 PointBorderColor= "#fff",
                                 PointHoverBackgroundColor= "#fff",
-                                PointHoverBorderColor= "rgb(255, 99, 132)",
-                                Options = new ChartJsDatasetOptions
-                                { 
-                                    Elements = new ChartJsDatasetOptions.ChartJsElement 
-                                    { 
-                                        Bar = new ChartJsDatasetOptions.ChartJsBarElement($"highlight()") 
-                                    }
-                                }
+                                PointHoverBorderColor= "rgb(255, 99, 132)"
                             },
                             new ChartJsDataset
                             {
