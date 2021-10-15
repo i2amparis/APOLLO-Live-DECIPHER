@@ -128,6 +128,11 @@ namespace Topsis.Application.Features
             public List<NameValueOption> Range { get; set; }
             public string WorkspaceId { get; set; }
         }
+
+        public class ClearVotesCommand : IRequest<string>
+        {
+            public string WorkspaceId { get; set; }
+        }
         #endregion
 
         public class Handler : 
@@ -144,7 +149,8 @@ namespace Topsis.Application.Features
             IRequestHandler<ChangeAlternativesRangeCommand, string>,
             IRequestHandler<ChangeCriteriaWeightRangeCommand, string>,
             IRequestHandler<AddCriterionOptionCommand, string>,
-            IRequestHandler<DeleteCriterionOptionCommand, string>
+            IRequestHandler<DeleteCriterionOptionCommand, string>,
+            IRequestHandler<ClearVotesCommand, string>
         {
             private readonly IWorkspaceRepository _workspaces;
 
@@ -269,6 +275,14 @@ namespace Topsis.Application.Features
                 var item = await LoadWorkspaceAsync(command.WorkspaceId);
                 item.ChangeCriteriaWeightsRange(command.Range);
                 return await SaveAsync(item);
+            }
+
+            public async Task<string> Handle(ClearVotesCommand command, CancellationToken cancellationToken)
+            {
+                var id = command.WorkspaceId.DehashInts().First();
+                await _workspaces.ClearVotesAndReportsAsync(id);
+                await _workspaces.UnitOfWork.SaveChangesAsync();
+                return id.Hash();
             }
 
             #region [ Helpers ]

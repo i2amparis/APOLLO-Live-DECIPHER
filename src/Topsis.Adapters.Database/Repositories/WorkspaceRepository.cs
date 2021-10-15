@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 using Topsis.Application.Contracts.Database;
 using Topsis.Domain;
@@ -9,6 +10,22 @@ namespace Topsis.Adapters.Database.Repositories
     {
         public WorkspaceRepository(WorkspaceDbContext db) : base(db)
         {
+        }
+
+        public async Task ClearVotesAndReportsAsync(int id)
+        {
+            var votes = await _db.WsStakeholderVotes
+                .Include(x => x.CriteriaImportance)
+                .Include(x => x.Answers)
+                .Where(x => x.WorkspaceId == id).ToArrayAsync();
+
+            _db.WsStakeholderVotes.RemoveRange(votes);
+
+            var reports = await _db.WsWorkspacesReports
+                .Where(x => x.WorkspaceId == id)
+                .ToArrayAsync();
+
+            _db.WsWorkspacesReports.RemoveRange(reports);
         }
 
         public override async Task<Workspace> GetByIdAsync(int id)

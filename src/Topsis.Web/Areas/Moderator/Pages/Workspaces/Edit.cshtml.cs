@@ -228,5 +228,13 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
             await _bus.Send(cmd);
             await LoadPageAsync(id);
         }
+
+        public async Task OnPostClearVotesAsync(string id)
+        {
+            var cmd = new EditWorkspace.ClearVotesCommand { WorkspaceId = id };
+
+            await _bus.Send(cmd);
+            await LoadPageAsync(id);
+        }
     }
 }

@@ -2,6 +2,8 @@
 @model Workspaces.EditModel
 @{
     bool isDraft = Model.Data.CurrentStatus == Domain.WorkspaceStatus.Draft;
+    bool isPublished = Model.Data.CurrentStatus == Domain.WorkspaceStatus.Published;
+
     bool isAcceptingVotes = Model.Data.CurrentStatus == Domain.WorkspaceStatus.AcceptingVotes;
 
     bool isFinalized = Model.Data.CurrentStatus == Domain.WorkspaceStatus.Finalized;
@@ -37,15 +39,25 @@
             </div>
 
             <div class="form-group ml-3">
-                <input type="submit" value="Change Status" class="btn btn-info float-right" />
+                <input type="submit" value="Change Status" class="btn btn-primary float-right" />
             </div>
         </form>
 
         @if (isAcceptingVotes)
         {
-            <div class="md-12 m-3">
-                <a target="_blank" asp-area="Guest" asp-page="/Workspace/Vote" asp-route-id="@Model.Data.Id.Hash()">Check vote form</a>
+    <div class="md-12 m-3">
+        <a target="_blank" asp-area="Guest" asp-page="/Workspace/Vote" asp-route-id="@Model.Data.Id.Hash()">Check vote form</a>
+
+        <h5 class="mt-3">Votes</h5>
+        <form asp-page-handler="clearvotes">
+            <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
+
+            <div class="form-group">
+                <input type="submit" value="Clear Existing Votes" class="btn btn-outline-danger float-right" />
+                <a target="_blank" class="btn btn-outline-success" asp-area="Guest" asp-page="/Workspace/Vote" asp-route-id="@Model.Data.Id.Hash()">Check vote form</a>
             </div>
+        </form>
+    </div>
         }
 
         @if (isFinalized)
@@ -71,7 +83,7 @@
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Change Info" class="btn btn-link float-right" />
+                <input type="submit" value="Change Info" class="btn btn-primary float-right" />
             </div>
         </form>
     </div>
@@ -239,7 +251,7 @@
                 @if (isDraft)
                 {
                     <div class="form-group">
-                        <input type="submit" value="Change Questionnaire Settings" class="btn btn-link float-right" />
+                        <input type="submit" value="Change Questionnaire Settings" class="btn btn-primary float-right" />
                     </div>
                 }
 
@@ -502,83 +514,86 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form id="form-alternatives-range" asp-page-handler="ChangeAlternativesRange">
-                    <input type="hidden" name="WorkspaceId" value="@Model.Data.Id.Hash()" />
+                <div class="modal-body">
+                    <form id="form-alternatives-range" asp-page-handler="ChangeAlternativesRange">
+                        <input type="hidden" name="WorkspaceId" value="@Model.Data.Id.Hash()" />
 
-                    <table class="@tableCls">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="text-center">Title</th>
-                                <th scope="col">Value</th>
-                                <th scope="col">&nbsp;</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @{
-                                var items = settings.AlternativeRange;
+                        <table class="@tableCls">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="text-center">Title</th>
+                                    <th scope="col">Value</th>
+                                    <th scope="col">&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var items = settings.AlternativeRange;
 
-                                @for (var i = 0; i < items.Count; i++)
-                                {
-                                    var item = items[i];
-                                    <tr>
-                                        <td>
-                                            <input type="text" name="range[@i].name" value="@item.Name" class="form-control" />
-                                        </td>
-                                        <td>
-                                            <label>@item.Value</label>
-                                            <input type="hidden" name="range[@i].value" value="@item.Value" class="form-control" required="required" />
-                                        </td>
-                                        <td></td>
-                                    </tr>
+                                    @for (var i = 0; i < items.Count; i++)
+                                    {
+                                        var item = items[i];
+                                        <tr>
+                                            <td>
+                                                <input type="text" name="range[@i].name" value="@item.Name" class="form-control" />
+                                            </td>
+                                            <td>
+                                                <label>@item.Value</label>
+                                                <input type="hidden" name="range[@i].value" value="@item.Value" class="form-control" required="required" />
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    }
                                 }
-                            }
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
 
-                    <div class="form-group">
-                        <input type="submit" value="Change Alternatives Labels" class="btn btn-link float-right" />
-                    </div>
-                </form>
+                        <div class="form-group">
+                            <input type="submit" value="Change Alternatives Labels" class="btn btn-primary float-right" />
+                        </div>
+                    </form>
 
-                <form id="form-criteria-range" asp-page-handler="ChangeCriteriaWeightsRange">
-                    <input type="hidden" name="WorkspaceId" value="@Model.Data.Id.Hash()" />
+                    <form id="form-criteria-range" asp-page-handler="ChangeCriteriaWeightsRange">
+                        <input type="hidden" name="WorkspaceId" value="@Model.Data.Id.Hash()" />
 
-                    <table class="@tableCls">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="text-center">Title</th>
-                                <th scope="col">Value</th>
-                                <th scope="col">&nbsp;</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @{
-                                var weights = settings.CriteriaWeightRange;
+                        <table class="@tableCls">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="text-center">Title</th>
+                                    <th scope="col">Value</th>
+                                    <th scope="col">&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var weights = settings.CriteriaWeightRange;
 
-                                @for (var i = 0; i < weights.Count; i++)
-                                {
-                                    var item = weights[i];
-                                    <tr>
-                                        <td>
-                                            <input type="text" name="range[@i].name" value="@item.Name" class="form-control" />
-                                        </td>
-                                        <td>
-                                            <label>@item.Value</label>
-                                            <input type="hidden" name="range[@i].value" value="@item.Value" class="form-control" required="required" />
-                                        </td>
-                                        <td></td>
-                                    </tr>
+                                    @for (var i = 0; i < weights.Count; i++)
+                                    {
+                                        var item = weights[i];
+                                        <tr>
+                                            <td>
+                                                <input type="text" name="range[@i].name" value="@item.Name" class="form-control" />
+                                            </td>
+                                            <td>
+                                                <label>@item.Value</label>
+                                                <input type="hidden" name="range[@i].value" value="@item.Value" class="form-control" required="required" />
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    }
                                 }
-                            }
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
 
-                    <div class="form-group">
-                        <input type="submit" value="Change Weight Labels" class="btn btn-link float-right" />
-                    </div>
-                </form>
+                        <div class="form-group">
+                            <input type="submit" value="Change Weight Labels" class="btn btn-primary float-right" />
+                        </div>
+                    </form>
+                </div>
+                    
+                </div>
             </div>
-        </div>
     </div>
 </div>
 
