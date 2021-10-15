@@ -31,9 +31,10 @@ namespace Topsis.Web.ChartJs
             var labels = new List<string>();
             var myData = new List<double>();
             var groupData = new List<double>();
-            foreach (var item in vm.ChartAlternatives)
+
+            foreach (var item in vm.ChartAlternatives.OrderBy(x => x.AlternativeOrder))
             {
-                labels.Add(item.Alternative);
+                labels.Add(item.AlternativeTitle);
                 myData.Add(item.StakeholderTopsis);
                 groupData.Add(item.GroupTopsis);
             }
@@ -119,14 +120,16 @@ namespace Topsis.Web.ChartJs
                 return null;
             }
 
+            var alternativeDict = vm.Workspace.Questionnaire.AlternativesDictionary;
+
             var datasets = vm.ChartGroups.Select(x => new ChartJsDataset
             {
                 Label = x.Key,
                 BackgroundColor = GetRandomColor(),
-                Data = x.Value.OrderBy(x => x.AlternativeId).Select(x => x.Topsis).ToList()
+                Data = x.Value.OrderBy(x => alternativeDict[x.AlternativeId].Order).Select(x => x.Topsis).ToList()
             }).ToArray();
 
-            var labels = vm.Workspace.Questionnaire.Alternatives.OrderBy(x => x.Id).Select(x => x.Title).ToList();
+            var labels = alternativeDict.Values.OrderBy(x => x.Order).Select(x => x.Title).ToList();
 
             return new ChartJsReport()
             {

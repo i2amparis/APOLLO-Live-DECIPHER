@@ -12,13 +12,15 @@ namespace Topsis.Adapters.Algorithm
         public DataTable Calculate(Workspace workspace, DataTable normalizedTable)
         {
             var criteria = workspace.Questionnaire.Criteria.ToDictionary(x => x.Id, x => x);
+            var alternatives = workspace.Questionnaire.Alternatives.ToDictionary(x => x.Id, x => x.Title);
 
-            return BuildDistancesTable(workspace.Questionnaire.GetSettings(), criteria, normalizedTable);
+            return BuildDistancesTable(workspace.Questionnaire.GetSettings(), criteria, normalizedTable, alternatives);
         }
 
         private DataTable BuildDistancesTable(QuestionnaireSettings settings,
             Dictionary<int, Criterion> criteria,
-            DataTable normalizedTable)
+            DataTable normalizedTable,
+            Dictionary<int, string> alternatives)
         {
             DataTable result = BuildDistancesTableSchema(criteria);
 
@@ -31,6 +33,7 @@ namespace Topsis.Adapters.Algorithm
             {
                 var distanceRow = result.NewRow();
                 distanceRow[ColumnHelper.GetAlternativeColumnName()] = normalizedRow[ColumnHelper.GetAlternativeColumnName()];
+                distanceRow[ColumnHelper.GetAlternativeTitleColumnName()] = normalizedRow[ColumnHelper.GetAlternativeTitleColumnName()];
 
                 double sumOfNegative = 0;
                 double sumOfPositive = 0;
@@ -81,6 +84,7 @@ namespace Topsis.Adapters.Algorithm
         {
             var result = new DataTable();
             result.Columns.Add(ColumnHelper.GetAlternativeColumnName(), typeof(int));
+            result.Columns.Add(ColumnHelper.GetAlternativeTitleColumnName(), typeof(string));
 
             // build positive/negative criteria columns
             foreach (var kvp in criteria)

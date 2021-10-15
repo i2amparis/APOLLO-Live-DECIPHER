@@ -30,7 +30,7 @@ namespace Topsis.Application.Contracts.Database
                 yield break;
             }
 
-            var alternativesDict = workspace.Questionnaire.Alternatives.ToDictionary(x => x.Id, x => x.Title);
+            var alternativesDict = workspace.Questionnaire.AlternativesDictionary;
 
             var groupAlternatives = analysis.GroupTopsis[StakeholderTopsis.DefaultGroupName]
                 .ToDictionary(x => x.AlternativeId, x => x.Topsis);
@@ -55,16 +55,20 @@ namespace Topsis.Application.Contracts.Database
 
         public class AlternativeChartItem
         {
-            public AlternativeChartItem(string alternative, double? stakeholderTopsis, double groupTopsis)
+            public AlternativeChartItem(Alternative alternative, double? stakeholderTopsis, double groupTopsis)
             {
-                Alternative = alternative;
+                AlternativeTitle = alternative.Title;
+                AlternativeOrder = alternative.Order;
                 StakeholderTopsis = stakeholderTopsis ?? 0;
                 GroupTopsis = groupTopsis;
             }
 
-            [JsonPropertyName("alt")]
-            [JsonProperty("alt")]
-            public string Alternative { get; }
+            [JsonPropertyName("at")]
+            [JsonProperty("at")]
+            public string AlternativeTitle { get; }
+            [JsonPropertyName("ao")]
+            [JsonProperty("ao")]
+            public short AlternativeOrder { get; }
             [JsonPropertyName("mytopsis")]
             [JsonProperty("mytopsis")]
             public double StakeholderTopsis { get; }

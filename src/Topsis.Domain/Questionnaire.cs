@@ -39,6 +39,7 @@ namespace Topsis.Domain
 
         public List<Criterion> Criteria { get; set; }
         public List<Alternative> Alternatives { get; set; }
+        public IDictionary<int, Alternative> AlternativesDictionary => Alternatives?.ToDictionary(x => x.Id, x => x);
 
         public bool IsReady()
         {

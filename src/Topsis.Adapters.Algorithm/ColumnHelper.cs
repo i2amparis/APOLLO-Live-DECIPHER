@@ -38,6 +38,11 @@ namespace Topsis.Adapters.Algorithm
             return "alternative";
         }
 
+        internal static string GetAlternativeTitleColumnName()
+        {
+            return "alternative_title";
+        }
+
         internal static string GetDistanceColumnName(bool isPositive)
         {
             var suffix = isPositive ? "positive" : "negative";

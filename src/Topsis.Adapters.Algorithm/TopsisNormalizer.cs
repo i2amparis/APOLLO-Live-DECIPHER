@@ -13,7 +13,8 @@ namespace Topsis.Adapters.Algorithm
         {
             var settings = workspace.Questionnaire.GetSettings();
             var criteriaWeights = BuildWeights(settings, answers);
-            return BuildTable(criteriaWeights, answers);
+            var alternatives = workspace.Questionnaire.Alternatives.ToDictionary(x => x.Id, x => x.Title);
+            return BuildTable(criteriaWeights, answers, alternatives);
         }
 
         #region [ Helpers ]
@@ -32,13 +33,14 @@ namespace Topsis.Adapters.Algorithm
             return result;
         }
 
-        private DataTable BuildTable(IDictionary<int, double> criteriaWeights, IList<StakeholderAnswerDto> answers)
+        private DataTable BuildTable(IDictionary<int, double> criteriaWeights, IList<StakeholderAnswerDto> answers, Dictionary<int, string> alternatives)
         {
             var result = new DataTable();
 
             // build columns.
 
             result.Columns.Add(ColumnHelper.GetAlternativeColumnName(), typeof(int));
+            result.Columns.Add(ColumnHelper.GetAlternativeTitleColumnName(), typeof(string));
             foreach (var c in criteriaWeights)
             {
                 result.Columns.Add(ColumnHelper.GetCriterionColumnName(c.Key), typeof(double));
@@ -51,6 +53,11 @@ namespace Topsis.Adapters.Algorithm
 
                 var dataRow = result.NewRow();
                 dataRow[ColumnHelper.GetAlternativeColumnName()] = item.Key;
+                if (alternatives.TryGetValue(item.Key, out var title))
+                {
+                    dataRow[ColumnHelper.GetAlternativeTitleColumnName()] = title;
+                }
+
                 foreach (var c in criteria)
                 {
                     var weight = criteriaWeights[c.CriterionId];
