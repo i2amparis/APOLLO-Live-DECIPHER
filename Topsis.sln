@@ -34,7 +34,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Topsis.Adapters.Email", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Topsis.Domain", "src\Topsis.Domain\Topsis.Domain.csproj", "{EF88E312-9932-4C28-B298-9DC8C079C0CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Topsis.Adapters.Caching", "src\Topsis.Adapters.Caching\Topsis.Adapters.Caching.csproj", "{C2B664E5-B586-4EB7-96C9-F1F3D2D4908E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Topsis.Adapters.Caching", "src\Topsis.Adapters.Caching\Topsis.Adapters.Caching.csproj", "{C2B664E5-B586-4EB7-96C9-F1F3D2D4908E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

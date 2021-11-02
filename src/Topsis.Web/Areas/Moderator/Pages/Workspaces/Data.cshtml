@@ -1,0 +1,59 @@
+﻿@page
+@model Topsis.Web.Areas.Moderator.Pages.Workspaces.DataModel
+@{
+    var criteria = Model.Data.Questionnaire.Criteria.ToDictionary(x => x.Id, x => x);
+    var orderedCriteria = criteria.Values.OrderBy(x => x.Order).Select(x => x.Id).ToArray();
+    var alternatives = Model.Data.Questionnaire.AlternativesDictionary;
+    var orderedAlternatives = alternatives.Values.OrderBy(x => x.Order).Select(x => x.Id).ToArray();
+    var stakeholders = Model.Answers.GroupBy(x => x.StakeholderId).ToDictionary(x => x.Key, x => x.ToArray());
+}
+
+<div class="row">
+
+    @foreach (var u in stakeholders)
+    {
+        
+        var stakeholderTopsis = Model.Analysis.StakeholderTopsis
+            .Where(x => x.StakeholderId == u.Key).ToDictionary(x => x.AlternativeId, x => x);
+
+        <table class="table col-md-12">
+            <thead>
+                <tr class="table-info">
+                    <th><span class="card-title">User: @u.Key</span></th>
+                </tr>
+            </thead>
+        </table>
+
+        <div class="col-md-12">
+
+            <table class="table table-striped table-responsive">
+                <thead>
+                    <tr>
+                        <th>Alternative</th>
+                        @foreach (var criterionId in orderedCriteria)
+                        {
+                            <th>@criteria[criterionId].Title</th>
+                        }
+                        <th>Topsis</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var alternativeId in orderedAlternatives)
+                    {
+                        var answers = u.Value.Where(x => x.AlternativeId == alternativeId).ToDictionary(x => x.CriterionId, x => x.AnswerValue);
+                        <tr>
+                            <th>@alternatives[alternativeId].Title</th>
+                            @foreach (var criterionId in orderedCriteria)
+                            {
+                                <td>@answers[criterionId]</td>
+                            }
+                            <td>@stakeholderTopsis[alternativeId].Topsis</td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    }
+
+</div>
