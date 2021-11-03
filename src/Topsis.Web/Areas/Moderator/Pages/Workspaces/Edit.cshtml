@@ -46,7 +46,7 @@
         @if (isAcceptingVotes)
         {
             <div class="md-12 m-3">
-                <a target="_blank" asp-area="Guest" asp-page="/Workspace/Vote" asp-route-id="@Model.Data.Id.Hash()">Check vote form</a>
+                @*<a target="_blank" asp-area="Guest" asp-page="/Workspace/Vote" asp-route-id="@Model.Data.Id.Hash()">Check vote form</a>*@
 
                 <h5 class="mt-3">Votes</h5>
                 <form asp-page-handler="clearvotes">
