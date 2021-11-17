@@ -6,14 +6,18 @@
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 </environment>
 <environment exclude="Development">
-    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.2/jquery.validate.min.js" 
+            integrity="sha384-cs1D9mYtA60FIcsT1T7+pERF8l9Ynz6WMFXyrBFkf2ewKQnOOprsRwo4sC+Kacmi" 
             asp-fallback-src="~/lib/jquery-validation/jquery.validate.min.js"
             asp-fallback-test="window.jQuery && window.jQuery.validator"
-            crossorigin="anonymous"
-            integrity="sha384-rZfj/ogBloos6wzLGpPkkOr/gpkBNLZ6b6yLy4o+ok+t/SAKlL5mvXLr0OXNi1Hp"></script>
-    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.9/jquery.validate.unobtrusive.min.js"
-            asp-fallback-src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"
-            asp-fallback-test="window.jQuery && window.jQuery.validator && window.jQuery.validator.unobtrusive"
-            crossorigin="anonymous"
-            integrity="sha384-ifv0TYDWxBHzvAk2Z0n8R434FL1Rlv/Av18DXE43N/1rvHyOG4izKst0f2iSLdds"></script>
+            crossorigin="anonymous">
+
+    </script>
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.10/jquery.validate.unobtrusive.min.js"
+            integrity="sha384-y9k3BO+hbWD6gTgtfMyg1egwFmd2oEgQ0fALVtFnCl9F6j6mCh+oCa0P0h+aj7Ii"
+            asp-fallback-src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"
+            asp-fallback-test="window.jQuery && window.jQuery.validator"
+            crossorigin="anonymous">
+    </script>
 </environment>

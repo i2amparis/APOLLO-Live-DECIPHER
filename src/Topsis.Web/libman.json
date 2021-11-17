@@ -15,11 +15,11 @@
       "destination": "wwwroot/lib/chartjs"
     },
     {
-      "library": "jquery-validate@1.17.0",
+      "library": "jquery-validate@1.19.2",
       "destination": "wwwroot/lib/jquery-validation"
     },
     {
-      "library": "jquery-validation-unobtrusive@3.2.9",
+      "library": "jquery-validation-unobtrusive@3.2.10",
       "destination": "jquery-validation-unobtrusive"
     }
   ]
