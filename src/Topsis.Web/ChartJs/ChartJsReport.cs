@@ -39,6 +39,12 @@ namespace Topsis.Web.ChartJs
                 groupData.Add(item.GroupTopsis);
             }
 
+            var settings = vm.Workspace.Questionnaire.GetSettings();
+            var suggestedMaxY = 1 + (int)settings.Scale;
+            var scales = new ChartJsDatasetOptions.ChartJsScales(
+                new ChartJsDatasetOptions.ChartJsAxes("Alternatives"),
+                new ChartJsDatasetOptions.ChartJsAxes("Topsis", suggestedMax: suggestedMaxY, stepSize:1));
+
             return new ChartJsReport()
             {
                 Data = new ChartJsData
@@ -59,7 +65,11 @@ namespace Topsis.Web.ChartJs
                             }
                         }
                 },
-                Type = "bar"
+                Type = "bar",
+                Options = new ChartJsDatasetOptions
+                {
+                    Scales = scales
+                }
             };
         }
 
@@ -100,7 +110,7 @@ namespace Topsis.Web.ChartJs
                         new ChartJsDatasetXY
                         {
                             BackgroundColor = ColorPink,
-                            Label = "Consensus Degree",
+                            Label = "",
                             Data = data
                         }
                     }
@@ -130,6 +140,12 @@ namespace Topsis.Web.ChartJs
             }).ToArray();
 
             var labels = alternativeDict.Values.OrderBy(x => x.Order).Select(x => x.Title).ToList();
+            var settings = vm.Workspace.Questionnaire.GetSettings();
+
+            var suggestedMaxY = 1 + (int)settings.Scale;
+            var scales = new ChartJsDatasetOptions.ChartJsScales(
+                new ChartJsDatasetOptions.ChartJsAxes("Alternatives"),
+                new ChartJsDatasetOptions.ChartJsAxes("Topsis", suggestedMax: suggestedMaxY, stepSize: 1));
 
             return new ChartJsReport()
             {
@@ -138,7 +154,11 @@ namespace Topsis.Web.ChartJs
                     Labels = labels,
                     Datasets = datasets
                 },
-                Type = "bar"
+                Type = "bar",
+                Options = new ChartJsDatasetOptions
+                { 
+                    Scales = scales
+                }
             };
         }
 
@@ -207,6 +227,10 @@ namespace Topsis.Web.ChartJs
 
             var avgConsensus = data.Average();
             var avgData = Enumerable.Range(1, data.Count).Select(x => avgConsensus).ToList();
+
+            var scales = new ChartJsDatasetOptions.ChartJsScales(
+                new ChartJsDatasetOptions.ChartJsAxes("Stakeholders"),
+                new ChartJsDatasetOptions.ChartJsAxes("Consensus", suggestedMax: 1, stepSize: 0.2));
             return new ChartJsReport()
             {
                 Data = new ChartJsData
@@ -233,6 +257,10 @@ namespace Topsis.Web.ChartJs
                                 Data = avgData,
                             }
                         }
+                },
+                Options = new ChartJsDatasetOptions
+                {
+                    Scales = scales
                 }
             };
         }

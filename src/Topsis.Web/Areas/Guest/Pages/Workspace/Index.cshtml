@@ -109,9 +109,9 @@
             <h3>Consensus</h3>
 
         </div>
-        <div class="col-md-4">
+        @*<div class="col-md-4">
             <canvas id="chCompareConsensus"></canvas>
-        </div>
+        </div>*@
 
         <div class="col-md-8">
             <canvas id="chConsensus"></canvas>
@@ -138,8 +138,8 @@
     <script>
         Chart.defaults.datasets.bar.minBarLength = 5;
 
-        let configCompareConsensus = JSON.parse('@Html.Raw(Model.ConsensusCompareReportJson)');
-        let compareChart = new Chart(document.getElementById('chCompareConsensus'), configCompareConsensus);
+        @*let configCompareConsensus = JSON.parse('@Html.Raw(Model.ConsensusCompareReportJson)');
+        let compareChart = new Chart(document.getElementById('chCompareConsensus'), configCompareConsensus);*@
 
         let configAlternatives = JSON.parse('@Html.Raw(Model.AlternativesReportJson)');
         let altChart = new Chart(document.getElementById('chAlternatives'), configAlternatives);
@@ -149,6 +149,7 @@
 
         let configCategories = JSON.parse('@Html.Raw(Model.CategoriesReportJson)');
         let categoriesChart = new Chart(document.getElementById('chCategories'), configCategories);
+
 
         let configConsensusDegree = JSON.parse('@Html.Raw(Model.ConsensusDegreeJson)');
         let chConsensusDegreeChart = new Chart(document.getElementById('chConsensusDegree'), configConsensusDegree);

@@ -76,6 +76,9 @@ namespace Topsis.Web.ChartJs
         [JsonProperty("scales")]
         public ChartJsScales Scales { get; set; }
 
+        [JsonProperty("plugins")]
+        public ChartJsPlugins Plugins { get; set; }
+
         public class ChartJsElement
         { 
             [JsonProperty("bar")]
@@ -97,26 +100,44 @@ namespace Topsis.Web.ChartJs
         {
             public ChartJsScales(string xLabel, string yLabel)
             {
-                XAxes = new[] { new ChartJsAxes(xLabel) };
-                YAxes = new[] { new ChartJsAxes(yLabel) };
+                XAxes = new ChartJsAxes(xLabel);
+                YAxes = new ChartJsAxes(yLabel);
+            }
+
+            public ChartJsScales(ChartJsAxes xAxes, ChartJsAxes yAxes)
+            {
+                XAxes = xAxes;
+                YAxes = yAxes;
             }
 
             [JsonProperty("x")]
-            public ChartJsAxes[] XAxes { get; set; }
+            public ChartJsAxes XAxes { get; set; }
 
             [JsonProperty("y")]
-            public ChartJsAxes[] YAxes { get; set; }
+            public ChartJsAxes YAxes { get; set; }
         }
 
         public class ChartJsAxes
         {
-            public ChartJsAxes(string label)
+            public ChartJsAxes(string label, int suggestedMin = 0, int suggestedMax = 1, double? stepSize = null)
             {
                 Title = new ChartJsTitle(label);
+                SuggestedMin = suggestedMin;
+                SuggestedMax = suggestedMax;
+
+                Ticks = new ChartJsTicks(stepSize:stepSize);
             }
 
             [JsonProperty("title")]
             public ChartJsTitle Title { get; set; }
+
+            [JsonProperty("suggestedMin")]
+            public int SuggestedMin { get; }
+            [JsonProperty("suggestedMax")]
+            public int SuggestedMax { get; }
+
+            [JsonProperty("ticks")]
+            public ChartJsTicks Ticks { get; set; }
         }
 
         public class ChartJsTitle
@@ -131,6 +152,56 @@ namespace Topsis.Web.ChartJs
             public bool Display { get; set; }
             [JsonProperty("text")]
             public string Text { get; set; }
+        }
+
+        public class ChartJsTicks
+        {
+            public ChartJsTicks(bool beginAtZero = true, double? stepSize = 1)
+            {
+                BeginAtZero = beginAtZero;
+                StepSize = stepSize;
+            }
+            /*
+ticks: {
+    beginAtZero: true,
+    steps: 10,
+    stepValue: 5,
+    max: 100
+}
+             */
+
+            [JsonProperty("beginAtZero")]
+            public bool BeginAtZero { get; set; }
+            [JsonProperty("stepSize")]
+            public double? StepSize { get; }
+        }
+
+        public class ChartJsPlugins
+        {
+            public ChartJsPlugins(ChartJsLegend legend)
+            {
+                Legend = legend;
+            }
+
+            [JsonProperty("legend")]
+            public ChartJsLegend Legend { get; }
+        }
+
+        public class ChartJsLegend
+        {
+            public ChartJsLegend(string title, string position = "top", bool display = true)
+            {
+                Title = title;
+                Position = position;
+                Display = display;
+            }
+
+            [JsonProperty("title")]
+            public string Title { get; set; }
+            [JsonProperty("title")]
+            public string Position { get; set; }
+            [JsonProperty("display")]
+            public bool Display { get; set; }
         }
     }
 }
