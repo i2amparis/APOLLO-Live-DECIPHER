@@ -99,6 +99,11 @@
 
         <div class="col-md-12">
             <h3>Alternatives</h3>
+            <div class="col-md-3 float-right">
+                <h5>Consensus</h5>
+                <p class="lead">
+                    <span class="badge @Model.CompareReport.MyBadgeCls">My: @(Model.CompareReport.MyConsensus)%</span>&nbsp;<span class="badge @Model.CompareReport.AverageBadgeCls">Avg: @(Model.CompareReport.AverarageConsensus)%</span></p>
+            </div>
             <canvas id="chAlternatives"></canvas>
         </div>
     </div>

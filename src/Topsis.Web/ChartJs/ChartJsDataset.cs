@@ -76,8 +76,8 @@ namespace Topsis.Web.ChartJs
         [JsonProperty("scales")]
         public ChartJsScales Scales { get; set; }
 
-        [JsonProperty("plugins")]
-        public ChartJsPlugins Plugins { get; set; }
+        //[JsonProperty("plugins")]
+        //public ChartJsPlugins Plugins { get; set; }
 
         public class ChartJsElement
         { 

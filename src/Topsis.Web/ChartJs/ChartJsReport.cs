@@ -43,7 +43,7 @@ namespace Topsis.Web.ChartJs
             var suggestedMaxY = 1 + (int)settings.Scale;
             var scales = new ChartJsDatasetOptions.ChartJsScales(
                 new ChartJsDatasetOptions.ChartJsAxes("Alternatives"),
-                new ChartJsDatasetOptions.ChartJsAxes("Topsis", suggestedMax: suggestedMaxY, stepSize:1));
+                new ChartJsDatasetOptions.ChartJsAxes("Evaluation", suggestedMax: suggestedMaxY, stepSize:1));
 
             return new ChartJsReport()
             {
@@ -145,7 +145,7 @@ namespace Topsis.Web.ChartJs
             var suggestedMaxY = 1 + (int)settings.Scale;
             var scales = new ChartJsDatasetOptions.ChartJsScales(
                 new ChartJsDatasetOptions.ChartJsAxes("Alternatives"),
-                new ChartJsDatasetOptions.ChartJsAxes("Topsis", suggestedMax: suggestedMaxY, stepSize: 1));
+                new ChartJsDatasetOptions.ChartJsAxes("Evaluation", suggestedMax: suggestedMaxY, stepSize: 1));
 
             return new ChartJsReport()
             {

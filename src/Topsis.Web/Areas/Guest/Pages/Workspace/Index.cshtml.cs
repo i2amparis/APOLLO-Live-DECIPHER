@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Topsis.Application.Contracts.Database;
+using Topsis.Domain.Common;
 using Topsis.Domain.Contracts;
 using Topsis.Web.ChartJs;
 
@@ -16,6 +19,7 @@ namespace Topsis.Web.Areas.Guest.Pages.Workspace
         public string ConsensusCompareReportJson { get; set; }
         public string CategoriesReportJson { get; set; }
         public object ConsensusDegreeJson { get; private set; }
+        public ConsensusCompareReport CompareReport { get; private set; }
 
         public async Task<IActionResult> OnGetAsync(string id,
             [FromServices] IUserContext userContext,
@@ -39,10 +43,50 @@ namespace Topsis.Web.Areas.Guest.Pages.Workspace
                 ConsensusCompareReportJson = JsonConvert.SerializeObject(ChartJsReport.BuildConsensusCompareReport(Data));
                 CategoriesReportJson = JsonConvert.SerializeObject(ChartJsReport.BuildCategoriesReport(Data));
                 ConsensusDegreeJson = JsonConvert.SerializeObject(ChartJsReport.BuildConsensusDegreeReport(Data));
-                
+
+                CompareReport = new ConsensusCompareReport(Data);
             }
 
             return Page();
+        }
+
+        public class ConsensusCompareReport
+        {
+            private const string DefaultBadge = "badge-secondary";
+
+            public ConsensusCompareReport(WorkspaceReportViewModel vm)
+            {
+                MyConsensus = Rounder.Round(100d * vm.ChartConsensus[vm.UserId], 1);
+                AverarageConsensus = Rounder.Round(100d * vm.ChartConsensus.Values.Average(), 1);
+            }
+
+            public double MyConsensus { get; }
+            public double AverarageConsensus { get; }
+
+            public string AverageBadgeCls => DefaultBadge;
+            public string MyBadgeCls => GetMyBadgeClass();
+
+            private string GetMyBadgeClass()
+            {
+                var delta = MyConsensus - AverarageConsensus;
+                var absDelta = Math.Abs(delta);
+                if (absDelta < 0.5d)
+                {
+                    return DefaultBadge;
+                }
+
+                if (delta < 0)
+                {
+                    if (absDelta > 2)
+                    {
+                        return "badge-danger";
+                    }
+
+                    return "badge-warning";
+                }
+
+                return "badge-success";
+            }
         }
     }
 }
