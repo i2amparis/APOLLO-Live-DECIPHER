@@ -9,8 +9,23 @@ namespace Topsis.Web.ChartJs
 {
     public class ChartJsReport
     {
-        private const string ColorPink = "rgba(255, 99, 132, 0.2)";
-        private const string ColorBlue = "rgba(54, 162, 235, 0.2)";
+        private static readonly string[] Colors = new []
+        {
+            "rgba(47, 75, 124, 0.2)", // "#2f4b7c",
+            "rgba(255, 166, 0, 0.2)", // "#ffa600",
+            "rgba(255, 124, 67, 0.2)", // "#ff7c43",
+            "rgba(249, 93, 106, 0.2)", // "#f95d6a",
+            "rgba(212, 80, 135, 0.2)", "#d45087",
+            "rgba(160, 81, 149, 0.2)", // "#a05195",
+            "rgba(102, 81, 145, 0.2)", // "#665191",
+            "rgba(0, 63, 92, 0.2)", // #665191
+        };
+
+        //private const string Color1 = "rgba(255, 99, 132, 0.2)";
+        //private const string Color2 = "rgba(54, 162, 235, 0.2)";
+
+        private static string Color1 = Colors[1];
+        private static string Color2 = Colors[4];
 
         public ChartJsReport()
         {
@@ -53,13 +68,13 @@ namespace Topsis.Web.ChartJs
                     Datasets = new[] {
                             new ChartJsDataset
                             {
-                                BackgroundColor = ColorPink,
+                                BackgroundColor = Color1,
                                 Label = "My Vote",
                                 Data = myData
                             },
                             new ChartJsDataset
                             {
-                                BackgroundColor = ColorBlue,
+                                BackgroundColor = Color2,
                                 Label = "Group Vote",
                                 Data = groupData
                             }
@@ -109,7 +124,7 @@ namespace Topsis.Web.ChartJs
                     Datasets = new object[] {
                         new ChartJsDatasetXY
                         {
-                            BackgroundColor = ColorPink,
+                            BackgroundColor = Color1,
                             Label = "",
                             Data = data
                         }
@@ -137,7 +152,13 @@ namespace Topsis.Web.ChartJs
                 Label = x.Key,
                 BackgroundColor = GetRandomColor(),
                 Data = x.Value.OrderBy(x => alternativeDict[x.AlternativeId].Order).Select(x => x.Topsis).ToList()
-            }).ToArray();
+            }).ToList();
+
+            for (int i = 0; i < datasets.Count; i++)
+            {
+                var index = i % Colors.Length;
+                datasets[i].BackgroundColor = Colors[index];
+            }
 
             var labels = alternativeDict.Values.OrderBy(x => x.Order).Select(x => x.Title).ToList();
             var settings = vm.Workspace.Questionnaire.GetSettings();
@@ -152,7 +173,7 @@ namespace Topsis.Web.ChartJs
                 Data = new ChartJsData
                 {
                     Labels = labels,
-                    Datasets = datasets
+                    Datasets = datasets.ToArray()
                 },
                 Type = "bar",
                 Options = new ChartJsDatasetOptions
@@ -180,7 +201,7 @@ namespace Topsis.Web.ChartJs
                     Datasets = new[] {
                             new ChartJsDataset
                             {
-                                BackgroundColor = ColorPink,
+                                BackgroundColor = Color1,
                                 Label = "My Consensus",
                                 Data = stakeholdersData,
                                 Fill = true,
@@ -191,7 +212,7 @@ namespace Topsis.Web.ChartJs
                             },
                             new ChartJsDataset
                             {
-                                BackgroundColor = ColorBlue,
+                                BackgroundColor = Color2,
                                 Label = "Average Consensus",
                                 Data = avgData,
                                 Fill = true,
@@ -214,14 +235,14 @@ namespace Topsis.Web.ChartJs
             }
 
             var data = vm.ChartConsensus.Where(x => x.Key != vm.UserId).Select(x => x.Value).ToList();
-            var colors = Enumerable.Range(0, data.Count).Select(x => ColorBlue).ToList();
+            var colors = Enumerable.Range(0, data.Count).Select(x => Color2).ToList();
             var labels = Enumerable.Range(1, data.Count).Select(x => $"S{x}").ToList();
 
             if (vm.ChartConsensus.TryGetValue(vm.UserId, out var currentStakeHolderConsensus))
             {
                 // add current stakeholder bar in different color.
                 data.Insert(0, currentStakeHolderConsensus);
-                colors.Insert(0, ColorPink);
+                colors.Insert(0, Color1);
                 labels.Insert(0, "Me");
             }
 
@@ -252,7 +273,7 @@ namespace Topsis.Web.ChartJs
                             new ChartJsDataset
                             {
                                 Type = "line",
-                                BackgroundColor = ColorPink,
+                                BackgroundColor = Color1,
                                 Label = "Average Consensus",
                                 Data = avgData,
                             }
