@@ -132,7 +132,7 @@ namespace Topsis.Web
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             //var options = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
