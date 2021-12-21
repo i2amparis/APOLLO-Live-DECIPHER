@@ -14,6 +14,10 @@ namespace Topsis.Adapters.Database.Seed
         private const string AdminUserPassword = "!!4921Rfaw3!";
         private const string AdminEmail = "a.soursos@gmail.com";
 
+        private const string ModeratorUserId = "4E59CEA1-FC55-49F5-BF30-4BC46A0DDA71";
+        private const string ModeratorUserPassword = "!!4921Rfbw3!";
+        private const string ModeratorEmail = "kkoasidis@epu.ntua.gr";
+
         public static void ApplyTo(ModelBuilder builder)
         {
             builder.Entity<ApplicationRole>().HasData(Roles());
@@ -40,11 +44,18 @@ namespace Topsis.Adapters.Database.Seed
 
         private static IEnumerable<ApplicationUser> Users()
         {
-            yield return new Administrator() 
+            yield return new UserCredentials() 
             { 
                 Id = AdminUserId, 
                 Email = AdminEmail, 
                 Password = AdminUserPassword 
+            }.BuildUser();
+
+            yield return new UserCredentials()
+            {
+                Id = ModeratorUserId,
+                Email = ModeratorEmail,
+                Password = ModeratorUserPassword
             }.BuildUser();
         }
 
@@ -54,6 +65,9 @@ namespace Topsis.Adapters.Database.Seed
             yield return BuildUserRole(RoleNames.Admin, AdminUserId);
             yield return BuildUserRole(RoleNames.Moderator, AdminUserId);
             yield return BuildUserRole(RoleNames.Stakeholder, AdminUserId);
+
+            yield return BuildUserRole(RoleNames.Moderator, ModeratorUserId);
+            yield return BuildUserRole(RoleNames.Stakeholder, ModeratorUserId);
         }
 
         private static IdentityUserRole<string> BuildUserRole(string role, string userId)
