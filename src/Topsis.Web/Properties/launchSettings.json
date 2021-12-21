@@ -34,13 +34,6 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "distributionName": ""
-    },
-    "Docker": {
-      "commandName": "Docker",
-      "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/Moderator/Workspaces",
-      "publishAllPorts": true,
-      "useSSL": true
     }
   }
 }

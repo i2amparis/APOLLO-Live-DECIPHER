@@ -20,8 +20,12 @@ namespace Topsis.Adapters.Database
 
         public static IServiceCollection AddDataAccess(this IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<WorkspaceDbContext>(builder => builder.AddMySqlDbOptions(connectionString));
+            services.AddSingleton<IDatabaseService, DatabaseConfigurationService>();
+            services.AddDbContext<WorkspaceDbContext>((serviceProvider, dbContextBuilder) =>
+            {
+                var service = serviceProvider.GetRequiredService<IDatabaseService>();
+                dbContextBuilder.AddMySqlDbOptions(service.GetRuntimeConnectionString());
+            });
 
             services.AddScoped<IUserContext, UserContext>();
 
