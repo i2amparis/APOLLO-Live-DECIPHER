@@ -20,6 +20,8 @@ namespace Topsis.Adapters.Database
 
         public static IServiceCollection AddDataAccess(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<DatabaseSettings>(configuration.GetSection("DatabaseSettings"));
+
             services.AddSingleton<IDatabaseService, DatabaseConfigurationService>();
             services.AddDbContext<WorkspaceDbContext>((serviceProvider, dbContextBuilder) =>
             {
