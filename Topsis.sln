@@ -36,6 +36,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Topsis.Domain", "src\Topsis
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Topsis.Adapters.Caching", "src\Topsis.Adapters.Caching\Topsis.Adapters.Caching.csproj", "{C2B664E5-B586-4EB7-96C9-F1F3D2D4908E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{607E41A6-AF33-4F3B-A62E-10A7C94C77BA}"
+	ProjectSection(SolutionItems) = preProject
+		cloudbuild.yaml = cloudbuild.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

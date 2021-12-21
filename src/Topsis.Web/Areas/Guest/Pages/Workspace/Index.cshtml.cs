@@ -87,6 +87,18 @@ namespace Topsis.Web.Areas.Guest.Pages.Workspace
 
                 return "badge-success";
             }
+
+            //private bool FindDeviations()
+            //{ 
+            //    // foreach stakeholder
+            //    //   foreach alternative
+            //    //      dev-increase-decrease = abs(solution stakeholder - group solution)
+
+            //    // find max = max(dev)
+            //    // result -> ena suggestion alt 
+            //    // report -> this is the alt with the biggest dev
+            //    // re-answer -> mark alternative with the biggest dev
+            //}
         }
     }
 }
