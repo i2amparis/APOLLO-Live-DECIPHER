@@ -39,6 +39,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{607E41A6-AF33-4F3B-A62E-10A7C94C77BA}"
 	ProjectSection(SolutionItems) = preProject
 		cloudbuild.yaml = cloudbuild.yaml
+		Dockerfile = Dockerfile
 	EndProjectSection
 EndProject
 Global
