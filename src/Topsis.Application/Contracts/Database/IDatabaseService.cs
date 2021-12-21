@@ -12,7 +12,7 @@ namespace Topsis.Application.Contracts.Database
     {
         public DatabaseSettings()
         {
-            DatabaseName = "m6-web";
+            DatabaseName = "topsis-web";
             Server = "127.0.0.1";
             Port = 3306;
             Migration = new DatabaseUserSettings();
