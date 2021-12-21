@@ -11,8 +11,6 @@ namespace Topsis.Adapters.Database.Services
 {
     public class MigrationHostedService : BackgroundService
     {
-        // We need to inject the IServiceProvider so we can create 
-        // the scoped service, MyDbContext
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<MigrationHostedService> _logger;
 
