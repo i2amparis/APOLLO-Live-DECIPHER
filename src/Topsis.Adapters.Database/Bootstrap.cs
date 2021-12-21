@@ -21,7 +21,7 @@ namespace Topsis.Adapters.Database
         public static IServiceCollection AddDataAccess(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<WorkspaceDbContext>(builder => builder.AddMariaDbOptions(connectionString));
+            services.AddDbContext<WorkspaceDbContext>(builder => builder.AddMySqlDbOptions(connectionString));
 
             services.AddScoped<IUserContext, UserContext>();
 
@@ -44,7 +44,13 @@ namespace Topsis.Adapters.Database
     {
         public static void AddMariaDbOptions(this DbContextOptionsBuilder builder, string connection)
         {
-            var serverVersion = new ServerVersion(new Version(10, 5, 1));
+            var serverVersion = new ServerVersion(new Version(10, 5, 1), ServerType.MariaDb);
+            builder.UseMySql(connection, options => options.ServerVersion(serverVersion));
+        }
+
+        public static void AddMySqlDbOptions(this DbContextOptionsBuilder builder, string connection)
+        {
+            var serverVersion = new ServerVersion(new Version(5, 7, 34), ServerType.MySql);
             builder.UseMySql(connection, options => options.ServerVersion(serverVersion));
         }
     }
