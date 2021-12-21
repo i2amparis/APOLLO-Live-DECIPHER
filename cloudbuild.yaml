@@ -33,12 +33,12 @@ images:
 options:
   substitutionOption: ALLOW_LOOSE
 substitutions:
-  _GCR_HOSTNAME: eu.gcr.io
-  _PLATFORM: managed
-  _LABELS: gcb-trigger-id=80e18a1d-c505-4b3c-bf44-6a5f6bac1bb5
-  _TRIGGER_ID: 80e18a1d-c505-4b3c-bf44-6a5f6bac1bb5
   _SERVICE_NAME: topsis
   _DEPLOY_REGION: europe-west1
+  _GCR_HOSTNAME: eu.gcr.io
+  _PLATFORM: managed
+  _LABELS: gcb-trigger-id=a06479ed-6dbb-478a-a9fa-fef6e85adffa
+  _TRIGGER_ID: a06479ed-6dbb-478a-a9fa-fef6e85adffa
 tags:
   - gcp-cloud-build-deploy-cloud-run
   - gcp-cloud-build-deploy-cloud-run-managed
