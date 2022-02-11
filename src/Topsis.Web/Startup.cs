@@ -115,7 +115,7 @@ namespace Topsis.Web
             services.AddSingleton<CommonLocalizationService>();
         }
 
-        public static IServiceCollection AddDataProtection(this IServiceCollection services,
+        public static IServiceCollection AddDataProtection(IServiceCollection services,
             IConfiguration configuration)
         {
             // Antiforgery tokens require data protection.
