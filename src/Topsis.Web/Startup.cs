@@ -57,6 +57,7 @@ namespace Topsis.Web
 
             services.AddApplicationServices();
 
+            AddDataProtection(services, Configuration);
             services.AddAuthorization(opt =>
             {
                 opt.AddPolicy(RequireModeratorPolicy, policy => policy.RequireRole(RoleNames.Moderator));
@@ -112,6 +113,24 @@ namespace Topsis.Web
                 });
 
             services.AddSingleton<CommonLocalizationService>();
+        }
+
+        public static IServiceCollection AddDataProtection(this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            // Antiforgery tokens require data protection.
+            services.AddDataProtection();
+
+            //services.AddDataProtection()
+            //    // Store keys in Cloud Storage so that multiple instances
+            //    // of the web application see the same keys.
+            //    .PersistKeysToGoogleCloudStorage(config.DataProtection.Bucket,
+            //        config.DataProtection.Object)
+            //    // Protect the keys with Google KMS for encryption and fine-
+            //    // grained access control.
+            //    .ProtectKeysWithGoogleKms(config.DataProtection.KmsKeyName);
+
+            return services;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
