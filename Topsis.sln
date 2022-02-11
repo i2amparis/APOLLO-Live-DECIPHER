@@ -42,6 +42,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{607E41
 		Dockerfile = Dockerfile
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Topsis.Adapters.Encryption", "src\Topsis.Adapters.Encryption\Topsis.Adapters.Encryption.csproj", "{03920AC0-5AD7-4458-80BE-EF5231FA666F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +86,10 @@ Global
 		{C2B664E5-B586-4EB7-96C9-F1F3D2D4908E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2B664E5-B586-4EB7-96C9-F1F3D2D4908E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2B664E5-B586-4EB7-96C9-F1F3D2D4908E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03920AC0-5AD7-4458-80BE-EF5231FA666F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03920AC0-5AD7-4458-80BE-EF5231FA666F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03920AC0-5AD7-4458-80BE-EF5231FA666F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03920AC0-5AD7-4458-80BE-EF5231FA666F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +105,7 @@ Global
 		{CE0458A1-9B8D-48E1-B429-99C4DF607297} = {4BE0FE38-C23C-4D39-A608-CC796474D030}
 		{EF88E312-9932-4C28-B298-9DC8C079C0CA} = {500004A4-F9EB-49E3-B1B3-9B34B47D093E}
 		{C2B664E5-B586-4EB7-96C9-F1F3D2D4908E} = {4BE0FE38-C23C-4D39-A608-CC796474D030}
+		{03920AC0-5AD7-4458-80BE-EF5231FA666F} = {4BE0FE38-C23C-4D39-A608-CC796474D030}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {42135D91-3E4C-4DF9-A766-7EEE2995ABC3}

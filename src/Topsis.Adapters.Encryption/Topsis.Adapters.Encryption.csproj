@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Apis.Auth.AspNetCore3" Version="1.55.0" />
+    <PackageReference Include="Google.Cloud.AspNetCore.DataProtection.Kms" Version="1.0.0-alpha03" />
+    <PackageReference Include="Google.Cloud.AspNetCore.DataProtection.Storage" Version="1.0.0-alpha03" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Topsis.Application\Topsis.Application.csproj" />
+  </ItemGroup>
+
+</Project>

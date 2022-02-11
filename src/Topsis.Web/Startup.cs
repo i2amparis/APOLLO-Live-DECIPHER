@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Globalization;
 using Topsis.Adapters.Algorithm;
 using Topsis.Adapters.Caching;
 using Topsis.Adapters.Database;
 using Topsis.Adapters.Email;
+using Topsis.Adapters.Encryption;
 using Topsis.Application;
 using Topsis.Application.Contracts.Identity;
 using Topsis.Domain.Contracts;
@@ -57,7 +57,7 @@ namespace Topsis.Web
 
             services.AddApplicationServices();
 
-            AddDataProtection(services, Configuration);
+            services.AddDataProtection(Configuration);
             services.AddAuthorization(opt =>
             {
                 opt.AddPolicy(RequireModeratorPolicy, policy => policy.RequireRole(RoleNames.Moderator));
@@ -113,24 +113,6 @@ namespace Topsis.Web
                 });
 
             services.AddSingleton<CommonLocalizationService>();
-        }
-
-        public static IServiceCollection AddDataProtection(IServiceCollection services,
-            IConfiguration configuration)
-        {
-            // Antiforgery tokens require data protection.
-            services.AddDataProtection();
-
-            //services.AddDataProtection()
-            //    // Store keys in Cloud Storage so that multiple instances
-            //    // of the web application see the same keys.
-            //    .PersistKeysToGoogleCloudStorage(config.DataProtection.Bucket,
-            //        config.DataProtection.Object)
-            //    // Protect the keys with Google KMS for encryption and fine-
-            //    // grained access control.
-            //    .ProtectKeysWithGoogleKms(config.DataProtection.KmsKeyName);
-
-            return services;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
