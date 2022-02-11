@@ -1,0 +1,67 @@
+﻿@model IList<Topsis.Application.Contracts.Database.StakeholderWorkspaceDto>
+@using Topsis.Domain.Common
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@foreach (var item in Model.GroupBy(x => x.WorkspaceId).Select(x => x.Last()))
+{
+    var isPublished = item.CurrentStatus == Domain.WorkspaceStatus.Published;
+    <div class="row m-2 p-1 border rounded">
+        <div class="col-md-12">
+
+            <h4>
+                @item.WorkspaceTitle
+            </h4>
+            <span>
+                @switch (item.CurrentStatus)
+                {
+                    case Domain.WorkspaceStatus.Published:
+                        <span class="badge badge-secondary">Coming soon</span>
+                        break;
+                    case Domain.WorkspaceStatus.Finalized:
+                        <p class="badge badge-success">Finalized</p>
+                        break;
+                    case Domain.WorkspaceStatus.AcceptingVotes:
+                        <p class="badge badge-primary">Accepting votes</p>
+                        break;
+                    default:
+                        <span class="badge badge-dark">Not available</span>
+                        break;
+
+                }
+            </span>
+            <p>@item.WorkspaceDescription</p>
+        </div>
+        <div class="col-md-3 offset-9 p-1">
+
+            @if (item.VoteId.HasValue)
+            {
+                <a href="@(Url.Page("/Workspace/Index", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
+                   role="button"
+                   class="btn btn-block btn-outline-success float-right">See Report</a>
+            }
+            else
+            {
+                switch (item.CurrentStatus)
+                {
+                    case Domain.WorkspaceStatus.Finalized:
+                        <a href="@(Url.Page("/Workspace/Index", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
+                           role="button"
+                           class="btn btn-block btn-outline-success float-right">See Report</a>
+                        break;
+                    case Domain.WorkspaceStatus.AcceptingVotes:
+                        <a href="@(Url.Page("/Workspace/Vote", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
+                           role="button"
+                           class="btn btn-block btn-primary float-right">Vote</a>
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+        </div>
+    </div>
+}

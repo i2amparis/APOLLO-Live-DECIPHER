@@ -13,28 +13,6 @@
     <div class="col-md-8">
         <h4>Workspaces</h4>
 
-        @foreach (var item in Model.Workspaces)
-        {
-            <div class="row m-md-1">
-                <div class="col-md-8">
-                    <h4>@item.WorkspaceTitle</h4>
-                    <p>@item.WorkspaceDescription</p>
-                </div>
-                <div class="col-md-2">
-                    @if (item.VoteId.HasValue)
-                    {
-                        <a href="@(Url.Page("/Workspace/Index", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
-                           role="button"
-                           class="btn btn-block btn-success">See Report</a>
-                    }
-                    else
-                    {
-                        <a href="@(Url.Page("/Workspace/Vote", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
-                           role="button"
-                           class="btn btn-block btn-primary">Vote</a>
-                    }
-                </div>
-            </div>
-        }
+        <partial name="_WorkspacesPartial" model="Model.Workspaces"/>
     </div>
 </div>
