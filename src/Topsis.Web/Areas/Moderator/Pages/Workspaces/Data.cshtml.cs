@@ -25,7 +25,7 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
             Analysis = Data.GetReportData();
             if (Analysis == null)
             {
-                return RedirectToPage("/Edit", new { id });
+                return RedirectToPage("Edit", new { id });
             }
 
             Answers = await reports.GetAnswersForCalculationAsync(workspaceId);
