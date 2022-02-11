@@ -16,11 +16,11 @@
             <h4>
                 @item.WorkspaceTitle
             </h4>
-            <span>
+            <div>
                 @switch (item.CurrentStatus)
                 {
                     case Domain.WorkspaceStatus.Published:
-                        <span class="badge badge-secondary">Coming soon</span>
+                        <p class="badge badge-secondary">Coming soon</p>
                         break;
                     case Domain.WorkspaceStatus.Finalized:
                         <p class="badge badge-success">Finalized</p>
@@ -29,11 +29,11 @@
                         <p class="badge badge-primary">Accepting votes</p>
                         break;
                     default:
-                        <span class="badge badge-dark">Not available</span>
+                        <p class="badge badge-dark">Not available</p>
                         break;
 
                 }
-            </span>
+            </div>
             <p>@item.WorkspaceDescription</p>
         </div>
         <div class="col-md-3 offset-9 p-1">
