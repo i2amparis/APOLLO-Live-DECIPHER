@@ -47,7 +47,7 @@ namespace Topsis.Adapters.Algorithm
                     {
                         // find ideal value.
                         var ideals = isPositive ? positiveIdeals : negativeIdeals;
-                        var ideal = isPositive ? ideals.Values.Max() : ideals.Values.Min();
+                        var ideal = ideals[item.Key];
 
                         var distanceColumnName = ColumnHelper.GetCriterionDistanceColumnName(item.Key, isPositive);
                         var distance = Math.Abs(normalizedValue - ideal);
