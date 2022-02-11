@@ -56,8 +56,15 @@ namespace Topsis.Web.Areas.Guest.Pages.Workspace
 
             public ConsensusCompareReport(WorkspaceReportViewModel vm)
             {
-                MyConsensus = Rounder.Round(100d * vm.ChartConsensus[vm.UserId], 1);
-                AverarageConsensus = Rounder.Round(100d * vm.ChartConsensus.Values.Average(), 1);
+                if (vm.ChartConsensus.TryGetValue(vm.UserId, out var value))
+                {
+                    MyConsensus = Rounder.Round(100d * value, 1); 
+                }
+
+                if (vm.ChartConsensus.Values.Any())
+                {
+                    AverarageConsensus = Rounder.Round(100d * vm.ChartConsensus.Values.Average(), 1); 
+                }
             }
 
             public double MyConsensus { get; }

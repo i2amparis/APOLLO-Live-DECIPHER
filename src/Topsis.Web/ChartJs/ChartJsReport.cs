@@ -185,7 +185,7 @@ namespace Topsis.Web.ChartJs
 
         internal static ChartJsReport BuildConsensusCompareReport(WorkspaceReportViewModel vm)
         {
-            if (vm.ChartConsensus == null)
+            if (vm.ChartConsensus?.Count > 0 != true)
             {
                 return null;
             }
@@ -229,7 +229,7 @@ namespace Topsis.Web.ChartJs
 
         internal static ChartJsReport BuildConsensusReport(WorkspaceReportViewModel vm)
         {
-            if (vm.ChartConsensus == null)
+            if (vm.ChartConsensus?.Count > 0 != true)
             {
                 return null;
             }

@@ -12,41 +12,64 @@
 
 <div class="row pt-md-5">
     <div class="col-md-8">
-        <h4>Workspaces</h4>
+        <h2>Workspaces</h2>
 
         @foreach (var item in Model.Workspaces.GroupBy(x => x.WorkspaceId).Select(x => x.Last()))
         {
-        <div class="row m-md-1">
-            <div class="col-md-8">
-                <h4>@item.WorkspaceTitle</h4>
-                <p>@item.WorkspaceDescription</p>
-            </div>
-            <div class="col-md-3">
-                @if (item.VoteId.HasValue)
-                {
-                    <a href="@(Url.Page("/Workspace/Index", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
-                       role="button"
-                       class="btn btn-block btn-success">See Report</a>
-                }
-                else
-                {
-                    switch (item.CurrentStatus)
+            var isPublished = item.CurrentStatus == Domain.WorkspaceStatus.Published;
+        <div class="row m-2 p-1 border rounded">
+            <div class="col-md-12">
+
+                <h4>
+                    @item.WorkspaceTitle
+                </h4>
+                <span>
+                    @switch (item.CurrentStatus)
                     {
                         case Domain.WorkspaceStatus.Published:
-                            <span>Coming soon.</span>
+                            <span class="badge badge-secondary">Coming soon</span>
                             break;
                         case Domain.WorkspaceStatus.Finalized:
+                            <p class="badge badge-success">Finalized</p>
+                            break;
                         case Domain.WorkspaceStatus.AcceptingVotes:
-                            <a href="@(Url.Page("/Workspace/Vote", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
-                               role="button"
-                               class="btn btn-block btn-primary">Vote</a>
+                            <p class="badge badge-primary">Accepting votes</p>
                             break;
                         default:
-                            <span>Not available.</span>
+                            <span class="badge badge-dark">Not available</span>
                             break;
-                    }
 
-                }
+                    }
+                </span>
+                <p>@item.WorkspaceDescription</p>
+            </div>
+            <div class="col-md-3 offset-9 p-1">
+
+                    @if (item.VoteId.HasValue)
+                    {
+                        <a href="@(Url.Page("/Workspace/Index", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
+                           role="button"
+                           class="btn btn-block btn-outline-success float-right">See Report</a>
+                    }
+                    else
+                    {
+                        switch (item.CurrentStatus)
+                        {
+                            case Domain.WorkspaceStatus.Finalized:
+                                <a href="@(Url.Page("/Workspace/Index", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
+                                   role="button"
+                                   class="btn btn-block btn-outline-success float-right">See Report</a>
+                                break;
+                            case Domain.WorkspaceStatus.AcceptingVotes:
+                                <a href="@(Url.Page("/Workspace/Vote", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
+                                   role="button"
+                                   class="btn btn-block btn-primary float-right">Vote</a>
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                
             </div>
         </div>
     }
