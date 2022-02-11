@@ -185,7 +185,7 @@ namespace Topsis.Web.ChartJs
 
         internal static ChartJsReport BuildConsensusCompareReport(WorkspaceReportViewModel vm)
         {
-            if (vm.ChartConsensus?.Count > 0 != true)
+            if (vm.ChartConsensus?.Count > 0 != true || vm.ChartConsensus.ContainsKey(vm.UserId) == false)
             {
                 return null;
             }
