@@ -56,6 +56,11 @@ namespace Topsis.Web.Areas.Guest.Pages.Workspace
 
             public ConsensusCompareReport(WorkspaceReportViewModel vm)
             {
+                if (vm.ChartConsensus == null)
+                {
+                    return;
+                }
+
                 if (vm.ChartConsensus.TryGetValue(vm.UserId, out var value))
                 {
                     MyConsensus = Rounder.Round(100d * value, 1); 

@@ -14,7 +14,7 @@ namespace Topsis.Adapters.Algorithm
             {
                 var cellValue = item.Field<double>(column);
                 min = Math.Min(min, cellValue);
-                max = Math.Min(min, cellValue);
+                max = Math.Max(max, cellValue);
             }
 
             return (min, max);
