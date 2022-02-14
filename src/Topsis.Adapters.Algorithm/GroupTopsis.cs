@@ -65,7 +65,7 @@ namespace Topsis.Adapters.Algorithm
                     var (min, max) = stakeholderIdeals[stakeholderId];
                     var posDistance = Math.Abs(max - stakeholderTopsis);
                     newRow[positiveColumn] = posDistance;
-                    var negDistance = Math.Abs(min - stakeholderTopsis);
+                    var negDistance = Math.Abs(stakeholderTopsis - min);
                     newRow[negativeColumn] = negDistance;
 
                     positiveDistanceSum += posDistance;
