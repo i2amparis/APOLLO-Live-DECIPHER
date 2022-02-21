@@ -42,7 +42,8 @@ namespace Topsis.Adapters.Algorithm
         private static void AddGroupConsensus(WorkspaceAnalysisResult result, QuestionnaireSettings settings)
         {
             var consensus = new TopsisConsensus();
-            var (stakeholdersConsent, consensusDegree) = consensus.Calculate(settings, result.StakeholderTopsis);
+            var globalTopsis = result.GroupTopsis[StakeholderTopsis.DefaultGroupName].ToDictionary(x => x.AlternativeId, x => x.Topsis);
+            var (stakeholdersConsent, consensusDegree) = consensus.Calculate(settings, result.StakeholderTopsis, globalTopsis);
             result.AddConsensusAnalysis(stakeholdersConsent, consensusDegree);
         }
 

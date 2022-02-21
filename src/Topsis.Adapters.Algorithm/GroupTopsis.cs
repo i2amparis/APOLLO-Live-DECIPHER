@@ -14,7 +14,7 @@ namespace Topsis.Adapters.Algorithm
         private Dictionary<int, StakeholderTopsis[]> _alternatives;
 
         public GroupTopsis(QuestionnaireSettings settings,
-            List<StakeholderTopsis> stakeholderAnswers)
+            IList<StakeholderTopsis> stakeholderAnswers)
         {
             _stakeholders = stakeholderAnswers.GroupBy(x => x.StakeholderId).ToDictionary(x => x.Key, x => x.ToArray());
             _alternatives = stakeholderAnswers.GroupBy(x => x.AlternativeId).ToDictionary(x => x.Key, x => x.ToArray());

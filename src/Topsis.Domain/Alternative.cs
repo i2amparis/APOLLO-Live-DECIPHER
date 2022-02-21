@@ -24,5 +24,10 @@ namespace Topsis.Domain
         {
             return string.IsNullOrWhiteSpace(Title) == false;
         }
+
+        public override string ToString()
+        {
+            return $"{Id}, {Title}, {Order}";
+        }
     }
 }

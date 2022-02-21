@@ -9,10 +9,12 @@ namespace Topsis.Adapters.Algorithm
 {
     internal class TopsisConsensus
     {
-        public (IDictionary<string, double>, IDictionary<int, double>) Calculate(QuestionnaireSettings settings, IList<StakeholderTopsis> stakeholderAnswers)
+        public (IDictionary<string, double>, IDictionary<int, double>) Calculate(QuestionnaireSettings settings, 
+            IList<StakeholderTopsis> stakeholderAnswers,
+            IDictionary<int, double> globalTopsis)
         {
             // Calculate topsis global - average of stakeholder alternatives topsis
-            var globalTopsis = CalculateGlobalTopsis(stakeholderAnswers);
+            //var globalTopsis = new GroupTopsis(settings, stakeholderAnswers).Calculate()
 
             // Consensus
             return CalculateDissimilarity(settings, globalTopsis, stakeholderAnswers);
