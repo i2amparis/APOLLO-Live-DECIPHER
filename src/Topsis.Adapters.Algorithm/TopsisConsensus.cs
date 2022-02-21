@@ -10,24 +10,13 @@ namespace Topsis.Adapters.Algorithm
     internal class TopsisConsensus
     {
         public (IDictionary<string, double>, IDictionary<int, double>) Calculate(QuestionnaireSettings settings, 
-            IList<StakeholderTopsis> stakeholderAnswers,
+            IList<StakeholderTopsis> stakeholderTopsis,
             IDictionary<int, double> globalTopsis)
         {
-            // Calculate topsis global - average of stakeholder alternatives topsis
-            //var globalTopsis = new GroupTopsis(settings, stakeholderAnswers).Calculate()
-
             // Consensus
-            return CalculateDissimilarity(settings, globalTopsis, stakeholderAnswers);
-        }
+            var globalTopsisSum = globalTopsis.Values.Sum();
 
-        private (IDictionary<string,double>, IDictionary<int,double>) CalculateDissimilarity(
-            QuestionnaireSettings settings,
-            IDictionary<int, double> globalTopsisAverage, 
-            IList<StakeholderTopsis> stakeholderTopsis)
-        {
-            var globalTopsisSum = globalTopsisAverage.Values.Sum();
-
-            var alternativeDissimilarities = globalTopsisAverage.ToDictionary(x => x.Key, x => new List<double>());
+            var alternativeDissimilarities = globalTopsis.ToDictionary(x => x.Key, x => new List<double>());
             var stakeholderTotalConsensus = new Dictionary<string, double>();
 
             foreach (var g in stakeholderTopsis.GroupBy(x => x.StakeholderId))
@@ -42,8 +31,8 @@ namespace Topsis.Adapters.Algorithm
                     // =(ABS(Data!$D5-Data!E5)/($B$4-1))^$B$3
                     // =(ABS(GlobalTopsis-StakeholderTopsis)/(OutputLinquisticScale))^Rigorousness
 
-                    var globalTopsis = globalTopsisAverage[stakeholderAlt.AlternativeId];
-                    var dissimilarity = Math.Pow(Math.Abs(globalTopsis - stakeholderAlt.Topsis) / (double)settings.Scale, settings.Rigorousness);
+                    var altGlobalTopsis = globalTopsis[stakeholderAlt.AlternativeId];
+                    var dissimilarity = Math.Pow(Math.Abs(altGlobalTopsis - stakeholderAlt.Topsis) / (double)settings.Scale, settings.Rigorousness);
 
                     if (alternativeDissimilarities.TryGetValue(stakeholderAlt.AlternativeId, out var altDissimilarities))
                     {
@@ -51,7 +40,7 @@ namespace Topsis.Adapters.Algorithm
                     }
 
                     // Global Consensus
-                    productSum += globalTopsis * (1 - dissimilarity);
+                    productSum += altGlobalTopsis * (1 - dissimilarity);
                 }
 
                 stakeholderTotalConsensus[g.Key] = Rounder.Round(productSum / globalTopsisSum);
@@ -62,18 +51,5 @@ namespace Topsis.Adapters.Algorithm
 
             return (stakeholderTotalConsensus, consensusDegree);
         }
-
-        #region [ Helpers ]
-        private IDictionary<int, double> CalculateGlobalTopsis(IList<StakeholderTopsis> stakeholderAnswers)
-        {
-            var result = new Dictionary<int, double>();
-            foreach (var g in stakeholderAnswers.GroupBy(x => x.AlternativeId))
-            {
-                result[g.Key] = g.Select(x => x.Topsis).Average();
-            }
-
-            return result;
-        }
-        #endregion
     }
 }
