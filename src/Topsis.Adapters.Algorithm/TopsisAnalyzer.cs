@@ -33,21 +33,28 @@ namespace Topsis.Adapters.Algorithm
 
             // Consensus Degree.
 
-            AddGroupTopsis(result, settings, jobCategories, answers);
-            AddGroupConsensus(result, settings);
+            var globalTopsis = AddGroupTopsis(result, settings, jobCategories, answers);
+            AddGroupConsensus(result, settings, globalTopsis);
 
             return Task.FromResult(result);
         }
 
-        private static void AddGroupConsensus(WorkspaceAnalysisResult result, QuestionnaireSettings settings)
+        private static void AddGroupConsensus(WorkspaceAnalysisResult result, QuestionnaireSettings settings, IDictionary<int, double> globalTopsis)
         {
             var consensus = new TopsisConsensus();
-            var globalTopsis = result.GroupTopsis[StakeholderTopsis.DefaultGroupName].ToDictionary(x => x.AlternativeId, x => x.Topsis);
             var (stakeholdersConsent, consensusDegree) = consensus.Calculate(settings, result.StakeholderTopsis, globalTopsis);
             result.AddConsensusAnalysis(stakeholdersConsent, consensusDegree);
         }
 
-        private static void AddGroupTopsis(WorkspaceAnalysisResult result, 
+        /// <summary>
+        /// Returns the global topsis key:alternativeId-value:topsis.
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="settings"></param>
+        /// <param name="jobCategories"></param>
+        /// <param name="answers"></param>
+        /// <returns></returns>
+        private static IDictionary<int, double> AddGroupTopsis(WorkspaceAnalysisResult result, 
             QuestionnaireSettings settings, 
             IDictionary<int, string> jobCategories, 
             IList<StakeholderAnswerDto> answers)
@@ -67,6 +74,8 @@ namespace Topsis.Adapters.Algorithm
                     result.AddGroupSolution(alternativeSubgroupItems, $"{title} ({voteCount})");
                 }
             }
+
+            return alternativeGroupItems.ToDictionary(x => x.AlternativeId, x => x.Topsis);
         }
 
         private IEnumerable<StakeholderTopsis> GetAlternativesResults(string stakeholderId, int? jobCategoryId, DataTable distancesTable)
