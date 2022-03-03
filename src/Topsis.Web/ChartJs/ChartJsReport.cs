@@ -60,7 +60,7 @@ namespace Topsis.Web.ChartJs
 
             var scales = new ChartJsDatasetOptions.ChartJsScales(
                 new ChartJsDatasetOptions.ChartJsAxes("Alternatives"),
-                new ChartJsDatasetOptions.ChartJsAxes("Evaluation", suggestedMax: suggestedMaxY, suggestedMin: suggestedMinY, stepSize:1));
+                new ChartJsDatasetOptions.ChartJsAxes("Evaluation", suggestedMax: suggestedMaxY, ticksMin: suggestedMinY, stepSize:1));
 
             return new ChartJsReport()
             {
@@ -165,7 +165,7 @@ namespace Topsis.Web.ChartJs
             var labels = alternativeDict.Values.OrderBy(x => x.Order).Select(x => x.Title).ToList();
             var settings = vm.Workspace.Questionnaire.GetSettings();
 
-            var suggestedMaxY = 1 + (int)settings.Scale;
+            var suggestedMaxY = (int)settings.Scale;
             var scales = new ChartJsDatasetOptions.ChartJsScales(
                 new ChartJsDatasetOptions.ChartJsAxes("Alternatives"),
                 new ChartJsDatasetOptions.ChartJsAxes("Evaluation", suggestedMax: suggestedMaxY, stepSize: 1));
@@ -255,7 +255,7 @@ namespace Topsis.Web.ChartJs
             var yMin = Math.Round(Math.Max(0, avgData.Min() - 0.2), 1);
             var scales = new ChartJsDatasetOptions.ChartJsScales(
                 new ChartJsDatasetOptions.ChartJsAxes("Stakeholders"),
-                new ChartJsDatasetOptions.ChartJsAxes("Consensus", suggestedMin: yMin, suggestedMax: yMax, stepSize:0.2));
+                new ChartJsDatasetOptions.ChartJsAxes("Consensus", suggestedMin: yMin, suggestedMax: yMax, stepSize:0.2, ticksBeginAtZero: false));
             return new ChartJsReport()
             {
                 Data = new ChartJsData

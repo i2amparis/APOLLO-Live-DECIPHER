@@ -120,29 +120,25 @@ namespace Topsis.Web.ChartJs
         public class ChartJsAxes
         {
             public ChartJsAxes(string label, 
-                double suggestedMin = 0, 
-                double min = 0,
-                double suggestedMax = 1, 
+                double? suggestedMin = null, 
+                double? suggestedMax = null, 
                 double? stepSize = null,
-                bool beginAtZero = true)
+                double? ticksMin = null,
+                bool ticksBeginAtZero = true)
             {
                 Title = new ChartJsTitle(label);
                 SuggestedMin = suggestedMin;
                 SuggestedMax = suggestedMax;
-                Min = min;
-                Ticks = new ChartJsTicks(stepSize:stepSize, beginAtZero: beginAtZero);
+                Ticks = new ChartJsTicks(stepSize:stepSize, beginAtZero: ticksBeginAtZero, min: ticksMin);
             }
 
             [JsonProperty("title")]
             public ChartJsTitle Title { get; set; }
 
-            [JsonProperty("min")]
-            public double Min { get; }
-
             [JsonProperty("suggestedMin")]
-            public double SuggestedMin { get; }
+            public double? SuggestedMin { get; }
             [JsonProperty("suggestedMax")]
-            public double SuggestedMax { get; }
+            public double? SuggestedMax { get; }
 
             [JsonProperty("ticks")]
             public ChartJsTicks Ticks { get; set; }
@@ -164,10 +160,12 @@ namespace Topsis.Web.ChartJs
 
         public class ChartJsTicks
         {
-            public ChartJsTicks(bool beginAtZero = true, double? stepSize = 1)
+            public ChartJsTicks(bool beginAtZero = true, double? stepSize = 1, double? min = null, double? max = null)
             {
                 BeginAtZero = beginAtZero;
                 StepSize = stepSize;
+                Min = min;
+                Max = max;
             }
             /*
 ticks: {
@@ -175,6 +173,7 @@ ticks: {
     steps: 10,
     stepValue: 5,
     max: 100
+    min: 0,
 }
              */
 
@@ -182,6 +181,10 @@ ticks: {
             public bool BeginAtZero { get; set; }
             [JsonProperty("stepSize")]
             public double? StepSize { get; }
+            [JsonProperty("min")]
+            public double? Min { get; }
+            [JsonProperty("max")]
+            public double? Max { get; }
         }
 
         public class ChartJsPlugins
