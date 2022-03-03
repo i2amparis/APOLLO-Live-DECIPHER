@@ -68,14 +68,26 @@ namespace Topsis.Adapters.Algorithm
                 if (jobCategories.TryGetValue(jobCategoryId, out var title))
                 {
                     var subGroupAnswers = result.StakeholderTopsis.Where(x => x.JobCategoryId == jobCategoryId).ToList();
-                    var subGroupTopsis = new GroupTopsis(settings, subGroupAnswers);
-                    var alternativeSubgroupItems = subGroupTopsis.Calculate().ToArray();
                     var voteCount = subGroupAnswers.GroupBy(x => x.StakeholderId).Count();
+                    var alternativeSubgroupItems = CalculateSubgroupTopsis(settings, subGroupAnswers, voteCount);
                     result.AddGroupSolution(alternativeSubgroupItems, $"{title} ({voteCount})");
                 }
             }
 
             return alternativeGroupItems.ToDictionary(x => x.AlternativeId, x => x.Topsis);
+        }
+
+        private static AlternativeTopsis[] CalculateSubgroupTopsis(QuestionnaireSettings settings, List<StakeholderTopsis> subGroupAnswers, int voteCount)
+        {
+            if (voteCount == 1)
+            {
+                // discussion: 3/3/2022
+                // When group has only one stakeholder then return existing stakeholder topsis.
+                return subGroupAnswers.Select(x => new AlternativeTopsis { AlternativeId = x.AlternativeId, Topsis = x.Topsis }).ToArray();
+            }
+
+            var subGroupTopsis = new GroupTopsis(settings, subGroupAnswers);
+            return subGroupTopsis.Calculate().ToArray();
         }
 
         private IEnumerable<StakeholderTopsis> GetAlternativesResults(string stakeholderId, int? jobCategoryId, DataTable distancesTable)
