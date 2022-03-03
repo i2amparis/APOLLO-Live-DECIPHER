@@ -251,9 +251,11 @@ namespace Topsis.Web.ChartJs
             var avgConsensus = data.Average();
             var avgData = Enumerable.Range(1, data.Count).Select(x => avgConsensus).ToList();
 
+            var yMax = Math.Ceiling(avgData.Max());
+            var yMin = Math.Round(Math.Max(0, avgData.Min() - 0.2), 1);
             var scales = new ChartJsDatasetOptions.ChartJsScales(
                 new ChartJsDatasetOptions.ChartJsAxes("Stakeholders"),
-                new ChartJsDatasetOptions.ChartJsAxes("Consensus", suggestedMax: 1, stepSize: 0.2));
+                new ChartJsDatasetOptions.ChartJsAxes("Consensus", suggestedMin: yMin, suggestedMax: yMax, stepSize:0.2));
             return new ChartJsReport()
             {
                 Data = new ChartJsData

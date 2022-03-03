@@ -119,17 +119,25 @@ namespace Topsis.Web.ChartJs
 
         public class ChartJsAxes
         {
-            public ChartJsAxes(string label, double suggestedMin = 0, double suggestedMax = 1, double? stepSize = null)
+            public ChartJsAxes(string label, 
+                double suggestedMin = 0, 
+                double min = 0,
+                double suggestedMax = 1, 
+                double? stepSize = null,
+                bool beginAtZero = true)
             {
                 Title = new ChartJsTitle(label);
                 SuggestedMin = suggestedMin;
                 SuggestedMax = suggestedMax;
-
-                Ticks = new ChartJsTicks(stepSize:stepSize);
+                Min = min;
+                Ticks = new ChartJsTicks(stepSize:stepSize, beginAtZero: beginAtZero);
             }
 
             [JsonProperty("title")]
             public ChartJsTitle Title { get; set; }
+
+            [JsonProperty("min")]
+            public double Min { get; }
 
             [JsonProperty("suggestedMin")]
             public double SuggestedMin { get; }

@@ -15,6 +15,7 @@ namespace Topsis.Web.Areas.Guest.Pages.Workspace
     {
         public WorkspaceReportViewModel Data { get; set; }
         public string AlternativesReportJson { get; set; }
+        public string AlternativesYLabelsJson { get; set; }
         public string ConsensusReportJson { get; set; }
         public string ConsensusCompareReportJson { get; set; }
         public string CategoriesReportJson { get; set; }
@@ -38,7 +39,9 @@ namespace Topsis.Web.Areas.Guest.Pages.Workspace
 
             if (Data.Workspace.HasReport())
             {
+                var settings = Data.Workspace.Questionnaire.GetSettings();
                 AlternativesReportJson = JsonConvert.SerializeObject(ChartJsReport.BuildAlternativesReport(Data));
+                AlternativesYLabelsJson = JsonConvert.SerializeObject(settings.AlternativeRange.Select(x => x.Name).ToArray());
                 ConsensusReportJson = JsonConvert.SerializeObject(ChartJsReport.BuildConsensusReport(Data));
                 ConsensusCompareReportJson = JsonConvert.SerializeObject(ChartJsReport.BuildConsensusCompareReport(Data));
                 CategoriesReportJson = JsonConvert.SerializeObject(ChartJsReport.BuildCategoriesReport(Data));

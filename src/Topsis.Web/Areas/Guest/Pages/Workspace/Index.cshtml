@@ -146,15 +146,22 @@
         @*let configCompareConsensus = JSON.parse('@Html.Raw(Model.ConsensusCompareReportJson)');
         let compareChart = new Chart(document.getElementById('chCompareConsensus'), configCompareConsensus);*@
 
+        let alternativesYLabels = JSON.parse('@Html.Raw(Model.AlternativesYLabelsJson)');
+        let alternativesTicksCallback = function (value, idx) {
+            return alternativesYLabels[idx];
+        };
+
         let configAlternatives = JSON.parse('@Html.Raw(Model.AlternativesReportJson)');
+        configAlternatives.options.scales['y'].ticks.callback = alternativesTicksCallback;
+
         let altChart = new Chart(document.getElementById('chAlternatives'), configAlternatives);
 
         let configConsensus = JSON.parse('@Html.Raw(Model.ConsensusReportJson)');
         let consensusChart = new Chart(document.getElementById('chConsensus'), configConsensus);
 
         let configCategories = JSON.parse('@Html.Raw(Model.CategoriesReportJson)');
+        configCategories.options.scales['y'].ticks.callback = alternativesTicksCallback;
         let categoriesChart = new Chart(document.getElementById('chCategories'), configCategories);
-
 
         let configConsensusDegree = JSON.parse('@Html.Raw(Model.ConsensusDegreeJson)');
         let chConsensusDegreeChart = new Chart(document.getElementById('chConsensusDegree'), configConsensusDegree);
