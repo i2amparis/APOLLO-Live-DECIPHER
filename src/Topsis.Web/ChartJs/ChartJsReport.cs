@@ -56,11 +56,11 @@ namespace Topsis.Web.ChartJs
 
             var settings = vm.Workspace.Questionnaire.GetSettings();
             var suggestedMaxY = (int)Math.Ceiling(Math.Max(myData.Max(), groupData.Max()));
-            var suggestedMinY = Math.Round(Math.Max(0, groupData.Min() - 0.2), 1);
+            var suggestedMinY = (int)Math.Floor(Math.Round(Math.Max(0, groupData.Min() - 0.2), 1));
 
             var scales = new ChartJsDatasetOptions.ChartJsScales(
                 new ChartJsDatasetOptions.ChartJsAxes("Alternatives"),
-                new ChartJsDatasetOptions.ChartJsAxes("Evaluation", suggestedMax: suggestedMaxY, ticksMin: suggestedMinY, stepSize:1));
+                new ChartJsDatasetOptions.ChartJsAxes("Evaluation", suggestedMin: suggestedMinY, suggestedMax: suggestedMaxY, ticksMin: suggestedMinY, stepSize:1));
 
             return new ChartJsReport()
             {
@@ -165,10 +165,12 @@ namespace Topsis.Web.ChartJs
             var labels = alternativeDict.Values.OrderBy(x => x.Order).Select(x => x.Title).ToList();
             var settings = vm.Workspace.Questionnaire.GetSettings();
 
-            var suggestedMaxY = (int)settings.Scale;
+            var suggestedMaxY = (int)Math.Ceiling(datasets.Max(x => x.Data.Max()));
+            var suggestedMinY = Math.Max(0, (int)Math.Floor(datasets.Max(x => x.Data.Max()) - 0.2));
+
             var scales = new ChartJsDatasetOptions.ChartJsScales(
                 new ChartJsDatasetOptions.ChartJsAxes("Alternatives"),
-                new ChartJsDatasetOptions.ChartJsAxes("Evaluation", suggestedMax: suggestedMaxY, stepSize: 1));
+                new ChartJsDatasetOptions.ChartJsAxes("Evaluation", suggestedMin: suggestedMinY, suggestedMax: suggestedMaxY, stepSize: 1));
 
             return new ChartJsReport()
             {
@@ -251,8 +253,8 @@ namespace Topsis.Web.ChartJs
             var avgConsensus = data.Average();
             var avgData = Enumerable.Range(1, data.Count).Select(x => avgConsensus).ToList();
 
-            var yMax = Math.Ceiling(avgData.Max());
-            var yMin = Math.Round(Math.Max(0, avgData.Min() - 0.2), 1);
+            var yMax = (int)Math.Ceiling(avgData.Max());
+            var yMin = (int)Math.Floor(Math.Round(Math.Max(0, avgData.Min() - 0.2), 1));
             var scales = new ChartJsDatasetOptions.ChartJsScales(
                 new ChartJsDatasetOptions.ChartJsAxes("Stakeholders"),
                 new ChartJsDatasetOptions.ChartJsAxes("Consensus", suggestedMin: yMin, suggestedMax: yMax, stepSize:0.2, ticksBeginAtZero: false));

@@ -153,10 +153,12 @@ namespace Topsis.Application.Features
             IRequestHandler<ClearVotesCommand, string>
         {
             private readonly IWorkspaceRepository _workspaces;
+            private readonly IReportService _reports;
 
-            public Handler(IWorkspaceRepository workspaces)
+            public Handler(IWorkspaceRepository workspaces, IReportService reports)
             {
                 _workspaces = workspaces;
+                _reports = reports;
             }
 
             public async Task<string> Handle(ChangeOrderCommand command, CancellationToken cancellationToken)
@@ -228,13 +230,6 @@ namespace Topsis.Application.Features
                 return await SaveAsync(item);
             }
 
-            //public async Task<string> Handle(ChangeWeightCommand command, CancellationToken cancellationToken)
-            //{
-            //    var item = await LoadWorkspaceAsync(command.WorkspaceId);
-            //    item.ChangeCriterionWeight(command.Weight);
-            //    return await SaveAsync(item);
-            //}
-
             public async Task<string> Handle(ChangeAlternativeCommand command, CancellationToken cancellationToken)
             {
                 var item = await LoadWorkspaceAsync(command.WorkspaceId);
@@ -296,6 +291,7 @@ namespace Topsis.Application.Features
             private async Task<string> SaveAsync(Workspace item)
             {
                 await _workspaces.UnitOfWork.SaveChangesAsync();
+                _reports.ClearWorkspaceCache(item.Id);
                 return item.Id.Hash();
             }
             #endregion

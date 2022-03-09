@@ -8,5 +8,6 @@ namespace Topsis.Application.Contracts.Caching
         Task<TItem> GetOrCreateAsync<TItem>(string key, 
             Func<Task<TItem>> factory,
             TimeSpan? slidingExpiration = null);
+        void Remove(string key);
     }
 }

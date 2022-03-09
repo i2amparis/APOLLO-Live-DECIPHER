@@ -29,5 +29,10 @@ namespace Topsis.Adapters.Caching
                     return item;
                 });
         }
+
+        public void Remove(string key)
+        {
+            _cache.Remove(key);
+        }
     }
 }

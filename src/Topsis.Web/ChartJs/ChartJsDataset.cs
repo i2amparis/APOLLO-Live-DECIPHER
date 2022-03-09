@@ -120,8 +120,8 @@ namespace Topsis.Web.ChartJs
         public class ChartJsAxes
         {
             public ChartJsAxes(string label, 
-                double? suggestedMin = null, 
-                double? suggestedMax = null, 
+                int? suggestedMin = null, 
+                int? suggestedMax = null, 
                 double? stepSize = null,
                 double? ticksMin = null,
                 bool ticksBeginAtZero = true)
@@ -129,16 +129,16 @@ namespace Topsis.Web.ChartJs
                 Title = new ChartJsTitle(label);
                 SuggestedMin = suggestedMin;
                 SuggestedMax = suggestedMax;
-                Ticks = new ChartJsTicks(stepSize:stepSize, beginAtZero: ticksBeginAtZero, min: ticksMin);
+                Ticks = new ChartJsTicks(stepSize:stepSize, beginAtZero: ticksBeginAtZero);
             }
 
             [JsonProperty("title")]
             public ChartJsTitle Title { get; set; }
 
             [JsonProperty("suggestedMin")]
-            public double? SuggestedMin { get; }
+            public int? SuggestedMin { get; }
             [JsonProperty("suggestedMax")]
-            public double? SuggestedMax { get; }
+            public int? SuggestedMax { get; }
 
             [JsonProperty("ticks")]
             public ChartJsTicks Ticks { get; set; }
@@ -160,12 +160,10 @@ namespace Topsis.Web.ChartJs
 
         public class ChartJsTicks
         {
-            public ChartJsTicks(bool beginAtZero = true, double? stepSize = 1, double? min = null, double? max = null)
+            public ChartJsTicks(bool beginAtZero = true, double? stepSize = 1)
             {
                 BeginAtZero = beginAtZero;
                 StepSize = stepSize;
-                Min = min;
-                Max = max;
             }
             /*
 ticks: {
@@ -181,10 +179,6 @@ ticks: {
             public bool BeginAtZero { get; set; }
             [JsonProperty("stepSize")]
             public double? StepSize { get; }
-            [JsonProperty("min")]
-            public double? Min { get; }
-            [JsonProperty("max")]
-            public double? Max { get; }
         }
 
         public class ChartJsPlugins
