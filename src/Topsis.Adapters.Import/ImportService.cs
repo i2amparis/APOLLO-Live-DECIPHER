@@ -50,14 +50,22 @@ namespace Topsis.Adapters.Import
                     var dataset = reader.AsDataSet();
                     var table = dataset.Tables[0];
                     var headers = GetHeaders(table).ToArray();
-                    var workspaceKey = Guid.NewGuid().ToString();
-                    var stakeholders = ImportStakeholders(workspaceKey, headers, table);
-                    return await BuildWorkspaceAsync(workspaceKey, stakeholders, headers, table);
+
+                    // delete if exists.
+                    var importKey = file.FileName.Replace(" ", string.Empty);
+                    var found = await _workspaces.FindImportedAsync(importKey);
+                    if (found != null)
+                    {
+                        throw new ImportException(Domain.Common.DomainErrors.WorkspaceImport_AlreadyExist);
+                    }
+
+                    var stakeholders = await ImportStakeholdersAsync(importKey, headers, table);
+                    return await BuildWorkspaceAsync(importKey, stakeholders, headers, table);
                 }
             }
         }
 
-        private async Task<Workspace> BuildWorkspaceAsync(string workspaceKey, 
+        private async Task<Workspace> BuildWorkspaceAsync(string importKey, 
             IDictionary<string, string> stakeholders, 
             SurveyColumn[] columns, 
             DataTable table)
@@ -79,7 +87,7 @@ namespace Topsis.Adapters.Import
             }
 
             // criteria.
-            var workspace = new Workspace() { Title = workspaceKey, UserId = _user.UserId };
+            var workspace = new Workspace() { ImportKey = importKey, Title = importKey, UserId = _user.UserId };
             workspace.Questionnaire.SetSettings(QuestionnaireSettings.Default());
 
             var numberToCriterion = new Dictionary<int, Criterion>();
@@ -98,6 +106,8 @@ namespace Topsis.Adapters.Import
                 textToAlternative[item.AlternativeKey] = alternative;
             }
 
+            workspace.ChangeStatus(WorkspaceStatus.Published);
+            workspace.ChangeStatus(WorkspaceStatus.AcceptingVotes);
             await _workspaces.AddAsync(workspace);
             await _workspaces.UnitOfWork.SaveChangesAsync();
 
@@ -134,6 +144,7 @@ namespace Topsis.Adapters.Import
                 await _votes.AddAsync(vote);
             }
 
+            workspace.ChangeStatus(WorkspaceStatus.Finalized);
             await _votes.UnitOfWork.SaveChangesAsync();
             return workspace;
         }
@@ -174,7 +185,7 @@ namespace Topsis.Adapters.Import
             return vote;
         }
 
-        private IDictionary<string, string> ImportStakeholders(string workspaceKey, SurveyColumn[] columns, DataTable table)
+        private async Task<IDictionary<string, string>> ImportStakeholdersAsync(string workspaceKey, SurveyColumn[] columns, DataTable table)
         {
             var result = new Dictionary<string, string>();
 
@@ -190,12 +201,12 @@ namespace Topsis.Adapters.Import
 
                 var userId = $"{workspaceKey}_{id}";
                 var user = IdentityFactory.BuildUser(new UserCredentials { Id = userId, Email = $"{userId}@email.com", Password = $"{id}!{id}!{DateTime.Now:d}" });
-                _users.AddAsync(user);
-                _users.AddUserToRoleAsync(userId, RoleNames.Stakeholder);
+                await _users.AddAsync(user);
+                await _users.AddUserToRoleAsync(userId, RoleNames.Stakeholder);
                 result[id] = userId;
             }
 
-            _users.UnitOfWork.SaveChangesAsync();
+            await _users.UnitOfWork.SaveChangesAsync();
             return result;
         }
 

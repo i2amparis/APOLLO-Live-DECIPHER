@@ -1,0 +1,73 @@
+﻿@page
+@model Topsis.Web.Areas.Moderator.Pages.Workspaces.ImportModel
+@{
+}
+
+@section Css {
+
+    <link href="~/lib/dropzone/dropzone.min.css" rel="stylesheet" />
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <h3>Import Workspace</h3>
+        @Html.ValidationDiv().AddClass("text-danger")
+        <form asp-action="/add" class="dropzone" id="my-dropzone">
+            @Html.AntiForgeryToken()
+            <div class="dz-message">
+                Drop survey file here or click to upload.
+                <br> <span class="note">(*.xlsx files)</span>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/lib/dropzone/dropzone.min.js"></script>
+
+    <script type="text/javascript">
+        let IsJsonString = function (str) {
+            try {
+                JSON.parse(str);
+            } catch (e) {
+                return false;
+            }
+
+            return true;
+        }
+
+        Dropzone.options.myDropzone = { // camelized version of the `id`
+            url: "@(this.Request.Path)",
+            paramName: "file", // The name that will be used to transfer the file
+            maxFilesize: @(Model.MaxFileMbLength), // MB
+            uploadMultiple: false,
+            acceptedFiles: ".xlsx",
+            timeout: 300000, // timeout in ms
+            params: {},
+            success: function (file, response) {
+                if (response.redirect) {
+                    document.location = response.redirect;
+                    return;
+                }
+
+                console.log(response);
+            },
+            error: function (file, response) {
+                
+                let error = response;
+                if (IsJsonString(response) == false) {
+                    // drop zone error. transform it.
+                    error = JSON.stringify({ Title: response });
+                }
+
+                console.error(error);
+            },
+        };
+
+        $(document).ready(function () {
+            
+        });
+    </script>
+}

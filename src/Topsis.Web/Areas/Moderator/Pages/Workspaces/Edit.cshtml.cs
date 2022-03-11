@@ -34,7 +34,7 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
 
         private async Task LoadPageAsync(string id)
         {
-            var response = await _bus.Send(new GetWorkspace.ById.Request(id));
+            var response = await _bus.SendAsync(new GetWorkspace.ById.Request(id));
             Data = response.Result;
             StatusOptions = GetStatusOptions(response.Result);
             Settings = Data.Questionnaire.GetSettings();
@@ -91,7 +91,7 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
                 MoveUp = moveUp 
             };
 
-            await _bus.Send(cmd);
+            await _bus.SendAsync(cmd);
             await LoadPageAsync(id);
         }
 
@@ -104,7 +104,7 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
                 Description = description
             };
 
-            await _bus.Send(cmd);
+            await _bus.SendAsync(cmd);
             await LoadPageAsync(id);
         }
 
@@ -116,7 +116,7 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
                 Status = status
             };
 
-            await _bus.Send(cmd);
+            await _bus.SendAsync(cmd);
             await LoadPageAsync(id);
         }
 
@@ -128,7 +128,7 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
                 Title = title ?? "new criterion"
             };
 
-            await _bus.Send(cmd);
+            await _bus.SendAsync(cmd);
             await LoadPageAsync(id);
         }
 
@@ -140,7 +140,7 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
                 Title = title ?? "new alternative"
             };
 
-            await _bus.Send(cmd);
+            await _bus.SendAsync(cmd);
             await LoadPageAsync(id);
         }
 
@@ -152,7 +152,7 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
                 CriterionId = criterionId
             };
 
-            await _bus.Send(cmd);
+            await _bus.SendAsync(cmd);
             await LoadPageAsync(id);
         }
 
@@ -164,13 +164,13 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
                 AlternativeId = alternativeId
             };
 
-            await _bus.Send(cmd);
+            await _bus.SendAsync(cmd);
             await LoadPageAsync(id);
         }
 
         public async Task OnPostChangeCriterion(EditWorkspace.ChangeCriterionCommand cmd)
         {
-            await _bus.Send(cmd);
+            await _bus.SendAsync(cmd);
             await LoadPageAsync(cmd.Id);
         }
 
@@ -183,25 +183,25 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
                 Title = title
             };
 
-            await _bus.Send(cmd);
+            await _bus.SendAsync(cmd);
             await LoadPageAsync(id);
         }
 
         public async Task OnPostChangeAlternativesRange(EditWorkspace.ChangeAlternativesRangeCommand cmd)
         {
-            await _bus.Send(cmd);
+            await _bus.SendAsync(cmd);
             await LoadPageAsync(cmd.WorkspaceId);
         }
 
         public async Task OnPostChangeCriteriaWeightsRange(EditWorkspace.ChangeCriteriaWeightRangeCommand cmd)
         {
-            await _bus.Send(cmd);
+            await _bus.SendAsync(cmd);
             await LoadPageAsync(cmd.WorkspaceId);
         }
 
         public async Task OnPostChangeTopsisSettings(EditWorkspace.ChangeTopsisSettingsCommand cmd)
         {
-            await _bus.Send(cmd);
+            await _bus.SendAsync(cmd);
             await LoadPageAsync(cmd.WorkspaceId);
         }
 
@@ -209,7 +209,7 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
         {
             var cmd = new EditWorkspace.AddCriterionOptionCommand { WorkspaceId = id };
 
-            await _bus.Send(cmd);
+            await _bus.SendAsync(cmd);
             await LoadPageAsync(id);
         }
 
@@ -217,7 +217,7 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
         {
             var cmd = new EditWorkspace.DeleteCriterionOptionCommand { WorkspaceId = id, Index = index };
 
-            await _bus.Send(cmd);
+            await _bus.SendAsync(cmd);
             await LoadPageAsync(id);
         }
 
@@ -225,7 +225,7 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
         {
             var cmd = new CalculateResults.Command { WorkspaceId = id, Algorithm = algorithm };
 
-            await _bus.Send(cmd);
+            await _bus.SendAsync(cmd);
             await LoadPageAsync(id);
         }
 
@@ -233,8 +233,16 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
         {
             var cmd = new EditWorkspace.ClearVotesCommand { WorkspaceId = id };
 
-            await _bus.Send(cmd);
+            await _bus.SendAsync(cmd);
             await LoadPageAsync(id);
+        }
+
+        public async Task<IActionResult> OnPostDeleteAsync(string id)
+        {
+            var cmd = new EditWorkspace.DeleteCommand { WorkspaceId = id };
+
+            await _bus.SendAsync(cmd);
+            return RedirectToPage("Index");
         }
     }
 }

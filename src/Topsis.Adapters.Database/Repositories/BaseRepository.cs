@@ -78,7 +78,7 @@ namespace Topsis.Adapters.Database.Repositories
             throw new NotImplementedException();
         }
 
-        public Task DeleteAsync(TEntity entity)
+        public virtual Task DeleteAsync(TEntity entity)
         {
             throw new NotImplementedException();
         }

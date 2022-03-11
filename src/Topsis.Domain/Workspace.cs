@@ -49,6 +49,8 @@ namespace Topsis.Domain
         public int? ParentId { get; set; }
         public Workspace Parent { get; set; }
 
+        [StringLength(255)]
+        public string ImportKey { get; set; }
         public Questionnaire Questionnaire { get; set; }
         public List<StakeholderVote> Votes { get; set; }
         public List<WorkspaceReport> Reports { get; set; }

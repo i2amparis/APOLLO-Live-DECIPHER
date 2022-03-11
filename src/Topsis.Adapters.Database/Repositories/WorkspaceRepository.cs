@@ -12,6 +12,11 @@ namespace Topsis.Adapters.Database.Repositories
         {
         }
 
+        public async Task<Workspace> FindImportedAsync(string importKey)
+        {
+            return await Set.FirstOrDefaultAsync(x => x.ImportKey == importKey);
+        }
+
         public async Task ClearVotesAndReportsAsync(int id)
         {
             var votes = await _db.WsStakeholderVotes
@@ -49,6 +54,26 @@ namespace Topsis.Adapters.Database.Repositories
                 .Include(x => x.Questionnaire)
                     .ThenInclude(x => x.Alternatives)
                 .SingleAsync(x => x.Id == id);
+        }
+
+        public async override Task DeleteAsync(Workspace entity)
+        {
+            var workspace = await Set
+                .Include(x => x.Questionnaire)
+                    .ThenInclude(x => x.Criteria)
+                .Include(x => x.Questionnaire)
+                    .ThenInclude(x => x.Alternatives)
+                .Include(x => x.Votes)
+                    .ThenInclude(x => x.Answers)
+                .Include(x => x.Reports)
+                .FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            foreach (var item in workspace.Votes)
+            {
+                _db.Users.Remove(new Application.Contracts.Identity.ApplicationUser { Id = item.ApplicationUserId });
+            }
+
+            Set.Remove(workspace);
         }
     }
 }

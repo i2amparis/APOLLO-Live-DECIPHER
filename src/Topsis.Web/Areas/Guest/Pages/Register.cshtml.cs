@@ -46,7 +46,7 @@ namespace Topsis.Web.Areas.Guest.Pages
         {
             ReturnUrl = GetReturnUrl(returnUrl);
 
-            var user = await _bus.Send(Data);
+            var user = await _bus.SendAsync(Data);
             await _signInManager.SignInAsync(user, true);
             return Redirect(returnUrl);
         }

@@ -26,7 +26,7 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
                 return Page();
             }
 
-            var id = await _bus.Send(Data);
+            var id = await _bus.SendAsync(Data);
             return RedirectToPage("Edit", new { id });
         }
     }

@@ -133,6 +133,11 @@ namespace Topsis.Application.Features
         {
             public string WorkspaceId { get; set; }
         }
+
+        public class DeleteCommand : IRequest<string>
+        {
+            public string WorkspaceId { get; set; }
+        }
         #endregion
 
         public class Handler : 
@@ -150,7 +155,8 @@ namespace Topsis.Application.Features
             IRequestHandler<ChangeCriteriaWeightRangeCommand, string>,
             IRequestHandler<AddCriterionOptionCommand, string>,
             IRequestHandler<DeleteCriterionOptionCommand, string>,
-            IRequestHandler<ClearVotesCommand, string>
+            IRequestHandler<ClearVotesCommand, string>,
+            IRequestHandler<DeleteCommand, string>
         {
             private readonly IWorkspaceRepository _workspaces;
             private readonly IReportService _reports;
@@ -276,6 +282,20 @@ namespace Topsis.Application.Features
             {
                 var id = command.WorkspaceId.DehashInts().First();
                 await _workspaces.ClearVotesAndReportsAsync(id);
+                await _workspaces.UnitOfWork.SaveChangesAsync();
+                return id.Hash();
+            }
+
+            public async Task<string> Handle(DeleteCommand command, CancellationToken cancellationToken)
+            {
+                var id = command.WorkspaceId.DehashInts().First();
+                var workspace = await _workspaces.GetByIdAsync(id);
+                if (workspace == null)
+                {
+                    return null;
+                }
+
+                await _workspaces.DeleteAsync(workspace);
                 await _workspaces.UnitOfWork.SaveChangesAsync();
                 return id.Hash();
             }

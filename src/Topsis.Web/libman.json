@@ -3,6 +3,10 @@
   "defaultProvider": "cdnjs",
   "libraries": [
     {
+      "library": "dropzone@5.9.3",
+      "destination": "wwwroot/lib/dropzone/"
+    },
+    {
       "library": "bootstrap@4.6.0",
       "destination": "wwwroot/lib/bootstrap/"
     },

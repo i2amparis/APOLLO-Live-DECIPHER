@@ -43,6 +43,7 @@ namespace Topsis.Application.Contracts.Database
     {
         Task<Workspace> GetByIdForCalculationAsync(int id);
         Task ClearVotesAndReportsAsync(int id);
+        Task<Workspace> FindImportedAsync(string importKey);
     }
 
     public interface IVoteRepository : IIntRepository<StakeholderVote>

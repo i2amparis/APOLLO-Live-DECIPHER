@@ -18,6 +18,7 @@ namespace Topsis.Domain.Common
         WorkspaceImport_InvalidStakeholderId = 11,
         WorkspaceImport_InvalidVoteValue = 12,
         WorkspaceStatus_CannotFindCriterionWeight = 13,
+        WorkspaceImport_AlreadyExist = 14,
     }
 
     public class DomainException : Exception

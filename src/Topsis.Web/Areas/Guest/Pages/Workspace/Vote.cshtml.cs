@@ -47,7 +47,7 @@ namespace Topsis.Web.Areas.Guest.Pages.Workspace
                 return Page();
             }
 
-            var result = await bus.Send(Data);
+            var result = await bus.SendAsync(Data);
             return this.RedirectToPage("/Workspace/Index", new { Data.Id });
         }
     }

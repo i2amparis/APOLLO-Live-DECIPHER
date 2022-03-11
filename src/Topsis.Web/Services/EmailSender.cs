@@ -16,7 +16,7 @@ namespace Topsis.Web.Services
 
         public async Task SendEmailAsync(string email, string subject, string message)
         {
-            await _bus.Send(new SendEmailCommand(email, subject, message));
+            await _bus.SendAsync(new SendEmailCommand(email, subject, message));
         }
     }
 }
