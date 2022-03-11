@@ -21,4 +21,10 @@
     <ProjectReference Include="..\..\src\Topsis.Web\Topsis.Web.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Data\input_mcda_dlci.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

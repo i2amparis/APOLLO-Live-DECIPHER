@@ -15,6 +15,7 @@ using Topsis.Adapters.Caching;
 using Topsis.Adapters.Database;
 using Topsis.Adapters.Email;
 using Topsis.Adapters.Encryption;
+using Topsis.Adapters.Import;
 using Topsis.Application;
 using Topsis.Application.Contracts.Identity;
 using Topsis.Domain.Contracts;
@@ -49,6 +50,7 @@ namespace Topsis.Web
             services.AddDataAccess(Configuration);
             services.AddEmail(Configuration);
             services.AddAlgorithm();
+            services.AddImportServices();
 
             services
                 .AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)

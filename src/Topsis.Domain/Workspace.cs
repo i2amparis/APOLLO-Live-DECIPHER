@@ -91,16 +91,16 @@ namespace Topsis.Domain
             Description = description ?? throw new ArgumentNullException(nameof(description));
         }
 
-        public void AddCriterion(string title)
+        public Criterion AddCriterion(string title)
         {
             EnsureInDraftStatusOrThrowException();
-            Questionnaire.AddCriterion(title);
+            return Questionnaire.AddCriterion(title);
         }
 
-        public void AddAlternative(string title)
+        public Alternative AddAlternative(string title)
         {
             EnsureInDraftStatusOrThrowException();
-            Questionnaire.AddAlternative(title);
+            return Questionnaire.AddAlternative(title);
         }
 
         public void RemoveCriterion(int criterionId)

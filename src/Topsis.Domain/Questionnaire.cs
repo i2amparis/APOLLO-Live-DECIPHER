@@ -49,16 +49,20 @@ namespace Topsis.Domain
                 && Alternatives.All(x => x.IsReadyForVoting());
         }
 
-        internal void AddCriterion(string title)
+        internal Criterion AddCriterion(string title)
         {
             var newOrder = Criteria.Any() ? Criteria.Max(x => x.Order) + 1 : 1;
-            Criteria.Add(new Criterion { Title = title, Order = (short)newOrder });
+            var item = new Criterion { Title = title, Order = (short)newOrder };
+            Criteria.Add(item);
+            return item;
         }
 
-        internal void AddAlternative(string title)
+        internal Alternative AddAlternative(string title)
         {
             var newOrder = Alternatives.Any() ? Alternatives.Max(x => x.Order) + 1 : 1;
-            Alternatives.Add(new Alternative { Title = title, Order = (short)newOrder });
+            var item = new Alternative { Title = title, Order = (short)newOrder };
+            Alternatives.Add(item);
+            return item;
         }
 
         internal void RemoveCriterion(int criterionId)

@@ -31,6 +31,7 @@
     <ProjectReference Include="..\Topsis.Adapters.Database\Topsis.Adapters.Database.csproj" />
     <ProjectReference Include="..\Topsis.Adapters.Email\Topsis.Adapters.Email.csproj" />
     <ProjectReference Include="..\Topsis.Adapters.Encryption\Topsis.Adapters.Encryption.csproj" />
+    <ProjectReference Include="..\Topsis.Adapters.Import\Topsis.Adapters.Import.csproj" />
     <ProjectReference Include="..\Topsis.Application\Topsis.Application.csproj" />
   </ItemGroup>
 
