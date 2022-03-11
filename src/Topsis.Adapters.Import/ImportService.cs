@@ -79,7 +79,9 @@ namespace Topsis.Adapters.Import
             }
 
             // criteria.
-            var workspace = new Workspace() { Title = workspaceKey };
+            var workspace = new Workspace() { Title = workspaceKey, UserId = _user.UserId };
+            workspace.Questionnaire.SetSettings(QuestionnaireSettings.Default());
+
             var numberToCriterion = new Dictionary<int, Criterion>();
             foreach (var g in criteriaAlternatives.OrderBy(x => x.Key))
             {
@@ -100,6 +102,7 @@ namespace Topsis.Adapters.Import
             await _workspaces.UnitOfWork.SaveChangesAsync();
 
             // votes
+            var criteriaWeightsNumberToIndex = columns.OfType<SurveyColumnCriterionWeight>().GroupBy(x => x.Number).ToDictionary(x => x.Key, x => x.First().ColumnIndex);
             var columnId = GetStakeholderIdColumn(columns);
             for (int rowIndex = 1; rowIndex < table.Rows.Count; rowIndex++)
             {
@@ -107,37 +110,25 @@ namespace Topsis.Adapters.Import
                 var stakeholderId = GetStakeholderId(table, columnId, rowIndex);
                 var userId = stakeholders[stakeholderId];
 
-                // vote.
-                var vote = new StakeholderVote
-                {
-                    WorkspaceId = workspace.Id,
-                    ApplicationUserId = userId
-                };
-
                 var row = table.Rows[rowIndex];
-                foreach (var item in criteriaAlternatives)
+                StakeholderVote vote = BuildVote(criteriaColumns, workspace, numberToCriterion, textToAlternative, row, stakeholderId, userId);
+
+                // importance.
+                foreach (var kvp in criteriaWeightsNumberToIndex)
                 {
-                    foreach (var column in criteriaColumns)
+                    var criterion = numberToCriterion[kvp.Key];
+                    var importance = row[kvp.Value]?.ToString();
+                    if (int.TryParse(importance, out var importanceWeight) == false)
                     {
-                        if (numberToCriterion.TryGetValue(column.Number, out var criterion) == false)
-                        {
-                            throw new ImportException(Domain.Common.DomainErrors.WorkspaceImport_InvalidVoteValue, $"Cannot find criterion for 'user:{stakeholderId}' and 'criterion:{column.CriterionTitle}'.");
-                        }
-
-                        if (textToAlternative.TryGetValue(column.AlternativeKey, out var alternative) == false)
-                        {
-                            throw new ImportException(Domain.Common.DomainErrors.WorkspaceImport_InvalidVoteValue, $"Cannot find alternative for 'user:{stakeholderId}' and 'alternative:{column.AlternativeTitle}'.");
-                        }
-
-                        var value = row[column.ColumnIndex]?.ToString();
-                        if (double.TryParse(value, out var voteValue) == false)
-                        {
-                            throw new ImportException(Domain.Common.DomainErrors.WorkspaceImport_InvalidVoteValue, $"Cannot parse vote value for 'user:{stakeholderId}' and 'header:{column.RawTitle}'.");
-                        }
-
-                        var answer = new StakeholderAnswer() { Vote = vote, Alternative = alternative, Criterion = criterion, Value = voteValue };
-                        vote.Answers.Add(answer);
+                        throw new ImportException(Domain.Common.DomainErrors.WorkspaceStatus_CannotFindCriterionWeight, $"Cannot find criterion weight for 'user:{stakeholderId}' and 'criterion:{kvp.Key}'.");
                     }
+
+                    vote.CriteriaImportance.Add(new StakeholderCriterionImportance()
+                    {
+                        Vote = vote,
+                        CriterionId = criterion.Id,
+                        Weight = importanceWeight
+                    });
                 }
 
                 await _votes.AddAsync(vote);
@@ -145,6 +136,42 @@ namespace Topsis.Adapters.Import
 
             await _votes.UnitOfWork.SaveChangesAsync();
             return workspace;
+        }
+
+        private static StakeholderVote BuildVote(IEnumerable<SurveyColumnCriterion> criteriaColumns, 
+            Workspace workspace, Dictionary<int, Criterion> numberToCriterion, 
+            Dictionary<string, Alternative> textToAlternative, DataRow row, string stakeholderId, string userId)
+        {
+            // vote.
+            var vote = new StakeholderVote
+            {
+                WorkspaceId = workspace.Id,
+                ApplicationUserId = userId
+            };
+
+            foreach (var column in criteriaColumns)
+            {
+                if (numberToCriterion.TryGetValue(column.Number, out var criterion) == false)
+                {
+                    throw new ImportException(Domain.Common.DomainErrors.WorkspaceImport_InvalidVoteValue, $"Cannot find criterion for 'user:{stakeholderId}' and 'criterion:{column.CriterionTitle}'.");
+                }
+
+                if (textToAlternative.TryGetValue(column.AlternativeKey, out var alternative) == false)
+                {
+                    throw new ImportException(Domain.Common.DomainErrors.WorkspaceImport_InvalidVoteValue, $"Cannot find alternative for 'user:{stakeholderId}' and 'alternative:{column.AlternativeTitle}'.");
+                }
+
+                var value = row[column.ColumnIndex]?.ToString();
+                if (double.TryParse(value, out var voteValue) == false)
+                {
+                    throw new ImportException(Domain.Common.DomainErrors.WorkspaceImport_InvalidVoteValue, $"Cannot parse vote value for 'user:{stakeholderId}' and 'header:{column.RawTitle}'.");
+                }
+
+                var answer = new StakeholderAnswer() { Vote = vote, Alternative = alternative, Criterion = criterion, Value = voteValue };
+                vote.Answers.Add(answer);
+            }
+
+            return vote;
         }
 
         private IDictionary<string, string> ImportStakeholders(string workspaceKey, SurveyColumn[] columns, DataTable table)

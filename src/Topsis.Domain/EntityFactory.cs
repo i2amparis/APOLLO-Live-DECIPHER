@@ -17,9 +17,9 @@ namespace Topsis.Domain
             };
 
             result.Questionnaire = new Questionnaire();
+            result.Questionnaire.SetSettings(QuestionnaireSettings.Default());
             result.Questionnaire.Criteria.AddRange(Criterion.Bulk(criteriaNo));
             result.Questionnaire.Alternatives.AddRange(Alternative.Bulk(alternativesNo));
-            result.Questionnaire.SetSettings(QuestionnaireSettings.Default());
 
             return result;
         }
