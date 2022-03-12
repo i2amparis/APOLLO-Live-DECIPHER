@@ -200,7 +200,7 @@ namespace Topsis.Adapters.Import
                 }
 
                 var userId = $"{workspaceKey}_{id}";
-                var user = IdentityFactory.BuildUser(new UserCredentials { Id = userId, Email = $"{userId}@email.com", Password = $"{id}!{id}!{DateTime.Now:d}" });
+                var user = IdentityFactory.BuildUser(new UserCredentials { Id = userId, Email = $"{userId}@email.com", Password = $"{id}!{id}!{DateTime.Now:yyyyMMdd}" });
                 await _users.AddAsync(user);
                 await _users.AddUserToRoleAsync(userId, RoleNames.Stakeholder);
                 result[id] = userId;

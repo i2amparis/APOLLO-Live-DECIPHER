@@ -42,7 +42,7 @@ namespace Topsis.Application.Contracts.Database
     public interface IWorkspaceRepository : IIntRepository<Workspace>
     {
         Task<Workspace> GetByIdForCalculationAsync(int id);
-        Task ClearVotesAndReportsAsync(int id);
+        Task<string[]> ClearVotesAndReportsAsync(int id);
         Task<Workspace> FindImportedAsync(string importKey);
     }
 

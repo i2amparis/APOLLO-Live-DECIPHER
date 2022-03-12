@@ -1,7 +1,9 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -160,11 +162,13 @@ namespace Topsis.Application.Features
         {
             private readonly IWorkspaceRepository _workspaces;
             private readonly IReportService _reports;
+            private readonly ILogger<Handler> _log;
 
-            public Handler(IWorkspaceRepository workspaces, IReportService reports)
+            public Handler(IWorkspaceRepository workspaces, IReportService reports, ILogger<Handler> log)
             {
                 _workspaces = workspaces;
                 _reports = reports;
+                _log = log;
             }
 
             public async Task<string> Handle(ChangeOrderCommand command, CancellationToken cancellationToken)
@@ -295,8 +299,11 @@ namespace Topsis.Application.Features
                     return null;
                 }
 
+                var sw = Stopwatch.StartNew();
                 await _workspaces.DeleteAsync(workspace);
                 await _workspaces.UnitOfWork.SaveChangesAsync();
+                sw.Stop();
+                _log.LogInformation($"Deletion took {sw.ElapsedMilliseconds / 1000} secs.");
                 return id.Hash();
             }
 

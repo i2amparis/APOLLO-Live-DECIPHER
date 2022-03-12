@@ -25,10 +25,12 @@ namespace Topsis.AcceptanceTests.Features
     public class AcceptanceTest
     {
         protected readonly SliceFixture _fixture;
+        private readonly ITestOutputHelper _output;
+
         public AcceptanceTest(SliceFixture sliceFixture, ITestOutputHelper output)
         {
             _fixture = new SliceFixture();
-            //_fixture.Output = output;
+            _output = output;
         }
     }
 }
