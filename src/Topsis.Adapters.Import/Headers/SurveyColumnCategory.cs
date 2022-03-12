@@ -27,5 +27,9 @@ namespace Topsis.Adapters.Import
         }
 
         public string CategoryName { get; }
+
+        public bool IsCountry => string.Equals(CategoryName, "country", System.StringComparison.OrdinalIgnoreCase);
+        public bool IsGender => string.Equals(CategoryName, "gender", System.StringComparison.OrdinalIgnoreCase);
+        public bool IsWork => string.Equals(CategoryName, "work", System.StringComparison.OrdinalIgnoreCase);
     }
 }

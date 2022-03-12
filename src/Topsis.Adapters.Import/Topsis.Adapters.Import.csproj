@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
+    <PackageReference Include="Fastenshtein" Version="1.0.0.8" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
   </ItemGroup>
 

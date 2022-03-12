@@ -20,10 +20,12 @@ namespace Topsis.Adapters.Import
         private readonly IVoteRepository _votes;
         private readonly IApplicationUserRepository<ApplicationUser> _users;
         private readonly IUserContext _user;
+        private Dictionary<string, string> _countriesMap;
+        private readonly Country[] _allCountries = Country.AllCountries();
 
         public ImportService(IWorkspaceRepository workspaces, 
             IVoteRepository votes,
-            IApplicationUserRepository<ApplicationUser> users, 
+            IApplicationUserRepository<ApplicationUser> users,
             IUserContext user)
         {
             _workspaces = workspaces;
@@ -116,12 +118,12 @@ namespace Topsis.Adapters.Import
             var columnId = GetStakeholderIdColumn(columns);
             for (int rowIndex = 1; rowIndex < table.Rows.Count; rowIndex++)
             {
-                // find user.
-                var stakeholderId = GetStakeholderId(table, columnId, rowIndex);
-                var userId = stakeholders[stakeholderId];
-
                 var row = table.Rows[rowIndex];
-                StakeholderVote vote = BuildVote(criteriaColumns, workspace, numberToCriterion, textToAlternative, row, stakeholderId, userId);
+
+                // find user.
+                var stakeholderId = GetStakeholderId(table, columnId, row);
+                var userId = stakeholders[stakeholderId];
+                var vote = BuildVote(criteriaColumns, workspace, numberToCriterion, textToAlternative, row, stakeholderId, userId);
 
                 // importance.
                 foreach (var kvp in criteriaWeightsNumberToIndex)
@@ -190,10 +192,13 @@ namespace Topsis.Adapters.Import
             var result = new Dictionary<string, string>();
 
             var columnId = GetStakeholderIdColumn(columns);
+            var columnCountry = GetCountryColumn(columns);
 
             for (int rowIndex = 1; rowIndex < table.Rows.Count; rowIndex++)
             {
-                string id = GetStakeholderId(table, columnId, rowIndex);
+                var row = table.Rows[rowIndex];
+
+                string id = GetStakeholderId(table, columnId, row);
                 if (string.IsNullOrWhiteSpace(id))
                 {
                     throw new ImportException(Domain.Common.DomainErrors.WorkspaceImport_InvalidStakeholderId, $"Could not parse stakeholder id for 'row:{rowIndex}'.");
@@ -201,6 +206,8 @@ namespace Topsis.Adapters.Import
 
                 var userId = $"{workspaceKey}_{id}";
                 var user = IdentityFactory.BuildUser(new UserCredentials { Id = userId, Email = $"{userId}@email.com", Password = $"{id}!{id}!{DateTime.Now:yyyyMMdd}" });
+                
+                user.CountryId = GetStakeholderCountryId(columnCountry, row);
                 await _users.AddAsync(user);
                 await _users.AddUserToRoleAsync(userId, RoleNames.Stakeholder);
                 result[id] = userId;
@@ -210,20 +217,58 @@ namespace Topsis.Adapters.Import
             return result;
         }
 
-        private static string GetStakeholderId(DataTable table, SurveyColumnStakeholderId columnId, int rowIndex)
+        private string GetStakeholderCountryId(SurveyColumnCategory columnCountry, DataRow row)
         {
-            return table.Rows[rowIndex][columnId.ColumnIndex]?.ToString()?.Trim();
+            var countryToLower = CountryToLower(columnCountry, row);
+            if (string.IsNullOrEmpty(countryToLower))
+            {
+                return null;
+            }
+
+            if (_countriesMap == null)
+            {
+                _countriesMap = new Dictionary<string, string>();
+            }
+
+            if (_countriesMap.TryGetValue(countryToLower, out var id))
+            {
+                return id;
+            }
+
+            var distances = _allCountries.ToDictionary(x => x.Id, x => Fastenshtein.Levenshtein.Distance(countryToLower, x.Title));
+            var closest = distances.OrderBy(x => x.Value).FirstOrDefault();
+            if (closest.Value < 3)
+            {
+                return closest.Key;
+            }
+
+            return null;
+        }
+
+        private SurveyColumnCategory GetCountryColumn(SurveyColumn[] columns)
+        {
+            return columns.OfType<SurveyColumnCategory>().FirstOrDefault(x => x.IsCountry);
+        }
+
+        private static string CountryToLower(SurveyColumnCategory countryColumn, DataRow row)
+        {
+            return row.ItemArray[countryColumn.ColumnIndex]?.ToString()?.Trim()?.ToLower();
+        }
+
+        private static string GetStakeholderId(DataTable table, SurveyColumnStakeholderId columnId, DataRow row)
+        {
+            return row[columnId.ColumnIndex]?.ToString()?.Trim();
         }
 
         private static SurveyColumnStakeholderId GetStakeholderIdColumn(SurveyColumn[] headers)
         {
-            var header = headers.OfType<SurveyColumnStakeholderId>().FirstOrDefault();
-            if (header == null)
+            var columns = headers.OfType<SurveyColumnStakeholderId>().FirstOrDefault();
+            if (columns == null)
             {
                 throw new ImportException(Domain.Common.DomainErrors.WorkspaceImport_InvalidStakeholderId, "Column for stakeholders ids not found.");
             }
 
-            return header;
+            return columns;
         }
 
         private IEnumerable<SurveyColumn> GetHeaders(DataTable table)

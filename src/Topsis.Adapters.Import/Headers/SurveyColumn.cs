@@ -1,7 +1,4 @@
-﻿using System;
-using System.Data;
-
-namespace Topsis.Adapters.Import
+﻿namespace Topsis.Adapters.Import
 {
     public enum SurveyHeaderType
     {
@@ -22,7 +19,7 @@ namespace Topsis.Adapters.Import
 
         public SurveyColumn(SurveyHeaderType type, int columnIndex, string rawTitle)
         {
-            RawTitle = rawTitle;
+            RawTitle = rawTitle?.Trim();
             Type = type;
             ColumnIndex = columnIndex;
         }
