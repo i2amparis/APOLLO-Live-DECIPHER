@@ -246,7 +246,7 @@ namespace Topsis.Adapters.Import
                 return closest.Key;
             }
 
-            return null;
+            return JobCategory.OtherJobCategoryId;
         }
 
         private SurveyColumnCategory GetWorkColumn(SurveyColumn[] columns)
