@@ -146,7 +146,7 @@ namespace Topsis.Adapters.Database
 
             // Workspace.
             builder.Entity<Country>().HasData(Country.AllCountries());
-            builder.Entity<JobCategory>().HasData(JobCategorySeed.Data());
+            builder.Entity<JobCategory>().HasData(JobCategory.AllJobCategories());
         }
         #endregion
     }

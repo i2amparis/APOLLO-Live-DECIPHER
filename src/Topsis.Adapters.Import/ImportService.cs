@@ -22,6 +22,8 @@ namespace Topsis.Adapters.Import
         private readonly IUserContext _user;
         private Dictionary<string, string> _countriesMap;
         private readonly Country[] _allCountries = Country.AllCountries();
+        private Dictionary<string, int> _workMap;
+        private readonly JobCategory[] _allJobCategories = JobCategory.AllJobCategories();
 
         public ImportService(IWorkspaceRepository workspaces, 
             IVoteRepository votes,
@@ -193,6 +195,7 @@ namespace Topsis.Adapters.Import
 
             var columnId = GetStakeholderIdColumn(columns);
             var columnCountry = GetCountryColumn(columns);
+            var columnWork = GetWorkColumn(columns);
 
             for (int rowIndex = 1; rowIndex < table.Rows.Count; rowIndex++)
             {
@@ -206,8 +209,8 @@ namespace Topsis.Adapters.Import
 
                 var userId = $"{workspaceKey}_{id}";
                 var user = IdentityFactory.BuildUser(new UserCredentials { Id = userId, Email = $"{userId}@email.com", Password = $"{id}!{id}!{DateTime.Now:yyyyMMdd}" });
-                
                 user.CountryId = GetStakeholderCountryId(columnCountry, row);
+                user.JobCategoryId = GetStakeholderJobCategoryId(columnWork, row);
                 await _users.AddAsync(user);
                 await _users.AddUserToRoleAsync(userId, RoleNames.Stakeholder);
                 result[id] = userId;
@@ -217,9 +220,50 @@ namespace Topsis.Adapters.Import
             return result;
         }
 
+        #region [ Work ]
+        private int? GetStakeholderJobCategoryId(SurveyColumnCategory column, DataRow row)
+        {
+            var excelTitleToLower = CategoryToLower(column, row);
+            if (string.IsNullOrEmpty(excelTitleToLower))
+            {
+                return null;
+            }
+
+            if (_workMap == null)
+            {
+                _workMap = new Dictionary<string, int>();
+            }
+
+            if (_workMap.TryGetValue(excelTitleToLower, out var id))
+            {
+                return id;
+            }
+
+            var distances = _allJobCategories.ToDictionary(x => x.Id, x => Fastenshtein.Levenshtein.Distance(excelTitleToLower, x.Title.ToLower()));
+            var closest = distances.OrderBy(x => x.Value).FirstOrDefault();
+            if (closest.Value < 3)
+            {
+                return closest.Key;
+            }
+
+            return null;
+        }
+
+        private SurveyColumnCategory GetWorkColumn(SurveyColumn[] columns)
+        {
+            return columns.OfType<SurveyColumnCategory>().FirstOrDefault(x => x.IsWork);
+        }
+
+        private static string CategoryToLower(SurveyColumnCategory column, DataRow row)
+        {
+            return row.ItemArray[column.ColumnIndex]?.ToString()?.Trim()?.ToLower();
+        }
+        #endregion
+
+        #region [ Country ]
         private string GetStakeholderCountryId(SurveyColumnCategory columnCountry, DataRow row)
         {
-            var countryToLower = CountryToLower(columnCountry, row);
+            var countryToLower = CategoryToLower(columnCountry, row);
             if (string.IsNullOrEmpty(countryToLower))
             {
                 return null;
@@ -249,11 +293,7 @@ namespace Topsis.Adapters.Import
         {
             return columns.OfType<SurveyColumnCategory>().FirstOrDefault(x => x.IsCountry);
         }
-
-        private static string CountryToLower(SurveyColumnCategory countryColumn, DataRow row)
-        {
-            return row.ItemArray[countryColumn.ColumnIndex]?.ToString()?.Trim()?.ToLower();
-        }
+        #endregion
 
         private static string GetStakeholderId(DataTable table, SurveyColumnStakeholderId columnId, DataRow row)
         {
