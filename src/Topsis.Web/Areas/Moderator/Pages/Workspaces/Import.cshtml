@@ -22,6 +22,12 @@
     </div>
 </div>
 
+<div class="row mt-2">
+    <div class="col-md-12">
+        <p id="summary" class="text-danger"></p>
+    </div>
+</div>
+
 @section Scripts {
 
     <partial name="_ValidationScriptsPartial" />
@@ -38,6 +44,16 @@
             return true;
         }
 
+        let buildSummary = function (response) {
+            let error = response.error;
+            if (IsJsonString(response) == false) {
+                // drop zone error. transform it.
+                error = JSON.stringify({ Title: response.error });
+            }
+
+            $('#summary').text(error);
+        }
+
         Dropzone.options.myDropzone = { // camelized version of the `id`
             url: "@(this.Request.Path)",
             paramName: "file", // The name that will be used to transfer the file
@@ -52,17 +68,10 @@
                     return;
                 }
 
-                console.log(response);
+                buildSummary(response);
             },
             error: function (file, response) {
-                
-                let error = response;
-                if (IsJsonString(response) == false) {
-                    // drop zone error. transform it.
-                    error = JSON.stringify({ Title: response });
-                }
-
-                console.error(error);
+                buildSummary(response);
             },
         };
 

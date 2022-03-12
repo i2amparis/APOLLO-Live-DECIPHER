@@ -56,7 +56,7 @@ namespace Topsis.Adapters.Import
                     var found = await _workspaces.FindImportedAsync(importKey);
                     if (found != null)
                     {
-                        throw new ImportException(Domain.Common.DomainErrors.WorkspaceImport_AlreadyExist);
+                        throw new ImportException(Domain.Common.DomainErrors.WorkspaceImport_AlreadyExist, "Workspace with the same import filename alredy exists. You can delete the workspace when the status is 'Archived'.");
                     }
 
                     var stakeholders = await ImportStakeholdersAsync(importKey, headers, table);
