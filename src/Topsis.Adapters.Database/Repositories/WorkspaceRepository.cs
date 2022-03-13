@@ -64,22 +64,23 @@ namespace Topsis.Adapters.Database.Repositories
         public async override Task DeleteAsync(Workspace entity)
         {
             var userids = await ClearVotesAndReportsAsync(entity.Id);
-            //await _db.SaveChangesAsync();
-
-            var roles = await _db.UserRoles.Where(x => userids.Contains(x.UserId)).ToArrayAsync();
-            _db.RemoveRange(roles);
-            //await _db.SaveChangesAsync();
-
-            var users = await _db.Users.Where(x => userids.Contains(x.Id)).ToArrayAsync();
-            _db.Users.RemoveRange(users);
-            //await _db.SaveChangesAsync();
-
+           
             var workspace = await Set
                 .Include(x => x.Questionnaire)
                     .ThenInclude(x => x.Criteria)
                 .Include(x => x.Questionnaire)
                     .ThenInclude(x => x.Alternatives)
                 .FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            if (string.IsNullOrEmpty(workspace.ImportKey) == false)
+            {
+                var removedUserIds = userids.Where(x => x.IndexOf(workspace.ImportKey, System.StringComparison.OrdinalIgnoreCase) > -1).ToArray();
+                var roles = await _db.UserRoles.Where(x => removedUserIds.Contains(x.UserId)).ToArrayAsync();
+                _db.RemoveRange(roles);
+                
+                var users = await _db.Users.Where(x => removedUserIds.Contains(x.Id)).ToArrayAsync();
+                _db.Users.RemoveRange(users);
+            }
 
             Set.Remove(workspace);
         }
