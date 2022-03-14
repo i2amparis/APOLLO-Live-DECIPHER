@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Topsis.Application.Contracts.Algorithm;
@@ -29,7 +30,6 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
             }
 
             Answers = await reports.GetAnswersForCalculationAsync(workspaceId);
-
             return Page();
         }
     }

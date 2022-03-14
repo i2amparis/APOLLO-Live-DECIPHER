@@ -32,7 +32,7 @@
                         <th>Alternative</th>
                         @foreach (var criterionId in orderedCriteria)
                         {
-                            <th>@criteria[criterionId].Title</th>
+                            <th>[@criterionId] @criteria[criterionId].Title</th>
                         }
                         <th>Topsis</th>
                     </tr>
@@ -42,7 +42,7 @@
                     {
                         var answers = u.Value.Where(x => x.AlternativeId == alternativeId).ToDictionary(x => x.CriterionId, x => x.AnswerValue);
                         <tr>
-                            <th>@alternatives[alternativeId].Title</th>
+                            <th>[@(alternativeId)] @alternatives[alternativeId].Title</th>
                             @foreach (var criterionId in orderedCriteria)
                             {
                                 <td>@answers[criterionId]</td>
