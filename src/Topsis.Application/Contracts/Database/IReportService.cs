@@ -21,5 +21,6 @@ namespace Topsis.Application.Contracts.Database
         ValueTask<IDictionary<int,string>> GetJobCategoriesAsync();
 
         public void ClearWorkspaceCache(int workspaceId);
+        StakeholderDemographicsDto[] GetStakeholdersDemographicsAsync(string[] userIds);
     }
 }

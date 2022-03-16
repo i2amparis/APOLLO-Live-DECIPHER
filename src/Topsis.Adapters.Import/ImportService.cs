@@ -25,6 +25,8 @@ namespace Topsis.Adapters.Import
         private readonly Country[] _allCountries = Country.AllCountries();
         private Dictionary<string, int> _workMap;
         private readonly JobCategory[] _allJobCategories = JobCategory.AllJobCategories();
+        private readonly IDictionary<string, short> _allGenders
+            = EnumHelper.GetDictionary<Gender>().ToDictionary(x => x.Value.ToLower(), x => x.Key);
 
         public ImportService(IWorkspaceRepository workspaces, 
             IVoteRepository votes,
@@ -125,12 +127,47 @@ namespace Topsis.Adapters.Import
             return workspace;
         }
 
-        private static IList<StakeholderVote> BuildVotes(IDictionary<string, string> stakeholders, 
-            SurveyColumn[] columns, 
-            DataTable table, 
-            IEnumerable<SurveyColumnCriterion> criteriaColumns, 
-            Workspace workspace, 
-            Dictionary<int, Criterion> numberToCriterion, 
+        private async Task<IDictionary<string, string>> ImportStakeholdersAsync(string workspaceKey, SurveyColumn[] columns, DataTable table)
+        {
+            var result = new Dictionary<string, string>();
+
+            var columnId = GetStakeholderIdColumn(columns);
+            var columnCountry = GetCountryColumn(columns);
+            var columnWork = GetWorkColumn(columns);
+            var columnGender = GetGenderColumn(columns);
+
+            for (int rowIndex = 1; rowIndex < table.Rows.Count; rowIndex++)
+            {
+                var row = table.Rows[rowIndex];
+
+                string id = GetStakeholderId(columnId, row);
+                if (string.IsNullOrWhiteSpace(id))
+                {
+                    throw new ImportException(DomainErrors.WorkspaceImport_InvalidStakeholderId, $"Could not parse stakeholder id for 'row:{rowIndex}'.");
+                }
+
+                var userId = $"{workspaceKey}_{id}";
+                var user = IdentityFactory.BuildUser(new UserCredentials { Id = userId, Email = $"{userId}@email.com", Password = $"{id}!{id}!{DateTime.Now:yyyyMMdd}" });
+                user.CountryId = GetStakeholderCountryId(columnCountry, row);
+                user.JobCategoryId = GetStakeholderJobCategoryId(columnWork, row);
+                user.GenderId = GetStakeholderGenderId(columnGender, row);
+
+                await _users.AddAsync(user);
+                await _users.AddUserToRoleAsync(userId, RoleNames.Stakeholder);
+                result[id] = userId;
+            }
+
+            await _users.UnitOfWork.SaveChangesAsync();
+            return result;
+        }
+
+        #region [ Votes ]
+        private static IList<StakeholderVote> BuildVotes(IDictionary<string, string> stakeholders,
+            SurveyColumn[] columns,
+            DataTable table,
+            IEnumerable<SurveyColumnCriterion> criteriaColumns,
+            Workspace workspace,
+            Dictionary<int, Criterion> numberToCriterion,
             Dictionary<string, Alternative> textToAlternative)
         {
             var criteriaWeightsNumberToIndex = columns.OfType<SurveyColumnCriterionWeight>().GroupBy(x => x.Number).ToDictionary(x => x.Key, x => x.First().ColumnIndex);
@@ -176,7 +213,7 @@ namespace Topsis.Adapters.Import
             {
                 foreach (var kvp in result)
                 {
-                    if (stakeholderWeights.TryGetValue(kvp.Key, out var excelWeight) 
+                    if (stakeholderWeights.TryGetValue(kvp.Key, out var excelWeight)
                         && excelWeight.HasValue)
                     {
                         kvp.Value.Weight = Rounder.Round(excelWeight.Value / maxWeight.Value);
@@ -191,9 +228,9 @@ namespace Topsis.Adapters.Import
             return result.Values.ToArray();
         }
 
-        private static StakeholderVote BuildVote(IEnumerable<SurveyColumnCriterion> criteriaColumns, 
-            Workspace workspace, Dictionary<int, Criterion> numberToCriterion, 
-            Dictionary<string, Alternative> textToAlternative, DataRow row, 
+        private static StakeholderVote BuildVote(IEnumerable<SurveyColumnCriterion> criteriaColumns,
+            Workspace workspace, Dictionary<int, Criterion> numberToCriterion,
+            Dictionary<string, Alternative> textToAlternative, DataRow row,
             string stakeholderId, string userId)
         {
             // vote.
@@ -226,38 +263,8 @@ namespace Topsis.Adapters.Import
             }
 
             return vote;
-        }
-
-        private async Task<IDictionary<string, string>> ImportStakeholdersAsync(string workspaceKey, SurveyColumn[] columns, DataTable table)
-        {
-            var result = new Dictionary<string, string>();
-
-            var columnId = GetStakeholderIdColumn(columns);
-            var columnCountry = GetCountryColumn(columns);
-            var columnWork = GetWorkColumn(columns);
-
-            for (int rowIndex = 1; rowIndex < table.Rows.Count; rowIndex++)
-            {
-                var row = table.Rows[rowIndex];
-
-                string id = GetStakeholderId(columnId, row);
-                if (string.IsNullOrWhiteSpace(id))
-                {
-                    throw new ImportException(Domain.Common.DomainErrors.WorkspaceImport_InvalidStakeholderId, $"Could not parse stakeholder id for 'row:{rowIndex}'.");
-                }
-
-                var userId = $"{workspaceKey}_{id}";
-                var user = IdentityFactory.BuildUser(new UserCredentials { Id = userId, Email = $"{userId}@email.com", Password = $"{id}!{id}!{DateTime.Now:yyyyMMdd}" });
-                user.CountryId = GetStakeholderCountryId(columnCountry, row);
-                user.JobCategoryId = GetStakeholderJobCategoryId(columnWork, row);
-                await _users.AddAsync(user);
-                await _users.AddUserToRoleAsync(userId, RoleNames.Stakeholder);
-                result[id] = userId;
-            }
-
-            await _users.UnitOfWork.SaveChangesAsync();
-            return result;
-        }
+        } 
+        #endregion
 
         #region [ Work ]
         private int? GetStakeholderJobCategoryId(SurveyColumnCategory column, DataRow row)
@@ -331,6 +338,24 @@ namespace Topsis.Adapters.Import
         private SurveyColumnCategory GetCountryColumn(SurveyColumn[] columns)
         {
             return columns.OfType<SurveyColumnCategory>().FirstOrDefault(x => x.IsCountry);
+        }
+        #endregion
+
+        #region [ Gender ]
+        private Gender? GetStakeholderGenderId(SurveyColumnCategory column, DataRow row)
+        {
+            var valueToLower = CategoryToLower(column, row);
+            if (_allGenders.TryGetValue(valueToLower, out var genderId))
+            {
+                return (Gender)genderId;
+            }
+
+            return null;
+        }
+
+        private SurveyColumnCategory GetGenderColumn(SurveyColumn[] columns)
+        {
+            return columns.OfType<SurveyColumnCategory>().FirstOrDefault(x => x.IsGender);
         }
         #endregion
 

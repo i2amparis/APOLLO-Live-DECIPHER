@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Topsis.Application.Contracts.Algorithm;
 using Topsis.Domain;
+using Topsis.Domain.Common;
 
 namespace Topsis.Adapters.Algorithm
 {
@@ -11,8 +12,11 @@ namespace Topsis.Adapters.Algorithm
     {
         public Task<WorkspaceAnalysisResult> AnalyzeAsync(Workspace workspace, 
             IDictionary<int, string> jobCategories, 
-            IList<StakeholderAnswerDto> answers)
+            IList<StakeholderAnswerDto> answers,
+            IList<StakeholderDemographicsDto> stakeholdersDemographics)
         {
+            stakeholdersDemographics ??= new StakeholderDemographicsDto[0];
+
             var normalizer = new TopsisNormalizer();
             var distance = new TopsisDistanceCalculator();
 
@@ -35,7 +39,7 @@ namespace Topsis.Adapters.Algorithm
 
             // Consensus Degree.
 
-            var globalTopsis = AddGroupTopsis(result, settings, jobCategories, answers);
+            var globalTopsis = AddGroupTopsis(result, settings, jobCategories, stakeholdersDemographics);
             AddGroupConsensus(result, settings, globalTopsis);
 
             return Task.FromResult(result);
@@ -64,20 +68,37 @@ namespace Topsis.Adapters.Algorithm
         private static IDictionary<int, double> AddGroupTopsis(WorkspaceAnalysisResult result, 
             QuestionnaireSettings settings, 
             IDictionary<int, string> jobCategories, 
-            IList<StakeholderAnswerDto> answers)
+            IList<StakeholderDemographicsDto> stakeholders)
         {
             var groupTopsis = new GroupTopsis(settings, result.StakeholderTopsis);
             var alternativeGroupItems = groupTopsis.Calculate().ToArray();
             result.AddGroupSolution(alternativeGroupItems);
 
-            foreach (var jobCategoryId in answers.Select(x => x.JobCategoryId).Distinct().Where(x => x.HasValue).Select(x => x.Value))
+            var stakeholdersWithJob = stakeholders.Where(x => x.JobCategoryId.HasValue).ToArray();
+            foreach (var jobCategory in stakeholdersWithJob.GroupBy(x => x.JobCategoryId.Value))
             {
-                if (jobCategories.TryGetValue(jobCategoryId, out var title))
+                if (jobCategories.TryGetValue(jobCategory.Key, out var title))
                 {
-                    var subGroupAnswers = result.StakeholderTopsis.Where(x => x.JobCategoryId == jobCategoryId).ToList();
+                    var userIds = jobCategory.Select(x => x.Id).ToArray();
+                    var subGroupAnswers = result.StakeholderTopsis.Where(x => userIds.Contains(x.StakeholderId)).ToList();
                     var voteCount = subGroupAnswers.GroupBy(x => x.StakeholderId).Count();
                     var alternativeSubgroupItems = CalculateSubgroupTopsis(settings, subGroupAnswers, voteCount);
-                    result.AddGroupSolution(alternativeSubgroupItems, $"{title} ({voteCount})");
+                    result.AddGroupSolution(alternativeSubgroupItems, $"w:{title} ({voteCount})");
+                }
+            }
+
+            var stakeholdersWithGender = stakeholders.Where(x => x.GenderId.HasValue).ToArray();
+            if (stakeholdersWithGender.Any())
+            {
+                foreach (var genderGroup in stakeholdersWithGender.GroupBy(x => x.GenderId))
+                {
+                    var userIds = genderGroup.Select(x => x.Id).ToArray();
+                    var subGroupAnswers = result.StakeholderTopsis.Where(x => userIds.Contains(x.StakeholderId)).ToList();
+                    var voteCount = subGroupAnswers.GroupBy(x => x.StakeholderId).Count();
+                    var alternativeSubgroupItems = CalculateSubgroupTopsis(settings, subGroupAnswers, voteCount);
+                    
+                    var title = genderGroup.Key.GetDescription();
+                    result.AddGroupSolution(alternativeSubgroupItems, $"g:{title} ({voteCount})");
                 }
             }
 

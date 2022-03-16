@@ -17,7 +17,7 @@ namespace Topsis.Adapters.Algorithm.Unit.Test
             var answers2 = BuildMinimalStakeholderAnswers("s2", 4);
 
             var sut = new TopsisAnalyzer();
-            var output = await sut.AnalyzeAsync(workspace, new Dictionary<int, string>(), answers1.Union(answers2).ToArray());
+            var output = await sut.AnalyzeAsync(workspace, new Dictionary<int, string>(), answers1.Union(answers2).ToArray(), null);
 
             Assert.NotNull(output);
             Assert.NotEmpty(output.StakeholderTopsis);
@@ -31,7 +31,7 @@ namespace Topsis.Adapters.Algorithm.Unit.Test
             var answers = BuildExcelExp16StakeholderAnswers();
 
             var sut = new TopsisAnalyzer();
-            var output = await sut.AnalyzeAsync(workspace, new Dictionary<int, string>(), answers);
+            var output = await sut.AnalyzeAsync(workspace, new Dictionary<int, string>(), answers, null);
 
             Assert.NotNull(output);
             Assert.NotEmpty(output.StakeholderTopsis);
@@ -46,7 +46,7 @@ namespace Topsis.Adapters.Algorithm.Unit.Test
 
             var sw = Stopwatch.StartNew();
             var sut = new TopsisAnalyzer();
-            var output = await sut.AnalyzeAsync(workspace, new Dictionary<int, string>(), answers);
+            var output = await sut.AnalyzeAsync(workspace, new Dictionary<int, string>(), answers, null);
             sw.Stop();
 
             var secs = sw.ElapsedMilliseconds / 1000;

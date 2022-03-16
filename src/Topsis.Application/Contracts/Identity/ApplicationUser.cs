@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using Topsis.Domain;
 using Topsis.Domain.Contracts;
 
@@ -23,6 +22,9 @@ namespace Topsis.Application.Contracts.Identity
         public Country Country {get;set;}
         public int? JobCategoryId { get; set; }
         public JobCategory JobCategory { get; set; }
+
+        public Gender? GenderId { get; set; }
+
         public ChangeTrack Created { get; set; }
 
         public ICollection<StakeholderVote> Votes { get; set; }

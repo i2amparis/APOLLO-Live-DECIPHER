@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
 
 namespace Topsis.Domain.Common
 {
@@ -18,14 +17,6 @@ namespace Topsis.Domain.Common
         public static T DeserializeFromJson<T>(string json, JsonSerializerSettings settings = null)
         {
             return JsonConvert.DeserializeObject<T>(json, settings ?? Default);
-        }
-    }
-
-    public static class Rounder
-    {
-        public static double Round(double d, int decimals = 6)
-        {
-            return Math.Round(d, decimals);
         }
     }
 }

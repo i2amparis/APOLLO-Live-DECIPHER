@@ -9,6 +9,7 @@ namespace Topsis.Application.Contracts.Algorithm
     {
         Task<WorkspaceAnalysisResult> AnalyzeAsync(Workspace workspace, 
             IDictionary<int, string> jobCategories, 
-            IList<StakeholderAnswerDto> answers);
+            IList<StakeholderAnswerDto> answers,
+            IList<StakeholderDemographicsDto> stakeholdersDemographics);
     }
 }

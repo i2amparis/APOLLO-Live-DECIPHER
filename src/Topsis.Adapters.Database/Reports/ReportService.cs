@@ -186,6 +186,15 @@ namespace Topsis.Adapters.Database.Reports
                     .ThenInclude(x => x.Alternatives)
                 .SingleOrDefaultAsync(x => x.Id == workspaceId);
         }
+
+        public StakeholderDemographicsDto[] GetStakeholdersDemographicsAsync(string[] userIds)
+        {
+            var query = (from id in userIds
+                        join item in _db.Users on id equals item.Id
+                        select new StakeholderDemographicsDto(item.Id, item.GenderId, item.JobCategoryId)).AsQueryable();
+
+            return query.AsNoTracking().ToArray();
+        }
         #endregion
 
         #endregion
