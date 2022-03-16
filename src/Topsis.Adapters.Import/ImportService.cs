@@ -10,6 +10,7 @@ using Topsis.Application.Contracts.Database;
 using Topsis.Application.Contracts.Identity;
 using Topsis.Application.Contracts.Import;
 using Topsis.Domain;
+using Topsis.Domain.Common;
 using Topsis.Domain.Contracts;
 
 namespace Topsis.Adapters.Import
@@ -175,9 +176,10 @@ namespace Topsis.Adapters.Import
             {
                 foreach (var kvp in result)
                 {
-                    if (stakeholderWeights.TryGetValue(kvp.Key, out var excelWeight))
+                    if (stakeholderWeights.TryGetValue(kvp.Key, out var excelWeight) 
+                        && excelWeight.HasValue)
                     {
-                        kvp.Value.Weight = excelWeight / maxWeight.Value;
+                        kvp.Value.Weight = Rounder.Round(excelWeight.Value / maxWeight.Value);
                     }
                     else
                     {
