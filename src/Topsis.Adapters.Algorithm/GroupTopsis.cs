@@ -24,7 +24,6 @@ namespace Topsis.Adapters.Algorithm
         internal IEnumerable<AlternativeTopsis> Calculate()
         {
             // every stakeholder answer vector becomes a "criterion" for topsis
-
             var normalizedTable = BuildNormalizedTable();
             var distanceTable = BuildDistanceTable(normalizedTable);
             foreach (DataRow row in distanceTable.Rows)
@@ -136,7 +135,7 @@ namespace Topsis.Adapters.Algorithm
 
                 foreach (var item in alt.Value)
                 {
-                    newRow[ColumnHelper.GetStakeholderColumnName(item.StakeholderId)] = item.Topsis;
+                    newRow[ColumnHelper.GetStakeholderColumnName(item.StakeholderId)] = item.StakeholderWeight * item.Topsis;
                 }
 
                 result.Rows.Add(newRow);

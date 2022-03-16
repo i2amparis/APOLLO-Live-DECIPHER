@@ -116,14 +116,34 @@ namespace Topsis.Adapters.Import
             await _workspaces.UnitOfWork.SaveChangesAsync();
 
             // votes
+            var votes = BuildVotes(stakeholders, columns, table, criteriaColumns, workspace, numberToCriterion, textToAlternative).ToArray();
+            await _votes.AddRangeAsync(votes);
+
+            workspace.ChangeStatus(WorkspaceStatus.Finalized);
+            await _votes.UnitOfWork.SaveChangesAsync();
+            return workspace;
+        }
+
+        private static IList<StakeholderVote> BuildVotes(IDictionary<string, string> stakeholders, 
+            SurveyColumn[] columns, 
+            DataTable table, 
+            IEnumerable<SurveyColumnCriterion> criteriaColumns, 
+            Workspace workspace, 
+            Dictionary<int, Criterion> numberToCriterion, 
+            Dictionary<string, Alternative> textToAlternative)
+        {
             var criteriaWeightsNumberToIndex = columns.OfType<SurveyColumnCriterionWeight>().GroupBy(x => x.Number).ToDictionary(x => x.Key, x => x.First().ColumnIndex);
             var columnId = GetStakeholderIdColumn(columns);
+            var columnStakeholderWeight = GetStakeholderWeightColumn(columns);
+
+            var result = new Dictionary<string, StakeholderVote>();
+            var stakeholderWeights = new Dictionary<string, double?>();
             for (int rowIndex = 1; rowIndex < table.Rows.Count; rowIndex++)
             {
                 var row = table.Rows[rowIndex];
 
                 // find user.
-                var stakeholderId = GetStakeholderId(table, columnId, row);
+                var stakeholderId = GetStakeholderId(columnId, row);
                 var userId = stakeholders[stakeholderId];
                 var vote = BuildVote(criteriaColumns, workspace, numberToCriterion, textToAlternative, row, stakeholderId, userId);
 
@@ -143,19 +163,36 @@ namespace Topsis.Adapters.Import
                         CriterionId = criterion.Id,
                         Weight = importanceWeight
                     });
+
                 }
 
-                await _votes.AddAsync(vote);
+                stakeholderWeights[stakeholderId] = GetStakeholderWeight(columnStakeholderWeight, row);
+                result[stakeholderId] = vote;
             }
 
-            workspace.ChangeStatus(WorkspaceStatus.Finalized);
-            await _votes.UnitOfWork.SaveChangesAsync();
-            return workspace;
+            var maxWeight = stakeholderWeights.Max(x => x.Value);
+            if (maxWeight.HasValue)
+            {
+                foreach (var kvp in result)
+                {
+                    if (stakeholderWeights.TryGetValue(kvp.Key, out var excelWeight))
+                    {
+                        kvp.Value.Weight = excelWeight / maxWeight.Value;
+                    }
+                    else
+                    {
+                        kvp.Value.Weight = 1;
+                    }
+                }
+            }
+
+            return result.Values.ToArray();
         }
 
         private static StakeholderVote BuildVote(IEnumerable<SurveyColumnCriterion> criteriaColumns, 
             Workspace workspace, Dictionary<int, Criterion> numberToCriterion, 
-            Dictionary<string, Alternative> textToAlternative, DataRow row, string stakeholderId, string userId)
+            Dictionary<string, Alternative> textToAlternative, DataRow row, 
+            string stakeholderId, string userId)
         {
             // vote.
             var vote = new StakeholderVote
@@ -201,7 +238,7 @@ namespace Topsis.Adapters.Import
             {
                 var row = table.Rows[rowIndex];
 
-                string id = GetStakeholderId(table, columnId, row);
+                string id = GetStakeholderId(columnId, row);
                 if (string.IsNullOrWhiteSpace(id))
                 {
                     throw new ImportException(Domain.Common.DomainErrors.WorkspaceImport_InvalidStakeholderId, $"Could not parse stakeholder id for 'row:{rowIndex}'.");
@@ -295,21 +332,42 @@ namespace Topsis.Adapters.Import
         }
         #endregion
 
-        private static string GetStakeholderId(DataTable table, SurveyColumnStakeholderId columnId, DataRow row)
+        #region [ StakeholderId ]
+        private static string GetStakeholderId(SurveyColumnStakeholderId columnId, DataRow row)
         {
             return row[columnId.ColumnIndex]?.ToString()?.Trim();
         }
 
         private static SurveyColumnStakeholderId GetStakeholderIdColumn(SurveyColumn[] headers)
         {
-            var columns = headers.OfType<SurveyColumnStakeholderId>().FirstOrDefault();
-            if (columns == null)
+            var column = headers.OfType<SurveyColumnStakeholderId>().FirstOrDefault();
+            if (column == null)
             {
                 throw new ImportException(Domain.Common.DomainErrors.WorkspaceImport_InvalidStakeholderId, "Column for stakeholders ids not found.");
             }
 
-            return columns;
+            return column;
         }
+        #endregion
+
+        #region [ StakeholderWeight ]
+        private static double? GetStakeholderWeight(SurveyColumnStakeholderWeight column, DataRow row)
+        {
+            var value = row[column.ColumnIndex]?.ToString()?.Trim();
+            return double.TryParse(value, out var d) ? d : (double?)null;
+        }
+
+        private static SurveyColumnStakeholderWeight GetStakeholderWeightColumn(SurveyColumn[] headers)
+        {
+            var column = headers.OfType<SurveyColumnStakeholderWeight>().FirstOrDefault();
+            if (column == null)
+            {
+                throw new ImportException(Domain.Common.DomainErrors.WorkspaceImport_InvalidStakeholderWeight, "Column for stakeholders weights not found.");
+            }
+
+            return column;
+        }
+        #endregion
 
         private IEnumerable<SurveyColumn> GetHeaders(DataTable table)
         {

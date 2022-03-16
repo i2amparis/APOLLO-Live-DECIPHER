@@ -26,6 +26,11 @@ namespace Topsis.Adapters.Database.Repositories
             return result.Entity;
         }
 
+        public async Task AddRangeAsync(params ApplicationUser[] entities)
+        {
+            await _db.Users.AddRangeAsync(entities);
+        }
+
         public async Task AddUserToRoleAsync(string userId, string roleName)
         {
             var roles = _db.Roles.ToArray();

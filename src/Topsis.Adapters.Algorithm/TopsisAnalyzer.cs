@@ -18,6 +18,7 @@ namespace Topsis.Adapters.Algorithm
 
             var result = new WorkspaceAnalysisResult();
             var stakeholders = answers.GroupBy(x => x.StakeholderId);
+            var stakeholderWeights = BuildStakeholderWeights(workspace);
 
             foreach (var s in stakeholders)
             {
@@ -25,7 +26,8 @@ namespace Topsis.Adapters.Algorithm
 
                 var normalizedTable = normalizer.Normalize(workspace, stakeholderAnswers);
                 var distancesTable = distance.Calculate(workspace, normalizedTable);
-                var stakeholderTopsis = GetAlternativesResults(s.Key, stakeholderAnswers.First().JobCategoryId, distancesTable);
+                var stakeholderWeight = stakeholderWeights.TryGetValue(s.Key, out var weight) ? weight : 1;
+                var stakeholderTopsis = GetAlternativesResults(s.Key, stakeholderAnswers.First().JobCategoryId, distancesTable, stakeholderWeight);
                 result.AddStakeholderAnalysis(stakeholderTopsis);
             }
 
@@ -37,6 +39,11 @@ namespace Topsis.Adapters.Algorithm
             AddGroupConsensus(result, settings, globalTopsis);
 
             return Task.FromResult(result);
+        }
+
+        private Dictionary<string,double> BuildStakeholderWeights(Workspace workspace)
+        {
+            return workspace.Votes.ToDictionary(x => x.ApplicationUserId, x => x.Weight ?? 1);
         }
 
         private static void AddGroupConsensus(WorkspaceAnalysisResult result, QuestionnaireSettings settings, IDictionary<int, double> globalTopsis)
@@ -90,13 +97,13 @@ namespace Topsis.Adapters.Algorithm
             return subGroupTopsis.Calculate().ToArray();
         }
 
-        private IEnumerable<StakeholderTopsis> GetAlternativesResults(string stakeholderId, int? jobCategoryId, DataTable distancesTable)
+        private IEnumerable<StakeholderTopsis> GetAlternativesResults(string stakeholderId, int? jobCategoryId, DataTable distancesTable, double stakeholderWeight)
         {
             foreach (DataRow row in distancesTable.Rows)
             {
                 var alternativeId = (int)row[ColumnHelper.GetAlternativeColumnName()];
                 var topsis = (double)row[ColumnHelper.GetTopsisColumnName()];
-                yield return StakeholderTopsis.Create(stakeholderId, alternativeId, topsis, jobCategoryId);
+                yield return StakeholderTopsis.Create(stakeholderId, alternativeId, topsis, jobCategoryId, stakeholderWeight);
             }
         }
     }

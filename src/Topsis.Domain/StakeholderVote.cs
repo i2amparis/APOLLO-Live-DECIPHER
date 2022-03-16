@@ -16,7 +16,8 @@ namespace Topsis.Domain
 
         public ICollection<StakeholderAnswer> Answers { get; set; }
         public ICollection<StakeholderCriterionImportance> CriteriaImportance {get;set;} 
-        
+        public double? Weight { get; set; }
+
         public void Accept(IList<StakeholderAnswer> answers, IDictionary<int, int> importance)
         {
             Answers.Clear();

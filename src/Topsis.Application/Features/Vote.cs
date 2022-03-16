@@ -19,7 +19,7 @@ namespace Topsis.Application.Features
             public string Id { get; set; }
             public List<StakeholderAnswerDto> Answers { get; set; }
             public Dictionary<int, int> CriteriaImportance { get; set; }
-
+            
             public class StakeholderAnswerDto
             { 
                 [Required]

@@ -26,6 +26,7 @@ namespace Topsis.Application.Contracts.Database
         Task<TEntity> GetByIdAsync(TKey id);
         Task<IReadOnlyList<TEntity>> ListAllAsync();
         Task<TEntity> AddAsync(TEntity entity);
+        Task AddRangeAsync(params TEntity[] entities);
         Task UpdateAsync(TEntity entity);
         Task DeleteAsync(TEntity entity);
         Task<IPaginatedList<TEntity>> GetPagedReponseAsync(int page, int size);

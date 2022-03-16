@@ -87,5 +87,10 @@ namespace Topsis.Adapters.Database.Repositories
         {
             return await PaginatedList<TEntity>.CreateAsync(Set.AsQueryable(), page, size);
         }
+
+        public async Task AddRangeAsync(params TEntity[] entities)
+        {
+            await Set.AddRangeAsync(entities);
+        }
     }
 }
