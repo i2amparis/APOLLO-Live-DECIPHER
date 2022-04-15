@@ -11,10 +11,8 @@ namespace Topsis.Adapters.Algorithm
     {
         public DataTable Normalize(Workspace workspace, IList<StakeholderAnswerDto> answers)
         {
-            var settings = workspace.Questionnaire.GetSettings();
-            var criteriaWeights = BuildWeights(settings, answers);
-            var alternatives = workspace.Questionnaire.Alternatives.ToDictionary(x => x.Id, x => x.Title);
-            return BuildTable(criteriaWeights, answers, alternatives);
+            var criteriaWeights = BuildWeights(workspace.Questionnaire.GetSettings(), answers);
+            return BuildTable(criteriaWeights, answers, workspace.Questionnaire.AlternativesDictionary);
         }
 
         #region [ Helpers ]
@@ -33,12 +31,13 @@ namespace Topsis.Adapters.Algorithm
             return result;
         }
 
-        private DataTable BuildTable(IDictionary<int, double> criteriaWeights, IList<StakeholderAnswerDto> answers, Dictionary<int, string> alternatives)
+        private DataTable BuildTable(IDictionary<int, double> criteriaWeights, 
+            IList<StakeholderAnswerDto> answers, 
+            IDictionary<int, Alternative> alternatives)
         {
             var result = new DataTable();
 
             // build columns.
-
             result.Columns.Add(ColumnHelper.GetAlternativeColumnName(), typeof(int));
             result.Columns.Add(ColumnHelper.GetAlternativeTitleColumnName(), typeof(string));
             foreach (var c in criteriaWeights)
@@ -53,9 +52,9 @@ namespace Topsis.Adapters.Algorithm
 
                 var dataRow = result.NewRow();
                 dataRow[ColumnHelper.GetAlternativeColumnName()] = item.Key;
-                if (alternatives.TryGetValue(item.Key, out var title))
+                if (alternatives.TryGetValue(item.Key, out var alt))
                 {
-                    dataRow[ColumnHelper.GetAlternativeTitleColumnName()] = title;
+                    dataRow[ColumnHelper.GetAlternativeTitleColumnName()] = alt.Title;
                 }
 
                 foreach (var c in criteria)
