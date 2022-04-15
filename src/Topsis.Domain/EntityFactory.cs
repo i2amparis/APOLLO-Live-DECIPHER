@@ -16,7 +16,6 @@ namespace Topsis.Domain
                 UserId = userContext.UserId
             };
 
-            result.Questionnaire = new Questionnaire();
             result.Questionnaire.SetSettings(QuestionnaireSettings.Default());
             result.Questionnaire.Criteria.AddRange(Criterion.Bulk(criteriaNo));
             result.Questionnaire.Alternatives.AddRange(Alternative.Bulk(alternativesNo));

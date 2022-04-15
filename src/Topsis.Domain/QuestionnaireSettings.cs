@@ -30,7 +30,7 @@ namespace Topsis.Domain
 
         public OutputLinguisticScale Scale => AlternativeRange.Any() ? (OutputLinguisticScale)AlternativeRange.Last().Value : OutputLinguisticScale.Unknown;
 
-        public int CriterionWeightMax => CriteriaWeightRange.Any() ? (int)CriteriaWeightRange.Max(x => x.Value) : DefaultCriterionWeightMax;
+        public int CriterionWeightMax => CriteriaWeightRange.Any() ? (int)CriteriaWeightRange.Max(x => x.Value) : CriterionWeightMin;
 
         /// <summary>
         /// Takes values from 0 to 1.
