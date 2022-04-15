@@ -55,6 +55,12 @@
                                             </td>
                                         }
                                     </tr>
+                                    @if (Model.ViewModel.Tips.TryGetValue(alternative.Key, out var tip))
+                                    { 
+                                        <tr class="@(tip.IsMyTopsisAboveGroup ? "table-info" : "table-danger")">
+                                            <td colspan="@(Model.ViewModel.AlternativeRange.Count + 1)">@tip.GetTitle()</td>
+                                        </tr>
+                                    }
                                     answerIndex++;
 
                                 }

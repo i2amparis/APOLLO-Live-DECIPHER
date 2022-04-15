@@ -102,7 +102,19 @@
             <div class="col-md-3 float-right">
                 <h5>Consensus</h5>
                 <p class="lead">
-                    <span class="badge @Model.CompareReport.MyBadgeCls">Me: @(Model.CompareReport.MyConsensus)%</span>&nbsp;<span class="badge @Model.CompareReport.AverageBadgeCls">Avg: @(Model.CompareReport.AverarageConsensus)%</span></p>
+                    <span class="badge @Model.CompareReport.MyBadgeCls">Me: @(Model.CompareReport.MyConsensus)%</span>&nbsp;<span class="badge @Model.CompareReport.AverageBadgeCls">Avg: @(Model.CompareReport.AverarageConsensus)%</span>
+                </p>
+                @if (Model.CompareReport.Tips.Any())
+                {
+                <p>
+                    <ul>
+                        @foreach (var item in Model.CompareReport.Tips)
+                        {
+                            <li class="@(item.IsMyTopsisAboveGroup ? "text-info" : "text-danger")">@item.GetTitle()</li>
+                        }
+                    </ul>
+                </p>
+                }
             </div>
             <canvas id="chAlternatives"></canvas>
         </div>

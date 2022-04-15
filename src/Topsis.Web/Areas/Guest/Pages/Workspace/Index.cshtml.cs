@@ -2,9 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Topsis.Adapters.Algorithm;
 using Topsis.Application.Contracts.Database;
+using Topsis.Domain;
 using Topsis.Domain.Common;
 using Topsis.Domain.Contracts;
 using Topsis.Web.ChartJs;
@@ -64,16 +67,12 @@ namespace Topsis.Web.Areas.Guest.Pages.Workspace
                     return;
                 }
 
-                if (vm.ChartConsensus.TryGetValue(vm.UserId, out var value))
-                {
-                    MyConsensus = Rounder.Round(100d * value, 1); 
-                }
-
-                if (vm.ChartConsensus.Values.Any())
-                {
-                    AverarageConsensus = Rounder.Round(100d * vm.ChartConsensus.Values.Average(), 1); 
-                }
+                MyConsensus = vm.MyConsensus;
+                AverarageConsensus = vm.AverarageConsensus;
+                Tips = vm.Tips;
             }
+
+            public IList<FeedbackTip> Tips { get; }
 
             public double MyConsensus { get; }
             public double AverarageConsensus { get; }

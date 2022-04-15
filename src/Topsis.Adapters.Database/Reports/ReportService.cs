@@ -55,7 +55,8 @@ namespace Topsis.Adapters.Database.Reports
 
             var answers = await GetStakeholderAnswersAsync(user, id);
 
-            stakeholderVm.AddStakeholderAnswers(answers);
+            var report = await GetWorkspaceReportAsync(workspaceId, user);
+            stakeholderVm.AddStakeholderAnswers(answers, report);
             return stakeholderVm;
         }
 
