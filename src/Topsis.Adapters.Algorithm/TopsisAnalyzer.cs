@@ -47,7 +47,7 @@ namespace Topsis.Adapters.Algorithm
 
         private Dictionary<string,double> BuildStakeholderWeights(Workspace workspace)
         {
-            return workspace.Votes.ToDictionary(x => x.ApplicationUserId, x => x.Weight ?? 1);
+            return workspace.Votes.GroupBy(x => x.ApplicationUserId).ToDictionary(x => x.Key, x => x.OrderByDescending(x => x.Id).First().Weight ?? 1);
         }
 
         private static void AddGroupConsensus(WorkspaceAnalysisResult result, QuestionnaireSettings settings, IDictionary<int, double> globalTopsis)

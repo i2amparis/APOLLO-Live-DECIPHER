@@ -59,6 +59,7 @@ namespace Topsis.Adapters.Algorithm.Queue
                 workspace.FinalizeReport(reportKey.WorkspaceReportId, result);
                 await repository.UnitOfWork.SaveChangesAsync();
 
+                reports.ClearWorkspaceCache(workspace.Id);
                 logger.LogDebug($"Workspace report finalized: {reportKey}");
             }
             catch (System.Exception ex)
