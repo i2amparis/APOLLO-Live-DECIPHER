@@ -33,7 +33,8 @@
                                 {
                                     double? loadedAnswerValue = Model.ViewModel.StakeholderAnswers?.FirstOrDefault(x => x.CriterionId == criterion.Id && x.AlternativeId == alternative.Key)?.AnswerValue;
                                     var errorId = $"{criterion.Id}_{alternative.Key}_error";
-                                    <tr class="">
+                                    bool? isMyTopsisAboveGroup = Model.ViewModel.Tips.TryGetValue(alternative.Key, out var tip) ? tip.IsMyTopsisAboveGroup : (bool?)null;
+                                    <tr class="@(isMyTopsisAboveGroup.HasValue ? (isMyTopsisAboveGroup == true ? "table-info" : "table-danger") : "")">
                                         <th scope="row">
                                             @alternative.Value
                                             <input type="hidden" name="Data.Answers[@answerIndex].CriterionId" value="@criterion.Id" />
@@ -55,10 +56,17 @@
                                             </td>
                                         }
                                     </tr>
-                                    @if (Model.ViewModel.Tips.TryGetValue(alternative.Key, out var tip))
+                                    @if (isMyTopsisAboveGroup.HasValue)
                                     { 
                                         <tr class="@(tip.IsMyTopsisAboveGroup ? "table-info" : "table-danger")">
-                                            <td colspan="@(Model.ViewModel.AlternativeRange.Count + 1)">@tip.GetTitle()</td>
+                                            @if(tip.IsMyTopsisAboveGroup)
+                                            {
+                                                <td colspan="@(Model.ViewModel.AlternativeRange.Count + 1)"> Would you like to decrease your vote on this alternative?</td>
+                                            }
+                                            else
+                                            {
+                                                <td colspan="@(Model.ViewModel.AlternativeRange.Count + 1)"> Would you like to increase your vote on this alternative?</td>
+                                            }
                                         </tr>
                                     }
                                     answerIndex++;
