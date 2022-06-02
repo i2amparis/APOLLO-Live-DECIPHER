@@ -14,7 +14,7 @@ services:
       options:
         tag: "{{.DaemonName}}(image={{.ImageName}};name={{.Name}};id={{.ID}})"
     ports:
-      - 3308:3306 
+      - 3306:3306 
     networks:
       - backend
     volumes:
