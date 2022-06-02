@@ -26,10 +26,9 @@ namespace Topsis.Application.Contracts.Database
         public void AddStakeholderAnswers(List<StakeholderAnswerDto> answers, WorkspaceReportViewModel report)
         {
             StakeholderAnswers = answers;
-            if (answers.Any() && report != null)
-            {
-                Tips = report.Tips.ToDictionary(x => x.AlternativeId, x => x);
-            }
+            Tips = answers.Any() 
+                ? report.Tips.ToDictionary(x => x.AlternativeId, x => x)
+                : new Dictionary<int, FeedbackTip>();
         }
     }
 }
