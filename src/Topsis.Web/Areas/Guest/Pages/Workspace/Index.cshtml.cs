@@ -68,21 +68,21 @@ namespace Topsis.Web.Areas.Guest.Pages.Workspace
                 }
 
                 MyConsensus = vm.MyConsensus;
-                AverarageConsensus = vm.AverarageConsensus;
+                AverageConsensus = vm.AverageConsensus;
                 Tips = vm.Tips;
             }
 
             public IList<FeedbackTip> Tips { get; }
 
             public double MyConsensus { get; }
-            public double AverarageConsensus { get; }
+            public double AverageConsensus { get; }
 
             public string AverageBadgeCls => DefaultBadge;
             public string MyBadgeCls => GetMyBadgeClass();
 
             private string GetMyBadgeClass()
             {
-                var delta = MyConsensus - AverarageConsensus;
+                var delta = MyConsensus - AverageConsensus;
                 var absDelta = Math.Abs(delta);
                 if (absDelta < 0.5d)
                 {

@@ -31,7 +31,7 @@ namespace Topsis.Application.Contracts.Database
 
             if (ChartConsensus?.Values.Any() == true)
             {
-                AverarageConsensus = Rounder.Round(100d * ChartConsensus.Values.Average(), 1);
+                AverageConsensus = Rounder.Round(100d * ChartConsensus.Values.Average(), 1);
             }
 
             Tips = BuildTips(report, workspace).OrderByDescending(x => x.Distance).Take(MaxNumberOfTipsCount).ToArray();
@@ -69,7 +69,7 @@ namespace Topsis.Application.Contracts.Database
         public Dictionary<string, AlternativeTopsis[]> ChartGroups { get; }
         public IDictionary<int, double> AlternativesConsensusDegree { get; }
         public double MyConsensus { get; }
-        public double AverarageConsensus { get; }
+        public double AverageConsensus { get; }
         public IList<FeedbackTip> Tips { get; }
 
         private IEnumerable<FeedbackTip> BuildTips(WorkspaceAnalysisResult report, Workspace workspace)
@@ -79,7 +79,7 @@ namespace Topsis.Application.Contracts.Database
                 yield break;
             }
 
-            if (report == null || MyConsensus == 0 || AverarageConsensus == 0 || MyConsensus > AverarageConsensus)
+            if (report == null || MyConsensus == 0 || AverageConsensus == 0 || MyConsensus > AverageConsensus)
             {
                 // user doesn't have any tips.
                 yield break;
