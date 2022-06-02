@@ -37,7 +37,7 @@ namespace Topsis.Application.Features
             {
                 var workspaceId = command.WorkspaceId.DehashInts().First();
                 var item = await _workspaces.GetByIdForCalculationAsync(workspaceId);
-                if (item.CurrentStatus != WorkspaceStatus.Finalized)
+                if (item.IsFinalized() == false)
                 {
                     throw new DomainException(DomainErrors.WorkspaceStatus_CannotCalculateResults, $"status: {item.CurrentStatus}");
                 }

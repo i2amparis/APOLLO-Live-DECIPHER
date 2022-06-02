@@ -34,7 +34,7 @@ namespace Topsis.Application.Contracts.Database
                 AverarageConsensus = Rounder.Round(100d * ChartConsensus.Values.Average(), 1);
             }
 
-            Tips = BuildTips(report, workspace.Questionnaire.AlternativesDictionary).OrderByDescending(x => x.Distance).Take(MaxNumberOfTipsCount).ToArray();
+            Tips = BuildTips(report, workspace).OrderByDescending(x => x.Distance).Take(MaxNumberOfTipsCount).ToArray();
         }
 
         private IEnumerable<AlternativeChartItem> BuildAlternativesChartData(Workspace workspace, 
@@ -72,8 +72,13 @@ namespace Topsis.Application.Contracts.Database
         public double AverarageConsensus { get; }
         public IList<FeedbackTip> Tips { get; }
 
-        private IEnumerable<FeedbackTip> BuildTips(WorkspaceAnalysisResult report, IDictionary<int, Alternative> alternatives)
+        private IEnumerable<FeedbackTip> BuildTips(WorkspaceAnalysisResult report, Workspace workspace)
         {
+            if (workspace.CanProvideTips() == false)
+            {
+                yield break;
+            }
+
             if (report == null || MyConsensus == 0 || AverarageConsensus == 0 || MyConsensus > AverarageConsensus)
             {
                 // user doesn't have any tips.
@@ -90,7 +95,8 @@ namespace Topsis.Application.Contracts.Database
             var globalTopsisDict = globalTopsis.ToDictionary(x => x.AlternativeId, x => x.Topsis);
             foreach (var item in report.StakeholderTopsis.Where(x => string.Equals(x.StakeholderId, UserId, StringComparison.OrdinalIgnoreCase)))
             {
-                if (globalTopsisDict.TryGetValue(item.AlternativeId, out var globalAltTopsis) && alternatives.TryGetValue(item.AlternativeId, out var alternative))
+                if (globalTopsisDict.TryGetValue(item.AlternativeId, out var globalAltTopsis)
+                    && workspace.Questionnaire.AlternativesDictionary.TryGetValue(item.AlternativeId, out var alternative))
                 {
                     yield return new FeedbackTip(item, globalAltTopsis, alternative.Title);
                 }

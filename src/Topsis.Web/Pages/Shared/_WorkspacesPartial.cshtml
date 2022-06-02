@@ -25,6 +25,9 @@
                     case Domain.WorkspaceStatus.Finalized:
                         <p class="badge badge-success">Finalized</p>
                         break;
+                    case Domain.WorkspaceStatus.FinalizedWithFeedback:
+                        <p class="badge badge-success">Finalized</p>
+                        break;
                     case Domain.WorkspaceStatus.AcceptingVotes:
                         <p class="badge badge-primary">Accepting votes</p>
                         break;
@@ -49,6 +52,11 @@
                 switch (item.CurrentStatus)
                 {
                     case Domain.WorkspaceStatus.Finalized:
+                        <a href="@(Url.Page("/Workspace/Index", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
+                           role="button"
+                           class="btn btn-block btn-outline-success float-right">See Report</a>
+                        break;
+                    case Domain.WorkspaceStatus.FinalizedWithFeedback:
                         <a href="@(Url.Page("/Workspace/Index", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
                            role="button"
                            class="btn btn-block btn-outline-success float-right">See Report</a>

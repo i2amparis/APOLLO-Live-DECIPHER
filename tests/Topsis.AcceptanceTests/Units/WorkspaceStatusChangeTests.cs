@@ -13,6 +13,7 @@ namespace Topsis.AcceptanceTests.Units
         [InlineData(WorkspaceStatus.Published, WorkspaceStatus.AcceptingVotes)]
         [InlineData(WorkspaceStatus.AcceptingVotes, WorkspaceStatus.AcceptingVotes)]
         [InlineData(WorkspaceStatus.AcceptingVotes, WorkspaceStatus.Finalized)]
+        [InlineData(WorkspaceStatus.AcceptingVotes, WorkspaceStatus.FinalizedWithFeedback)]
         public void Can_Change(WorkspaceStatus current, WorkspaceStatus newStatus)
         { 
             var sut = new WorkspaceStatusChangeSpec(current);
@@ -23,6 +24,7 @@ namespace Topsis.AcceptanceTests.Units
         [Theory]
         [InlineData(WorkspaceStatus.Draft, WorkspaceStatus.AcceptingVotes)]
         [InlineData(WorkspaceStatus.Published, WorkspaceStatus.Finalized)]
+        [InlineData(WorkspaceStatus.Published, WorkspaceStatus.FinalizedWithFeedback)]
         public void Cannot_Change(WorkspaceStatus current, WorkspaceStatus newStatus)
         {
             var sut = new WorkspaceStatusChangeSpec(current);

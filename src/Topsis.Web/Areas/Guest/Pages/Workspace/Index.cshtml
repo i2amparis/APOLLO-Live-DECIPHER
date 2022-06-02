@@ -3,7 +3,7 @@
 @using Topsis.Domain.Common
 @{
     var currentStatus = Model.Data.Workspace.CurrentStatus;
-    var hasReports = currentStatus == Domain.WorkspaceStatus.Finalized && Model.Data.Workspace.Reports?.Any() == true;
+    var hasReports = Model.Data.Workspace.IsFinalized() && Model.Data.Workspace.Reports?.Any() == true;
     var noResultsMessage = string.Empty;
     var canVote = currentStatus == Domain.WorkspaceStatus.AcceptingVotes;
     switch (Model.Data.Workspace.CurrentStatus)

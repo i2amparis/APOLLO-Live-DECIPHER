@@ -21,6 +21,7 @@
             {
                 WorkspaceStatus.Draft => CheckFromDraft(newStatus),
                 WorkspaceStatus.Published => CheckFromPublished(newStatus),
+                WorkspaceStatus.FinalizedWithFeedback => CheckFromFinalized(newStatus),
                 WorkspaceStatus.Finalized => CheckFromFinalized(newStatus),
                 _ => true,
             };
@@ -54,6 +55,7 @@
             return newStatus switch
             {
                 WorkspaceStatus.AcceptingVotes => true,
+                WorkspaceStatus.FinalizedWithFeedback => true,
                 WorkspaceStatus.Finalized => true,
                 WorkspaceStatus.Archived => true,
                 _ => false,

@@ -6,7 +6,7 @@
 
     bool isAcceptingVotes = Model.Data.CurrentStatus == Domain.WorkspaceStatus.AcceptingVotes;
 
-    bool isFinalized = Model.Data.CurrentStatus == Domain.WorkspaceStatus.Finalized;
+    bool isFinalized = Model.Data.IsFinalized();
     bool isArchived = Model.Data.CurrentStatus == Domain.WorkspaceStatus.Archived;
     int iconWidth = 40;
     var tableCls = "table  table-striped table-responsive-sm"; // table-responsive

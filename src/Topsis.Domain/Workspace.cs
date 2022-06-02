@@ -26,14 +26,19 @@ namespace Topsis.Domain
         AcceptingVotes = 2,
 
         /// <summary>
+        /// Stop accepting votes. Accept feedback. Shows results in report page.
+        /// </summary>
+        FinalizedWithFeedback = 3,
+
+        /// <summary>
         /// Stop accepting votes. Shows results in report page.
         /// </summary>
-        Finalized = 3,
+        Finalized = 4,
 
         /// <summary>
         /// Stop showing (home/report pages), only admin/moderators can see it. 
         /// </summary>
-        Archived = 4
+        Archived = 5
     }
 
     public class Workspace : Entity
@@ -44,6 +49,18 @@ namespace Topsis.Domain
             Questionnaire = new Questionnaire();
             Votes = new List<StakeholderVote>();
             Reports = new List<WorkspaceReport>();
+        }
+
+        public bool IsFinalized()
+        {
+            return CurrentStatus == WorkspaceStatus.Finalized || CurrentStatus == WorkspaceStatus.FinalizedWithFeedback;
+        }
+
+
+        public bool CanProvideTips()
+        {
+            return CurrentStatus == WorkspaceStatus.AcceptingVotes
+                || CurrentStatus == WorkspaceStatus.FinalizedWithFeedback;
         }
 
         public int? ParentId { get; set; }
@@ -197,7 +214,7 @@ namespace Topsis.Domain
 
         public bool HasReport()
         {
-            return CurrentStatus == WorkspaceStatus.Finalized && Reports?.Any() == true;
+            return IsFinalized() && Reports?.Any() == true;
         }
 
         #endregion
