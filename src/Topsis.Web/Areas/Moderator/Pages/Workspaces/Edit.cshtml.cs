@@ -244,5 +244,30 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
             await _bus.SendAsync(cmd);
             return RedirectToPage("Index");
         }
+
+        #region [ Pre-Calculate ]
+        public async Task<IActionResult> OnPostPrecalculateAsync(string id)
+        {
+            var cmd = new CalculateResults.PrecalculateCommand { WorkspaceId = id };
+
+            var result = await _bus.SendAsync(cmd);
+            return new JsonResult(new PrecalculationViewModel(result));
+        }
+
+        public class PrecalculationViewModel
+        {
+            public PrecalculationViewModel(WorkspaceAnalysisResult result)
+            {
+                Result = result;
+                if (result.StakeholdersConsensus?.Count > 0)
+                {
+                    StakeholderConsensusAvg = result.StakeholdersConsensus.Average(x => x.Value);
+                }
+            }
+
+            public WorkspaceAnalysisResult Result { get; }
+            public double? StakeholderConsensusAvg { get; }
+        }
+        #endregion
     }
 }

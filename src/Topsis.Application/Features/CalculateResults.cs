@@ -19,18 +19,27 @@ namespace Topsis.Application.Features
             public AlgorithmType Algorithm { get; set; }
         }
 
+        public class PrecalculateCommand : IRequest<WorkspaceAnalysisResult>
+        {
+            public string WorkspaceId { get; set; }
+        }
+
         public class Handler :
+            IRequestHandler<PrecalculateCommand, WorkspaceAnalysisResult>,
             IRequestHandler<Command, string>
         {
             private readonly IWorkspaceRepository _workspaces;
             private readonly ICalculateResultsProducer _calculationProducer;
+            private readonly ICalculateResultsProcessor _calculationProcessor;
 
             public Handler(IWorkspaceRepository workspaces,
                 IWorkspaceReportRepository workspaceReportRepository,
-                ICalculateResultsProducer calculationProducer)
+                ICalculateResultsProducer calculationProducer,
+                ICalculateResultsProcessor calculationProcessor)
             {
                 _workspaces = workspaces;
                 _calculationProducer = calculationProducer;
+                _calculationProcessor = calculationProcessor;
             }
 
             public async Task<string> Handle(Command command, CancellationToken cancellationToken)
@@ -48,6 +57,12 @@ namespace Topsis.Application.Features
                 // Send to queue.
                 _calculationProducer.AddCalculationInQueue(new WorkspaceReportKey(workspaceId, report.Id));
                 return item.Id.Hash();
+            }
+
+            public async Task<WorkspaceAnalysisResult> Handle(PrecalculateCommand command, CancellationToken cancellationToken)
+            {
+                var workspaceId = command.WorkspaceId.DehashInts().First();
+                return await _calculationProcessor.PrecalculateAsync(workspaceId);
             }
         }
     }

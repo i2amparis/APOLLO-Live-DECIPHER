@@ -6,6 +6,7 @@
     var hasReports = Model.Data.Workspace.IsFinalized() && Model.Data.Workspace.Reports?.Any() == true;
     var noResultsMessage = string.Empty;
     var canVote = currentStatus == Domain.WorkspaceStatus.AcceptingVotes;
+    
     switch (Model.Data.Workspace.CurrentStatus)
     {
         case Domain.WorkspaceStatus.Draft:
@@ -18,8 +19,6 @@
             noResultsMessage = $"Workspace is currently accepting votes. If you've already voted, refresh this page in a few minutes.";
             break;
         case Domain.WorkspaceStatus.Finalized:
-            noResultsMessage = "Workspace voting completed. Waiting for the results.";
-            break;
         case Domain.WorkspaceStatus.FinalizedWithFeedback:
             noResultsMessage = "Workspace voting completed. Waiting for the results.";
             break;

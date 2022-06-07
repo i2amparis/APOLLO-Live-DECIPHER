@@ -5,13 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Topsis.Application.Contracts.Algorithm;
 using Topsis.Application.Contracts.Database;
+using Topsis.Application.Contracts.Results;
+using Topsis.Domain;
 
 namespace Topsis.Adapters.Algorithm.Queue
 {
-    public interface ICalculateResultsProcessor
-    {
-        Task ProcessAsync(WorkspaceReportKey reportKey);
-    }
+    
 
     public class Processor : ICalculateResultsProcessor
     {
@@ -49,10 +48,7 @@ namespace Topsis.Adapters.Algorithm.Queue
             try
             {
                 var workspace = await repository.GetByIdForCalculationAsync(reportKey.WorkspaceId);
-                var answers = await reports.GetAnswersForCalculationAsync(reportKey.WorkspaceId);
-                var stakeholdersDemographics = reports.GetStakeholdersDemographicsAsync(answers.Select(x => x.StakeholderId).Distinct().ToArray());
-                var jobCategories = await reports.GetJobCategoriesAsync();
-                var result = await algorithm.AnalyzeAsync(workspace, jobCategories, answers, stakeholdersDemographics);
+                var result = await GetAnalysisResultAsync(reportKey.WorkspaceId, algorithm, reports, workspace);
 
                 // save
                 logger.LogDebug($"Finalizing workspace result: {reportKey}");
@@ -67,6 +63,23 @@ namespace Topsis.Adapters.Algorithm.Queue
                 logger.LogError(ex, ex.Message, reportKey);
                 //throw;
             }
+        }
+
+        private static async Task<WorkspaceAnalysisResult> GetAnalysisResultAsync(int workspaceId, ITopsisAlgorithm algorithm, IReportService reports, Workspace workspace)
+        {
+            var answers = await reports.GetAnswersForCalculationAsync(workspaceId);
+            var stakeholdersDemographics = reports.GetStakeholdersDemographicsAsync(answers.Select(x => x.StakeholderId).Distinct().ToArray());
+            var jobCategories = await reports.GetJobCategoriesAsync();
+            return await algorithm.AnalyzeAsync(workspace, jobCategories, answers, stakeholdersDemographics);
+        }
+
+        public async Task<WorkspaceAnalysisResult> PrecalculateAsync(int workspaceId)
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var reports = scope.ServiceProvider.GetRequiredService<IReportService>();
+            var repository = scope.ServiceProvider.GetRequiredService<IWorkspaceRepository>();
+            var workspace = await repository.GetByIdForCalculationAsync(workspaceId);
+            return await GetAnalysisResultAsync(workspaceId, _algorithm, reports, workspace);
         }
     }
 }

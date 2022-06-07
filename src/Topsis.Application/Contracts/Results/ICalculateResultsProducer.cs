@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using Topsis.Application.Contracts.Algorithm;
+using Topsis.Domain;
 
 namespace Topsis.Application.Contracts.Results
 {
@@ -8,5 +10,11 @@ namespace Topsis.Application.Contracts.Results
     {
         void AddCalculationInQueue(WorkspaceReportKey reportKey);
         IAsyncEnumerable<WorkspaceReportKey> GetNextCalculationAsync(CancellationToken ct);
+    }
+
+    public interface ICalculateResultsProcessor
+    {
+        Task ProcessAsync(WorkspaceReportKey reportKey);
+        Task<WorkspaceAnalysisResult> PrecalculateAsync(int workspaceId);
     }
 }
