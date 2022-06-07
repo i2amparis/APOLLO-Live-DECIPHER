@@ -73,13 +73,14 @@ namespace Topsis.Adapters.Algorithm.Queue
             return await algorithm.AnalyzeAsync(workspace, jobCategories, answers, stakeholdersDemographics);
         }
 
-        public async Task<WorkspaceAnalysisResult> PrecalculateAsync(int workspaceId)
+        public async Task<PrecalculationResult> PrecalculateAsync(int workspaceId)
         {
             using var scope = _scopeFactory.CreateScope();
             var reports = scope.ServiceProvider.GetRequiredService<IReportService>();
             var repository = scope.ServiceProvider.GetRequiredService<IWorkspaceRepository>();
             var workspace = await repository.GetByIdForCalculationAsync(workspaceId);
-            return await GetAnalysisResultAsync(workspaceId, _algorithm, reports, workspace);
+            var result = await GetAnalysisResultAsync(workspaceId, _algorithm, reports, workspace);
+            return new PrecalculationResult(workspace, result);
         }
     }
 }

@@ -251,22 +251,7 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
             var cmd = new CalculateResults.PrecalculateCommand { WorkspaceId = id };
 
             var result = await _bus.SendAsync(cmd);
-            return new JsonResult(new PrecalculationViewModel(result));
-        }
-
-        public class PrecalculationViewModel
-        {
-            public PrecalculationViewModel(WorkspaceAnalysisResult result)
-            {
-                Result = result;
-                if (result.StakeholdersConsensus?.Count > 0)
-                {
-                    StakeholderConsensusAvg = result.StakeholdersConsensus.Average(x => x.Value);
-                }
-            }
-
-            public WorkspaceAnalysisResult Result { get; }
-            public double? StakeholderConsensusAvg { get; }
+            return new JsonResult(result);
         }
         #endregion
     }

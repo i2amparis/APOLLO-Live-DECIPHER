@@ -55,10 +55,18 @@
             </div>
 
             <div class="md-12 m-3">
-                <h5 class="mt-3">Pre-calculate consensus</h5>
-                <input id="pre-calculate-button" type="submit" value="Pre-calculate" class="btn btn-outline-success" data-id="@(Model.Data.Id.Hash())" />
-                <br />
-                <div class="m-3" id="pre-calculate-result-div"></div>
+                <h5 class="mt-3">Pre-calculate report</h5>
+                <table>
+                    <tr>
+                        <td>
+                            <input id="pre-calculate-button" type="submit" value="Pre-calculate" class="btn btn-outline-success" data-id="@(Model.Data.Id.Hash())" />
+                        </td>
+                        <td>
+                            <div id="pre-calculate-result-div"></div>
+                        </td>
+                    </tr>
+                </table>
+
             </div>
         }
 
@@ -716,7 +724,10 @@
                     // you can see the result from the console
                     // tab of the developer tools
                     console.log(result);
-                    $('#pre-calculate-result-div').html(`<span>Stakeholder Consensus AVG: ${result.stakeholderConsensusAvg || "empty"}</span>`)
+                    $('#pre-calculate-result-div').html(`<ul>
+                    <li>Votes: ${result.votesCount}</li>
+                    <li>Stakeholder Consensus AVG: ${result.stakeholderConsensusAvg || "empty"}</li>
+                    </ul>`)
                 },
                 error: function (xhr, resp, text) {
                     console.log(xhr, resp, text);
