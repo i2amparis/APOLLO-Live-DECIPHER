@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -47,8 +48,34 @@ namespace Topsis.Application.Features
             {
                 RuleFor(m => m.Id).NotNull();
                 RuleFor(m => m.Answers).NotEmpty();
+                RuleFor(m => m.Answers).Must(CheckCriteria)
+                    .WithName("Data.Answers")
+                    .WithMessage("You cannot answer all criteria alternatives with the same answer.");
                 RuleForEach(model => model.Answers)
                     .SetValidator(AddAnswerValidator);
+            }
+
+            private bool CheckCriteria(List<Command.StakeholderAnswerDto> arg)
+            {
+                var criteria = arg.GroupBy(x => x.CriterionId).ToDictionary(x => x.ToArray());
+                int countCriteriaWithSameAnswers = 0;
+                foreach (var kvp in criteria)
+                {
+                    if (kvp.Value.All(x => x.Value == kvp.Value.First().Value))
+                    {
+                        countCriteriaWithSameAnswers++;
+                    }
+                }
+
+                // 8/6.2022 - Konstantinos: at least one criterion should have a different answer value.
+                // if for all criteria we have the same answers, 
+                // example: 
+                // c1: a1-1, a2-1, a3-1 -- all 1
+                // c2: a1-4, a2-4, a3-4 -- all 4
+                // c3: a1-1, a2-1, a3-1 -- all 1
+                // c3: a1-3, a2-3, a3-3 -- all 3
+                // then this is invalid
+                return countCriteriaWithSameAnswers != criteria.Count();
             }
 
             private IValidator<Command.StakeholderAnswerDto> AddAnswerValidator(Command command, 

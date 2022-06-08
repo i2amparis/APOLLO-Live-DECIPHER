@@ -2,8 +2,8 @@ version: "3"
 
 services:
   
-  mariadb-web:
-    image: mariadb:10.5
+  mysql-web:
+    image: mysql:latest
     restart: 'always'
     environment:
       MYSQL_ROOT_PASSWORD: password

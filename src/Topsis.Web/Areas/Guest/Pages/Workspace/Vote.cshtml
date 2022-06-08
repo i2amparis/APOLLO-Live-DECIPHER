@@ -2,6 +2,9 @@
 @model Workspace.VoteModel
 @{
     int answerIndex = 0;
+    var alternativeValues = Model.ViewModel.Settings.AlternativeRange.Select(x => x.Value).OrderBy(x => x).ToArray();
+    var altLowerValue = alternativeValues.First();
+    var altUpperValue = alternativeValues.Last();
 }
 <h2>@Model.ViewModel.WorkspaceTitle</h2>
 <h5>Give us your feedback</h5>
@@ -11,6 +14,7 @@
 
         <form method="post" class="no-ajax">
             <input type="hidden" asp-for="Data.Id" />
+            <div asp-validation-summary="All" class="text-danger"></div>
 
             @foreach (var criterion in Model.ViewModel.CriteriaOrdered)
             {
@@ -34,7 +38,9 @@
                                     double? loadedAnswerValue = Model.ViewModel.StakeholderAnswers?.FirstOrDefault(x => x.CriterionId == criterion.Id && x.AlternativeId == alternative.Key)?.AnswerValue;
                                     var errorId = $"{criterion.Id}_{alternative.Key}_error";
                                     bool? isMyTopsisAboveGroup = Model.ViewModel.Tips.TryGetValue(alternative.Key, out var tip) ? tip.IsMyTopsisAboveGroup : (bool?)null;
-                                    <tr class="@(isMyTopsisAboveGroup.HasValue ? (isMyTopsisAboveGroup == true ? "table-info" : "table-danger") : "")">
+                                    var should_highlight = isMyTopsisAboveGroup.HasValue && (isMyTopsisAboveGroup == true ? loadedAnswerValue != altLowerValue : loadedAnswerValue != altUpperValue);
+
+                                    <tr class="@(should_highlight ? (isMyTopsisAboveGroup == true ? "table-info" : "table-danger") : "")">
                                         <th scope="row">
                                             @alternative.Value
                                             <input type="hidden" name="Data.Answers[@answerIndex].CriterionId" value="@criterion.Id" />
@@ -56,21 +62,22 @@
                                             </td>
                                         }
                                     </tr>
-                                    @if (isMyTopsisAboveGroup.HasValue)
-                                    { 
+
+                                    @if (should_highlight)
+                                    {
                                         <tr class="@(tip.IsMyTopsisAboveGroup ? "table-info" : "table-danger")">
-                                            @if(tip.IsMyTopsisAboveGroup)
+                                            @if (tip.IsMyTopsisAboveGroup)
                                             {
-                                                <td colspan="@(Model.ViewModel.AlternativeRange.Count + 1)"> Would you like to decrease your vote on this alternative?</td>
+                                                <td colspan="@(Model.ViewModel.AlternativeRange.Count + 1)"> Would you like to <strong>decrease</strong> your vote on this alternative?</td>
                                             }
                                             else
                                             {
-                                                <td colspan="@(Model.ViewModel.AlternativeRange.Count + 1)"> Would you like to increase your vote on this alternative?</td>
+                                                <td colspan="@(Model.ViewModel.AlternativeRange.Count + 1)"> Would you like to <strong class="">increase</strong> your vote on this alternative?</td>
                                             }
                                         </tr>
                                     }
-                                    answerIndex++;
 
+                                    answerIndex++;
                                 }
                             </tbody>
 
@@ -137,6 +144,8 @@
             </div>
 
             <div class="form-group pt-3">
+                <div asp-validation-summary="All" class="text-danger"></div>
+
                 <input type="submit" value="Submit" class="btn btn-primary float-right" />
             </div>
         </form>

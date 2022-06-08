@@ -144,7 +144,8 @@ namespace Topsis.Adapters.Database.Reports
                 AlternativeRange = settings.AlternativeRange,
                 CriteriaImportanceRange = settings.CriteriaWeightRange,
                 CriteriaOrdered = workspace.Questionnaire.Criteria.OrderBy(x => x.Order).ToArray(),
-                AlternativesOrdered = workspace.Questionnaire.Alternatives.OrderBy(x => x.Order).Select(x => new KeyValuePair<int, string>(x.Id, x.Title)).ToArray()
+                AlternativesOrdered = workspace.Questionnaire.Alternatives.OrderBy(x => x.Order).Select(x => new KeyValuePair<int, string>(x.Id, x.Title)).ToArray(),
+                Settings = workspace.Questionnaire.GetSettings()
             };
         }
 

@@ -40,10 +40,15 @@ namespace Topsis.Web.Areas.Guest.Pages.Workspace
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync([FromServices] IMessageBus bus)
+        public async Task<IActionResult> OnPostAsync([FromServices] IMessageBus bus,
+            [FromServices] IUserContext userContext,
+            [FromServices] IReportService reports)
         {
             if (ModelState.IsValid == false)
             {
+                ViewModel = await reports.GetStakeholderVoteViewModelAsync(userContext, Data.Id);
+                ViewModel.Accept(Data.Answers);
+
                 return Page();
             }
 

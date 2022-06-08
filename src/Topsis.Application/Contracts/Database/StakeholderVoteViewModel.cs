@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Topsis.Application.Contracts.Algorithm;
+using Topsis.Application.Features;
 using Topsis.Domain;
 
 namespace Topsis.Application.Contracts.Database
@@ -22,6 +23,7 @@ namespace Topsis.Application.Contracts.Database
         public List<StakeholderAnswerDto> StakeholderAnswers { get; private set; }
         public WorkspaceStatus WorkspaceStatus { get; set; }
         public IDictionary<int, FeedbackTip> Tips { get; private set; }
+        public QuestionnaireSettings Settings { get; set; }
 
         public void AddStakeholderAnswers(List<StakeholderAnswerDto> answers, WorkspaceReportViewModel report)
         {
@@ -29,6 +31,25 @@ namespace Topsis.Application.Contracts.Database
             Tips = answers.Any() 
                 ? report.Tips.ToDictionary(x => x.AlternativeId, x => x)
                 : new Dictionary<int, FeedbackTip>();
+        }
+
+        /// <summary>
+        /// when user 
+        /// </summary>
+        /// <param name="answers"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void Accept(List<Vote.Command.StakeholderAnswerDto> answers)
+        {
+            Func<int, int, string> build_key = (cid, altid) => $"{cid}_{altid}";
+            var changedAnswers = answers.ToDictionary(x => build_key(x.CriterionId, x.AlternativeId), x => x);
+            foreach (var item in StakeholderAnswers)
+            {
+                var key = build_key(item.CriterionId, item.AlternativeId);
+                if (changedAnswers.TryGetValue(key, out var newAnswer))
+                {
+                    item.AnswerValue = newAnswer.Value;
+                }
+            }
         }
     }
 }
