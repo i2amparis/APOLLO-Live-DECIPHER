@@ -101,25 +101,31 @@
 
         <div class="col-md-12">
             <h3>Alternatives</h3>
-            <div class="col-md-3 float-right">
+            <div class="col-md-3 float-md-right">
                 <h5>Consensus</h5>
                 <p class="lead">
                     <span class="badge @Model.CompareReport.MyBadgeCls">Me: @(Model.CompareReport.MyConsensus)%</span>&nbsp;<span class="badge @Model.CompareReport.AverageBadgeCls">Avg: @(Model.CompareReport.AverageConsensus)%</span>
                 </p>
                 
             </div>
+
+            @if (Model.CompareReport.Tips.Any())
+            {
+            <div class="col-md-9 pt-2 text-center">
+            
+                @foreach (var item in Model.CompareReport.Tips)
+                {
+                    <div class='p-3 mb-2 bg-secondary text-light font-weight-bold'>Your vote on alternative [@item.AlternativeTitle] had the largest difference from the group solution.</div>
+                }
+            
+            </div>
+            }
+
+            
             <canvas id="chAlternatives"></canvas>
         </div>
 
-        <div class="col-md-12 pt-2 text-center">
-            @if (Model.CompareReport.Tips.Any())
-            {
-                @foreach (var item in Model.CompareReport.Tips)
-                {
-                    <div class='p-3 mb-2 bg-light text-dark'>Your vote on alternative [@item.AlternativeTitle] had the largest difference from the group solution.</div>
-                }
-            }
-        </div>
+        
     </div>
 
 
