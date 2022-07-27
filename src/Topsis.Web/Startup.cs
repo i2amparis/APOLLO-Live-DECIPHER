@@ -2,12 +2,14 @@ using FluentValidation.AspNetCore;
 using HtmlTags;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Topsis.Adapters.Algorithm;
@@ -44,6 +46,7 @@ namespace Topsis.Web
             services.AddMiniProfiler(opt =>
             {
                 opt.RouteBasePath = "/profiler";
+                opt.ResultsAuthorize = IsMonitorAuthorized;
             })
             .AddEntityFramework();
 
@@ -90,6 +93,11 @@ namespace Topsis.Web
 
             services
                 .AddMvc(opt => opt.ModelBinderProviders.Insert(0, new EntityModelBinderProvider()));
+        }
+
+        private bool IsMonitorAuthorized(HttpRequest request)
+        {
+            return request.HttpContext.User.IsInRole(RoleNames.Admin);
         }
 
         private static void AddLocalization(IServiceCollection services)
