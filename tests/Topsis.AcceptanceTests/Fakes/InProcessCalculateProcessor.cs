@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Topsis.Adapters.Algorithm.Queue;
 using Topsis.Application.Contracts.Algorithm;
 using Topsis.Application.Contracts.Database;
+using Topsis.Application.Contracts.Results;
 
 namespace Topsis.AcceptanceTests.Fakes
 {
@@ -23,6 +24,11 @@ namespace Topsis.AcceptanceTests.Fakes
             _repository = repository;
             _reports = reports;
             _logger = logger;
+        }
+
+        public Task<PrecalculationResult> PrecalculateAsync(int workspaceId)
+        {
+            throw new System.NotImplementedException();
         }
 
         public async Task ProcessAsync(WorkspaceReportKey reportKey)

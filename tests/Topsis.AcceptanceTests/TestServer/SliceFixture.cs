@@ -111,7 +111,7 @@ namespace Topsis.AcceptanceTests.TestServer
             }
 
             private readonly string _connection =
-                "Server=127.0.0.1; port=3306; uid=root; pwd=password; database=topsis-test;";
+                "Server=127.0.0.1; port=3308; uid=root; pwd=password; database=topsis-test;";
             // "Server=.\\SQLExpress;Database=Topsis-Test;Trusted_Connection=True;MultipleActiveResultSets=true";
 
             public TestContext Context { get; set; }
