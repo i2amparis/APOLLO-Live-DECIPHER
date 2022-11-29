@@ -6,12 +6,16 @@ namespace Topsis.Application.Contracts.Database
     {
         string GetRuntimeConnectionString();
         string GetMigrationConnectionString();
+        string GetDatabaseEngine();
     }
 
     public class DatabaseSettings
     {
+        public const string ENGINE_POSTGRESQL = "postgresql";
+
         public DatabaseSettings()
         {
+            Engine = ENGINE_POSTGRESQL;
             DatabaseName = "topsis-web";
             Server = "127.0.0.1";
             Port = 3306;
@@ -19,6 +23,7 @@ namespace Topsis.Application.Contracts.Database
             Runtime = new DatabaseUserSettings();
         }
 
+        public string Engine { get; set; }
         public string DatabaseName { get; set; }
         public string Server { get; set; }
         public int Port { get; set; }

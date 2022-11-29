@@ -26,6 +26,12 @@ namespace Topsis.Adapters.Database.Services
             _logger = logger;
         }
 
+        public string GetDatabaseEngine()
+        {
+            // mysql|mariadb|postgresql
+            return _config.Engine ?? DatabaseSettings.ENGINE_POSTGRESQL;
+        }
+
         public string GetMigrationConnectionString()
         {
             _logger.LogDebug($"Getting migration connection (env:{_environment.EnvironmentName}).");

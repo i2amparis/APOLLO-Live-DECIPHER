@@ -36,7 +36,7 @@ namespace Topsis.Adapters.Database.Services
                 {
                     // Db Options.
                     var builder = new DbContextOptionsBuilder<WorkspaceDbContext>();
-                    builder.AddMySqlDbOptions(_databaseService.GetMigrationConnectionString());
+                    builder.Setup(_databaseService.GetDatabaseEngine(), _databaseService.GetMigrationConnectionString());
 
                     // Migrate.
                     var myDbContext = new WorkspaceDbContext(builder.Options, null);

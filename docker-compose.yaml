@@ -20,9 +20,9 @@ services:
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: password
-      PGDATA: /data/postgres
+      PGDATA: /db/postgres
     volumes:
-       - ./Docker/data/postgres:/data/postgres
+       - ./Docker/db/postgres:/db/postgres
     logging:
       options:
         tag: "{{.DaemonName}}(image={{.ImageName}};name={{.Name}};id={{.ID}})"
