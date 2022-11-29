@@ -16,7 +16,7 @@ namespace Topsis.Application.Contracts.Database
         public DatabaseSettings()
         {
             Engine = ENGINE_POSTGRESQL;
-            DatabaseName = "topsis-web";
+            DatabaseName = "topsis-db";
             Server = "127.0.0.1";
             Port = 3306;
             Migration = new DatabaseUserSettings();
@@ -60,7 +60,7 @@ namespace Topsis.Application.Contracts.Database
     {
         public DatabaseUserSettings()
         {
-            UserId = "root";
+            UserId = "dbuser";
             Password = "password";
         }
 

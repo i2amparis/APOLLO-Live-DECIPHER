@@ -104,7 +104,7 @@ namespace Topsis.Adapters.Database
         {
             if (optionsBuilder.IsConfigured == false)
             {
-                optionsBuilder.AddPostgreSql("server=db; port=5432; uid=root; pwd=password; database=topsis;");
+                optionsBuilder.AddPostgreSql("server=db; port=5432; User Id=dbuser; pwd=password; database=topsis-db;");
             }
         }
 

@@ -2,11 +2,11 @@ version: "3"
 
 services:
   
-  topsis-web-app-postgres:
+  topsis-web:
     build:
       dockerfile: "Dockerfile"
     ports:
-      - "8432:80"
+      - "8433:80"
     depends_on:
       - topsis-postgres
     networks:
@@ -18,11 +18,11 @@ services:
     container_name: postgres_container
     image: postgres
     environment:
-      POSTGRES_USER: root
+      POSTGRES_USER: dbuser
       POSTGRES_PASSWORD: password
-      PGDATA: /db/postgres
+      PGDATA: /data/postgres
     volumes:
-       - ./Docker/db/postgres:/db/postgres
+       - ./Docker/data/postgres:/data/postgres
     logging:
       options:
         tag: "{{.DaemonName}}(image={{.ImageName}};name={{.Name}};id={{.ID}})"

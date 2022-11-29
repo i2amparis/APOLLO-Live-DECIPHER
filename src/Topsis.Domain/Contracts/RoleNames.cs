@@ -7,9 +7,4 @@
         public const string Stakeholder = "stakeholder";
     }
 
-    public static class Administrators
-    {
-        public const string RootAdminUserName = "root";
-    }
-
 }

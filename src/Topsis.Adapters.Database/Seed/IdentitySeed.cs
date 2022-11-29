@@ -20,12 +20,32 @@ namespace Topsis.Adapters.Database.Seed
 
         public static void ApplyTo(ModelBuilder builder)
         {
-            builder.Entity<ApplicationRole>().HasData(Roles());
-            builder.Entity<ApplicationUser>().HasData(Users());
-            builder.Entity<IdentityUserRole<string>>().HasData(UsersInRoles());
+            //builder.Entity<ApplicationRole>().HasData(Roles());
+            //builder.Entity<ApplicationUser>().HasData(Users());
+            //builder.Entity<IdentityUserRole<string>>().HasData(UsersInRoles());
         }
 
-        private static IEnumerable<ApplicationRole> Roles()
+        public static void ApplyTo(WorkspaceDbContext db)
+        {
+            foreach (var item in GetRoles())
+            {
+                db.Roles.Add(item);
+            }
+
+            foreach (var item in GetUsers())
+            {
+                db.Users.Add(item);
+            }
+
+            foreach (var item in GetUsersInRoles())
+            {
+                db.UserRoles.Add(item);
+            }
+
+            db.SaveChanges();
+        }
+
+        private static IEnumerable<ApplicationRole> GetRoles()
         {
             yield return BuildRole(RoleNames.Admin);
             yield return BuildRole(RoleNames.Moderator);
@@ -42,7 +62,7 @@ namespace Topsis.Adapters.Database.Seed
             };
         }
 
-        private static IEnumerable<ApplicationUser> Users()
+        private static IEnumerable<ApplicationUser> GetUsers()
         {
             yield return new UserCredentials() 
             { 
@@ -59,7 +79,7 @@ namespace Topsis.Adapters.Database.Seed
             }.BuildUser();
         }
 
-        private static IEnumerable<IdentityUserRole<string>> UsersInRoles()
+        private static IEnumerable<IdentityUserRole<string>> GetUsersInRoles()
         {
             // root user as admin,moderator,stakeholder.
             yield return BuildUserRole(RoleNames.Admin, AdminUserId);

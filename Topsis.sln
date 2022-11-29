@@ -22,7 +22,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{387B8DF9-2AD9-4552-A356-688DCE6D42D7}"
 	ProjectSection(SolutionItems) = preProject
 		Docker\create.bat = Docker\create.bat
-		Docker\docker-compose.yaml = Docker\docker-compose.yaml
 		Docker\drop.bat = Docker\drop.bat
 		Docker\sh.bat = Docker\sh.bat
 		Docker\variables.env = Docker\variables.env

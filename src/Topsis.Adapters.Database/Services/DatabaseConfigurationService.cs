@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MySql.Data.MySqlClient;
+using Npgsql;
 using System;
 using Topsis.Application.Contracts.Database;
 
@@ -58,6 +59,16 @@ namespace Topsis.Adapters.Database.Services
 
         private string GetConnectionString(DatabaseUserSettings u)
         {
+            if (_config.Engine == DatabaseSettings.ENGINE_POSTGRESQL)
+            {
+                return GetPostgreSqlConnectionString(u);
+            }
+
+            return GetMySqlConnectionString(u);
+        }
+
+        private string GetMySqlConnectionString(DatabaseUserSettings u)
+        {
             var connectionString = $"Server={_config.Server}; port={_config.Port}; uid={u.UserId}; pwd={u.Password}; database={_config.DatabaseName};";
             if (string.IsNullOrWhiteSpace(_config.InstanceName))
             {
@@ -78,6 +89,21 @@ namespace Topsis.Adapters.Database.Services
             };
             builder.Pooling = true;
             builder.Server = $"{dbSocketDir}/{_config.InstanceName}";
+
+            return builder.ConnectionString;
+        }
+
+        private string GetPostgreSqlConnectionString(DatabaseUserSettings u)
+        {
+            var builder = new NpgsqlConnectionStringBuilder()
+            {
+                Host = _config.Server,
+                Port = _config.Port,
+                Username = u.UserId,
+                Password = u.Password,
+                Database = _config.DatabaseName,
+                Pooling = true
+            };
 
             return builder.ConnectionString;
         }

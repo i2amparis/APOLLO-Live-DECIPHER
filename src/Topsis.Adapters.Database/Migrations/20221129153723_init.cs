@@ -1,6 +1,6 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Topsis.Adapters.Database.Migrations
 {
@@ -41,7 +41,7 @@ namespace Topsis.Adapters.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -54,7 +54,7 @@ namespace Topsis.Adapters.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     DefaultCriterionWeight = table.Column<double>(nullable: false),
                     SettingsJson = table.Column<string>(nullable: true)
                 },
@@ -68,7 +68,7 @@ namespace Topsis.Adapters.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -107,6 +107,7 @@ namespace Topsis.Adapters.Database.Migrations
                     FirstName = table.Column<string>(maxLength: 50, nullable: true),
                     CountryId = table.Column<string>(nullable: true),
                     JobCategoryId = table.Column<int>(nullable: true),
+                    GenderId = table.Column<short>(nullable: true),
                     Created_UserId = table.Column<string>(nullable: true),
                     Created_Time = table.Column<DateTime>(nullable: true)
                 },
@@ -132,7 +133,7 @@ namespace Topsis.Adapters.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(nullable: true),
                     Order = table.Column<short>(nullable: false),
                     QuestionnaireId = table.Column<int>(nullable: true)
@@ -153,7 +154,7 @@ namespace Topsis.Adapters.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(nullable: true),
                     Type = table.Column<int>(nullable: false),
                     Order = table.Column<short>(nullable: false),
@@ -175,8 +176,9 @@ namespace Topsis.Adapters.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ParentId = table.Column<int>(nullable: true),
+                    ImportKey = table.Column<string>(maxLength: 255, nullable: true),
                     QuestionnaireId = table.Column<int>(nullable: true),
                     UserId = table.Column<string>(maxLength: 255, nullable: true),
                     Title = table.Column<string>(maxLength: 255, nullable: true),
@@ -205,7 +207,7 @@ namespace Topsis.Adapters.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -290,9 +292,10 @@ namespace Topsis.Adapters.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     WorkspaceId = table.Column<int>(nullable: false),
-                    ApplicationUserId = table.Column<string>(nullable: true)
+                    ApplicationUserId = table.Column<string>(nullable: true),
+                    Weight = table.Column<double>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -316,7 +319,7 @@ namespace Topsis.Adapters.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     WorkspaceId = table.Column<int>(nullable: false),
                     Algorithm = table.Column<short>(nullable: false),
                     VotesCount = table.Column<int>(nullable: false),
@@ -342,7 +345,7 @@ namespace Topsis.Adapters.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     VoteId = table.Column<int>(nullable: false),
                     AlternativeId = table.Column<int>(nullable: false),
                     CriterionId = table.Column<int>(nullable: false),
@@ -376,7 +379,7 @@ namespace Topsis.Adapters.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     VoteId = table.Column<int>(nullable: false),
                     CriterionId = table.Column<int>(nullable: false),
                     Weight = table.Column<int>(nullable: false)
@@ -399,40 +402,26 @@ namespace Topsis.Adapters.Database.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[,]
-                {
-                    { "4E59CEA1-FC55-49F5-BF30-4BC46A0DDA7A", "d88c0309-8220-4b8b-bed8-c3fad4f31032", "admin", "ADMIN" },
-                    { "4E59CEA1-FC55-49F5-BF30-4BC46A0DDA7B", "81af51b3-0585-4657-9970-c787e11eb5c1", "moderator", "MODERATOR" },
-                    { "4E59CEA1-FC55-49F5-BF30-4BC46A0DDA7C", "2ee994ab-f1bb-4bce-8851-7818defdda9b", "stakeholder", "STAKEHOLDER" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CountryId", "Email", "EmailConfirmed", "FirstName", "JobCategoryId", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "4E59CEA1-FC55-49F5-BF30-4BC46A0DDA70", 0, "5a707ad6-bd1c-4706-8323-bef16250ed1a", null, "a.soursos@gmail.com", true, null, null, null, false, null, "a.soursos@gmail.com", "a.soursos@gmail.com", "AQAAAAEAACcQAAAAEMMXtIDR5MY0QGKhlh5KxqWZ6YC1KkCnsh3ILk2xoKd6eKhbDB/T61n9kEoV7RRbIQ==", "", true, "7f0086e4-7718-491c-8627-18cdc291d491", false, "a.soursos@gmail.com" });
-
-            migrationBuilder.InsertData(
                 table: "WsCountries",
                 columns: new[] { "Id", "A2Code", "A3Code", "Title" },
                 values: new object[,]
                 {
-                    { "591", "PA", "PAN", "Panama" },
-                    { "275", "PS", "PSE", "Palestine, State of" },
-                    { "585", "PW", "PLW", "Palau" },
-                    { "586", "PK", "PAK", "Pakistan" },
-                    { "512", "OM", "OMN", "Oman" },
-                    { "580", "MP", "MNP", "Northern Mariana Islands (the)" },
-                    { "598", "PG", "PNG", "Papua New Guinea" },
-                    { "574", "NF", "NFK", "Norfolk Island" },
-                    { "570", "NU", "NIU", "Niue" },
-                    { "566", "NG", "NGA", "Nigeria" },
+                    { "004", "AF", "AFG", "Afghanistan" },
                     { "562", "NE", "NER", "Niger (the)" },
+                    { "566", "NG", "NGA", "Nigeria" },
+                    { "570", "NU", "NIU", "Niue" },
+                    { "574", "NF", "NFK", "Norfolk Island" },
+                    { "580", "MP", "MNP", "Northern Mariana Islands (the)" },
                     { "578", "NO", "NOR", "Norway" },
+                    { "512", "OM", "OMN", "Oman" },
+                    { "586", "PK", "PAK", "Pakistan" },
+                    { "585", "PW", "PLW", "Palau" },
+                    { "275", "PS", "PSE", "Palestine, State of" },
+                    { "591", "PA", "PAN", "Panama" },
+                    { "598", "PG", "PNG", "Papua New Guinea" },
                     { "600", "PY", "PRY", "Paraguay" },
+                    { "604", "PE", "PER", "Peru" },
                     { "608", "PH", "PHL", "Philippines (the)" },
-                    { "558", "NI", "NIC", "Nicaragua" },
                     { "612", "PN", "PCN", "Pitcairn" },
                     { "616", "PL", "POL", "Poland" },
                     { "620", "PT", "PRT", "Portugal" },
@@ -445,25 +434,24 @@ namespace Topsis.Adapters.Database.Migrations
                     { "638", "RE", "REU", "Réunion" },
                     { "652", "BL", "BLM", "Saint Barthélemy" },
                     { "654", "SH", "SHN", "Saint Helena, Ascension and Tristan da Cunha" },
-                    { "604", "PE", "PER", "Peru" },
+                    { "558", "NI", "NIC", "Nicaragua" },
+                    { "659", "KN", "KNA", "Saint Kitts and Nevis" },
                     { "554", "NZ", "NZL", "New Zealand" },
                     { "528", "NL", "NLD", "Netherlands (the)" },
-                    { "659", "KN", "KNA", "Saint Kitts and Nevis" },
-                    { "434", "LY", "LBY", "Libya" },
+                    { "438", "LI", "LIE", "Liechtenstein" },
                     { "440", "LT", "LTU", "Lithuania" },
                     { "442", "LU", "LUX", "Luxembourg" },
                     { "446", "MO", "MAC", "Macao" },
                     { "450", "MG", "MDG", "Madagascar" },
                     { "454", "MW", "MWI", "Malawi" },
-                    { "458", "MY", "MYS", "Malaysia" },
                     { "462", "MV", "MDV", "Maldives" },
                     { "466", "ML", "MLI", "Mali" },
                     { "470", "MT", "MLT", "Malta" },
                     { "584", "MH", "MHL", "Marshall Islands (the)" },
                     { "474", "MQ", "MTQ", "Martinique" },
                     { "478", "MR", "MRT", "Mauritania" },
-                    { "540", "NC", "NCL", "New Caledonia" },
                     { "480", "MU", "MUS", "Mauritius" },
+                    { "175", "YT", "MYT", "Mayotte" },
                     { "484", "MX", "MEX", "Mexico" },
                     { "583", "FM", "FSM", "Micronesia (Federated States of)" },
                     { "498", "MD", "MDA", "Moldova (the Republic of)" },
@@ -477,10 +465,10 @@ namespace Topsis.Adapters.Database.Migrations
                     { "516", "NA", "NAM", "Namibia" },
                     { "520", "NR", "NRU", "Nauru" },
                     { "524", "NP", "NPL", "Nepal" },
-                    { "175", "YT", "MYT", "Mayotte" },
+                    { "540", "NC", "NCL", "New Caledonia" },
                     { "662", "LC", "LCA", "Saint Lucia" },
+                    { "663", "MF", "MAF", "Saint Martin (French part)" },
                     { "666", "PM", "SPM", "Saint Pierre and Miquelon" },
-                    { "430", "LR", "LBR", "Liberia" },
                     { "772", "TK", "TKL", "Tokelau" },
                     { "776", "TO", "TON", "Tonga" },
                     { "780", "TT", "TTO", "Trinidad and Tobago" },
@@ -525,7 +513,7 @@ namespace Topsis.Adapters.Database.Migrations
                     { "534", "SX", "SXM", "Sint Maarten (Dutch part)" },
                     { "703", "SK", "SVK", "Slovakia" },
                     { "705", "SI", "SVN", "Slovenia" },
-                    { "663", "MF", "MAF", "Saint Martin (French part)" },
+                    { "434", "LY", "LBY", "Libya" },
                     { "090", "SB", "SLB", "Solomon Islands" },
                     { "710", "ZA", "ZAF", "South Africa" },
                     { "239", "GS", "SGS", "South Georgia and the South Sandwich Islands" },
@@ -541,10 +529,9 @@ namespace Topsis.Adapters.Database.Migrations
                     { "158", "TW", "TWN", "Taiwan (Province of China)" },
                     { "762", "TJ", "TJK", "Tajikistan" },
                     { "706", "SO", "SOM", "Somalia" },
-                    { "426", "LS", "LSO", "Lesotho" },
-                    { "438", "LI", "LIE", "Liechtenstein" },
-                    { "428", "LV", "LVA", "Latvia" },
-                    { "096", "BN", "BRN", "Brunei Darussalam" },
+                    { "430", "LR", "LBR", "Liberia" },
+                    { "458", "MY", "MYS", "Malaysia" },
+                    { "422", "LB", "LBN", "Lebanon" },
                     { "100", "BG", "BGR", "Bulgaria" },
                     { "854", "BF", "BFA", "Burkina Faso" },
                     { "108", "BI", "BDI", "Burundi" },
@@ -566,16 +553,16 @@ namespace Topsis.Adapters.Database.Migrations
                     { "184", "CK", "COK", "Cook Islands (the)" },
                     { "188", "CR", "CRI", "Costa Rica" },
                     { "191", "HR", "HRV", "Croatia" },
-                    { "192", "CU", "CUB", "Cuba" },
+                    { "426", "LS", "LSO", "Lesotho" },
                     { "531", "CW", "CUW", "Curaçao" },
                     { "196", "CY", "CYP", "Cyprus" },
-                    { "422", "LB", "LBN", "Lebanon" },
+                    { "203", "CZ", "CZE", "Czechia" },
                     { "384", "CI", "CIV", "Côte d'Ivoire" },
+                    { "208", "DK", "DNK", "Denmark" },
+                    { "096", "BN", "BRN", "Brunei Darussalam" },
                     { "086", "IO", "IOT", "British Indian Ocean Territory (the)" },
                     { "076", "BR", "BRA", "Brazil" },
                     { "074", "BV", "BVT", "Bouvet Island" },
-                    { "072", "BW", "BWA", "Botswana" },
-                    { "004", "AF", "AFG", "Afghanistan" },
                     { "008", "AL", "ALB", "Albania" },
                     { "012", "DZ", "DZA", "Algeria" },
                     { "016", "AS", "ASM", "American Samoa" },
@@ -588,9 +575,9 @@ namespace Topsis.Adapters.Database.Migrations
                     { "051", "AM", "ARM", "Armenia" },
                     { "533", "AW", "ABW", "Aruba" },
                     { "036", "AU", "AUS", "Australia" },
-                    { "208", "DK", "DNK", "Denmark" },
                     { "040", "AT", "AUT", "Austria" },
-                    { "044", "BS", "BHS", "Bahamas (the)" },
+                    { "262", "DJ", "DJI", "Djibouti" },
+                    { "031", "AZ", "AZE", "Azerbaijan" },
                     { "048", "BH", "BHR", "Bahrain" },
                     { "050", "BD", "BGD", "Bangladesh" },
                     { "052", "BB", "BRB", "Barbados" },
@@ -603,18 +590,18 @@ namespace Topsis.Adapters.Database.Migrations
                     { "068", "BO", "BOL", "Bolivia (Plurinational State of)" },
                     { "535", "BQ", "BES", "Bonaire, Sint Eustatius and Saba" },
                     { "070", "BA", "BIH", "Bosnia and Herzegovina" },
-                    { "031", "AZ", "AZE", "Azerbaijan" },
-                    { "262", "DJ", "DJI", "Djibouti" },
-                    { "203", "CZ", "CZE", "Czechia" },
-                    { "214", "DO", "DOM", "Dominican Republic (the)" },
-                    { "332", "HT", "HTI", "Haiti" },
-                    { "334", "HM", "HMD", "Heard Island and McDonald Islands" },
+                    { "072", "BW", "BWA", "Botswana" },
+                    { "044", "BS", "BHS", "Bahamas (the)" },
                     { "212", "DM", "DMA", "Dominica" },
+                    { "192", "CU", "CUB", "Cuba" },
+                    { "218", "EC", "ECU", "Ecuador" },
+                    { "334", "HM", "HMD", "Heard Island and McDonald Islands" },
+                    { "336", "VA", "VAT", "Holy See (the)" },
                     { "340", "HN", "HND", "Honduras" },
                     { "344", "HK", "HKG", "Hong Kong" },
                     { "348", "HU", "HUN", "Hungary" },
                     { "352", "IS", "ISL", "Iceland" },
-                    { "356", "IN", "IND", "India" },
+                    { "214", "DO", "DOM", "Dominican Republic (the)" },
                     { "360", "ID", "IDN", "Indonesia" },
                     { "364", "IR", "IRN", "Iran (Islamic Republic of)" },
                     { "368", "IQ", "IRQ", "Iraq" },
@@ -634,39 +621,40 @@ namespace Topsis.Adapters.Database.Migrations
                     { "414", "KW", "KWT", "Kuwait" },
                     { "417", "KG", "KGZ", "Kyrgyzstan" },
                     { "418", "LA", "LAO", "Lao People's Democratic Republic (the)" },
+                    { "428", "LV", "LVA", "Latvia" },
+                    { "332", "HT", "HTI", "Haiti" },
                     { "328", "GY", "GUY", "Guyana" },
-                    { "624", "GW", "GNB", "Guinea-Bissau" },
-                    { "336", "VA", "VAT", "Holy See (the)" },
-                    { "831", "GG", "GGY", "Guernsey" },
-                    { "218", "EC", "ECU", "Ecuador" },
+                    { "356", "IN", "IND", "India" },
+                    { "324", "GN", "GIN", "Guinea" },
                     { "818", "EG", "EGY", "Egypt" },
                     { "222", "SV", "SLV", "El Salvador" },
                     { "226", "GQ", "GNQ", "Equatorial Guinea" },
                     { "232", "ER", "ERI", "Eritrea" },
                     { "233", "EE", "EST", "Estonia" },
                     { "748", "SZ", "SWZ", "Eswatini" },
-                    { "231", "ET", "ETH", "Ethiopia" },
+                    { "624", "GW", "GNB", "Guinea-Bissau" },
                     { "238", "FK", "FLK", "Falkland Islands (the) [Malvinas]" },
-                    { "324", "GN", "GIN", "Guinea" },
+                    { "234", "FO", "FRO", "Faroe Islands (the)" },
                     { "242", "FJ", "FJI", "Fiji" },
                     { "246", "FI", "FIN", "Finland" },
                     { "250", "FR", "FRA", "France" },
                     { "254", "GF", "GUF", "French Guiana" },
-                    { "234", "FO", "FRO", "Faroe Islands (the)" },
-                    { "260", "TF", "ATF", "French Southern Territories (the)" },
-                    { "320", "GT", "GTM", "Guatemala" },
                     { "258", "PF", "PYF", "French Polynesia" },
-                    { "312", "GP", "GLP", "Guadeloupe" },
+                    { "231", "ET", "ETH", "Ethiopia" },
+                    { "266", "GA", "GAB", "Gabon" },
+                    { "260", "TF", "ATF", "French Southern Territories (the)" },
+                    { "831", "GG", "GGY", "Guernsey" },
+                    { "320", "GT", "GTM", "Guatemala" },
+                    { "316", "GU", "GUM", "Guam" },
                     { "308", "GD", "GRD", "Grenada" },
                     { "304", "GL", "GRL", "Greenland" },
-                    { "300", "GR", "GRC", "Greece" },
-                    { "316", "GU", "GUM", "Guam" },
+                    { "312", "GP", "GLP", "Guadeloupe" },
+                    { "292", "GI", "GIB", "Gibraltar" },
                     { "288", "GH", "GHA", "Ghana" },
                     { "276", "DE", "DEU", "Germany" },
                     { "268", "GE", "GEO", "Georgia" },
                     { "270", "GM", "GMB", "Gambia (the)" },
-                    { "266", "GA", "GAB", "Gabon" },
-                    { "292", "GI", "GIB", "Gibraltar" }
+                    { "300", "GR", "GRC", "Greece" }
                 });
 
             migrationBuilder.InsertData(
@@ -674,32 +662,25 @@ namespace Topsis.Adapters.Database.Migrations
                 columns: new[] { "Id", "Title" },
                 values: new object[,]
                 {
+                    { 16, "Responsible investment advisory firm (and actuary)" },
+                    { 10, "Consultant" },
+                    { 15, "Think tank" },
+                    { 14, "Regional Energy Agency" },
+                    { 13, "Diplomat" },
+                    { 12, "Central Bank" },
+                    { 11, "Philanthropy" },
                     { 9, "Civil Society" },
-                    { 1, "Academia/Researcher" },
                     { 2, "Private Sector/Industry" },
-                    { 3, "International Institution" },
-                    { 4, "National Government" },
-                    { 5, "Regional/Local Government" },
-                    { 6, "Policymaker" },
                     { 7, "NGO" },
+                    { 6, "Policymaker" },
+                    { 5, "Regional/Local Government" },
+                    { 4, "National Government" },
+                    { 3, "International Institution" },
+                    { 1, "Academia/Research" },
+                    { 17, "Multiple affiliations; Gov, NGO, Ac & industry" },
                     { 8, "Press" },
                     { 100, "Other" }
                 });
-
-            migrationBuilder.InsertData(
-                table: "AspNetUserRoles",
-                columns: new[] { "UserId", "RoleId" },
-                values: new object[] { "4E59CEA1-FC55-49F5-BF30-4BC46A0DDA70", "4E59CEA1-FC55-49F5-BF30-4BC46A0DDA7A" });
-
-            migrationBuilder.InsertData(
-                table: "AspNetUserRoles",
-                columns: new[] { "UserId", "RoleId" },
-                values: new object[] { "4E59CEA1-FC55-49F5-BF30-4BC46A0DDA70", "4E59CEA1-FC55-49F5-BF30-4BC46A0DDA7B" });
-
-            migrationBuilder.InsertData(
-                table: "AspNetUserRoles",
-                columns: new[] { "UserId", "RoleId" },
-                values: new object[] { "4E59CEA1-FC55-49F5-BF30-4BC46A0DDA70", "4E59CEA1-FC55-49F5-BF30-4BC46A0DDA7C" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
