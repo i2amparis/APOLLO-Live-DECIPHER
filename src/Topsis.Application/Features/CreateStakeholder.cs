@@ -32,13 +32,10 @@ namespace Topsis.Application.Features
         public class Handler : IRequestHandler<Command, ApplicationUser>
         {
             private readonly IApplicationUserRepository<ApplicationUser> _users;
-            private readonly IMapper _map;
 
-            public Handler(IApplicationUserRepository<ApplicationUser> users,
-                IMapper map)
+            public Handler(IApplicationUserRepository<ApplicationUser> users)
             {
                 _users = users;
-                _map = map;
             }
 
             public async Task<ApplicationUser> Handle(Command cmd, CancellationToken cancellationToken)
