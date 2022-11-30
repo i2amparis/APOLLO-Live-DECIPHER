@@ -35,8 +35,10 @@
 		- Handle the creation/update behavior
 	- Open a terminal to the root folder of Topsis.Adapters.Database proj
 	- Execute > dotnet ef migrations add add_user_education (this needs to have dotnet ef core tools installed, with default version 3.1)
-		- This cmd will use the connection string inside DatabaseFactory class in order to check the current state of the database
-		- (Optional) You can test this into a new database changing the connection string or using the DeployConnectionString env var, 
+		- This cmd will use the connection string inside DatabaseFactory class in order to check the current state of the database and
+		  it will create a .cs file under "Migrations" folder
+		- (Optional) If you changed your mind you can remove the added .cs file by executing cmd > dotnet ef migrations remove
+		- (Optional) You can test this into a new or existing database with the connection string hardcoded or using the DeployConnectionString env var, 
 		  executing the cmd > dotnet ef database update
 	- Test it (Debug-F5, this will run the migration process in MigrationHostedService)
 
