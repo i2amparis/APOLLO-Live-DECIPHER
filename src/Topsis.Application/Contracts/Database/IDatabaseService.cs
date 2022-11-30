@@ -11,6 +11,8 @@ namespace Topsis.Application.Contracts.Database
 
     public class DatabaseSettings
     {
+        public const string ENGINE_MARIADB = "mariadb";
+        public const string ENGINE_MYSQL = "mysql";
         public const string ENGINE_POSTGRESQL = "postgresql";
 
         public DatabaseSettings()

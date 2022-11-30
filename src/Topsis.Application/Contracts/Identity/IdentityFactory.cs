@@ -32,13 +32,13 @@ namespace Topsis.Application.Contracts.Identity
             {
                 Id = id,
                 UserName = email,
-                NormalizedUserName = email.Normalize(),
+                NormalizedUserName = email.ToUpper(),
                 Email = email,
-                NormalizedEmail = email.Normalize(),
+                NormalizedEmail = email.ToUpper(),
                 PhoneNumber = "",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
-                SecurityStamp = Guid.NewGuid().ToString()
+                SecurityStamp = Guid.NewGuid().ToString("D")
             };
 
             result.PasswordHash = GeneratePassword(result, password);

@@ -26,8 +26,9 @@ namespace Topsis.Adapters.Database
             services.AddDbContext<WorkspaceDbContext>((serviceProvider, dbContextBuilder) =>
             {
                 var service = serviceProvider.GetRequiredService<IDatabaseService>();
-                dbContextBuilder.AddPostgreSql(service.GetRuntimeConnectionString());
+                dbContextBuilder.SetupDatabase(service.GetDatabaseEngine(), service.GetRuntimeConnectionString());
             });
+
 
             services.AddScoped<IUserContext, UserContext>();
 
@@ -65,21 +66,21 @@ namespace Topsis.Adapters.Database
             builder.UseNpgsql(connection);
         }
 
-        public static void Setup(this DbContextOptionsBuilder optionsBuilder, string engine, string connection)
+        public static void SetupDatabase(this DbContextOptionsBuilder optionsBuilder, string engine, string connection)
         {
             switch (engine)
             {
-                case "mysql":
+                case DatabaseSettings.ENGINE_MYSQL:
                     optionsBuilder.AddMySqlDbOptions(connection);
                     break;
-                case "mariadb":
+                case DatabaseSettings.ENGINE_MARIADB:
                     optionsBuilder.AddMariaDbOptions(connection);
                     break;
-                case "postgresql":
+                case DatabaseSettings.ENGINE_POSTGRESQL:
                     optionsBuilder.AddPostgreSql(connection);
                     break;
                 default:
-                    throw new InvalidOperationException("Set 'DatabaseSettings__Engine', use one of (mysql|mariadb|postgresql)");
+                    throw new InvalidOperationException("Set 'DatabaseSettings__Engine' in appsettings, use one of (mysql|mariadb|postgresql)");
             }
         }
     }

@@ -10,7 +10,7 @@ using Topsis.Adapters.Database;
 namespace Topsis.Adapters.Database.Migrations
 {
     [DbContext(typeof(WorkspaceDbContext))]
-    [Migration("20221129153723_init")]
+    [Migration("20221129185627_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

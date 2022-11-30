@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MySql.Data.MySqlClient;
+using Npgsql;
 using Respawn;
 using System;
 using System.Collections.Generic;
@@ -45,13 +46,13 @@ namespace Topsis.AcceptanceTests.TestServer
             _checkpoint = new Checkpoint()
             {
                 TablesToIgnore = new[] { "AspNetRoles", "WsCountries", "WsJobCategories" },
-                DbAdapter = DbAdapter.MySql
+                DbAdapter = DbAdapter.Postgres
             };
         }
 
         public async Task InitializeAsync()
         {
-            using (var conn = new MySqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            using (var conn = new NpgsqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 await conn.OpenAsync();
                 await _checkpoint.Reset(conn);
@@ -106,12 +107,12 @@ namespace Topsis.AcceptanceTests.TestServer
                     services.AddScoped<ICalculateResultsProcessor, InProcessCalculateProcessor>();
 
                     services.AddDbContext<WorkspaceDbContext>(options =>
-                        options.UseSqlServer(_connection));
+                        options.UseNpgsql(_connection));
                 });
             }
 
             private readonly string _connection =
-                "Server=127.0.0.1; port=5432; uid=root; pwd=password; database=topsis-test;";
+                "Server=127.0.0.1; port=5432; User Id=dbuser; pwd=password; database=topsis-test;";
             // "Server=.\\SQLExpress;Database=Topsis-Test;Trusted_Connection=True;MultipleActiveResultSets=true";
 
             public TestContext Context { get; set; }

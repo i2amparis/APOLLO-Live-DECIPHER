@@ -22,28 +22,33 @@ namespace Topsis.Adapters.Database.Configuration
         {
             
             FormattableString sql = $@"
-SELECT 
-    ws.Id as WorkspaceId,
-    ws.Title as WorkspaceTitle,
-    ws.Description as WorkspaceDescription,
-	ws.CurrentStatus,
-    NULL as VoteId,
-    NULL as StakeholderId
-from
-            WsWorkspaces        ws
-where
-    ws.CurrentStatus in (1,2,3)
-UNION
-SELECT 
-    ws.Id as WorkspaceId,
-    ws.Title as WorkspaceTitle,
-    ws.Description as WorkspaceDescription,
-	ws.CurrentStatus,
-    v.Id as VoteId,
-    v.ApplicationUserId as StakeholderId
-from
-            WsWorkspaces        ws
-inner join  WsStakeholderVotes  v   on ws.Id = v.WorkspaceId
+SELECT r.""CurrentStatus"", r.""StakeholderId"", r.""VoteId"", r.""WorkspaceDescription"", r.""WorkspaceId"", r.""WorkspaceTitle""
+      FROM (
+      
+          SELECT 
+          	  ws.""Id"" AS ""WorkspaceId"",
+              ws.""Title"" AS ""WorkspaceTitle"",
+              ws.""Description"" AS ""WorkspaceDescription"",
+                ws.""CurrentStatus"",
+              NULL AS ""VoteId"",
+              NULL AS ""StakeholderId""
+          from
+                      ""WsWorkspaces"" as        ws
+          where
+              ws.""CurrentStatus"" in (1,2,3)
+          UNION
+          SELECT 
+          	  ws.""Id"" AS ""WorkspaceId"",
+              ws.""Title"" AS ""WorkspaceTitle"",
+              ws.""Description"" AS ""WorkspaceDescription"",
+                ws.""CurrentStatus"",
+              v.""Id"" AS ""VoteId"",
+              v.""ApplicationUserId"" AS ""StakeholderId""
+          from
+                   ""WsWorkspaces""        ws
+          inner JOIN  ""WsStakeholderVotes""  v   on ws.""Id"" = v.""WorkspaceId""
+      ) AS r
+      WHERE (r.""StakeholderId"" IS NULL)
 ";
 
             builder.HasNoKey().ToQuery(() =>

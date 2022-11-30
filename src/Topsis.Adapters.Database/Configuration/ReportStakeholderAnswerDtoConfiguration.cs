@@ -21,22 +21,22 @@ namespace Topsis.Adapters.Database.Configuration
         {
             FormattableString sql = $@"
 SELECT 
-    latest.WorkspaceId,
-    latest.ApplicationUserId as StakeholderId,
-    u.JobCategoryId,
-    latest.VoteId,
-	sa.AlternativeId,
-	sa.CriterionId, 
-    sa.Value as AnswerValue,
-    im.Weight as CriterionWeight
+    latest.""WorkspaceId"",
+    latest.""ApplicationUserId"" AS ""StakeholderId"",
+    u.""JobCategoryId"",
+    latest.""VoteId"",
+	sa.""AlternativeId"",
+	sa.""CriterionId"", 
+    sa.""Value"" AS ""AnswerValue"",
+    im.""Weight"" AS ""CriterionWeight""
 from
-            WsStakeholderAnswers                sa
-inner join  WsCriteria                          c   on sa.CriterionId = c.Id
-INNER JOIN  (select MAX(v.Id) AS VoteId, v.WorkspaceId, v.ApplicationUserId
-				from WsStakeholderVotes v
-				GROUP BY v.WorkspaceId, v.ApplicationUserId)				latest	 ON sa.VoteId = latest.VoteId
-INNER JOIN  AspNetUsers                         u   on latest.ApplicationUserId = u.Id
-inner join  WsStakeholderCriteriaImportance     im  on sa.VoteId = im.VoteId and c.Id = im.CriterionId
+            ""WsStakeholderAnswers""                sa
+inner JOIN  ""WsCriteria""                          c   on sa.""CriterionId"" = C.""Id""
+INNER JOIN  (select MAX(v.""Id"") AS ""VoteId"", v.""WorkspaceId"", v.""ApplicationUserId""
+				FROM ""WsStakeholderVotes"" v
+				GROUP BY v.""WorkspaceId"", v.""ApplicationUserId"")				latest	 ON sa.""VoteId"" = latest.""VoteId""
+INNER JOIN  ""AspNetUsers""                         u   on latest.""ApplicationUserId"" = u.""Id""
+inner JOIN  ""WsStakeholderCriteriaImportance""     im  on sa.""VoteId"" = im.""VoteId"" and C.""Id"" = im.""CriterionId""
 ";
 
             builder.HasNoKey().ToQuery(() =>

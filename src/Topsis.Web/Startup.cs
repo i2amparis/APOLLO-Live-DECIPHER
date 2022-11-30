@@ -55,6 +55,13 @@ namespace Topsis.Web
             services.AddAlgorithm();
             services.AddImportServices();
 
+            services.AddDataProtectionToDatabase();
+            services.Configure<CookiePolicyOptions>(options => {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
             services
                 .AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddRoles<ApplicationRole>()
@@ -62,7 +69,6 @@ namespace Topsis.Web
 
             services.AddApplicationServices();
 
-            services.AddDataProtection(Configuration);
             services.AddAuthorization(opt =>
             {
                 opt.AddPolicy(RequireModeratorPolicy, policy => policy.RequireRole(RoleNames.Moderator));

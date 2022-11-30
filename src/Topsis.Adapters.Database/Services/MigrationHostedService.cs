@@ -36,7 +36,7 @@ namespace Topsis.Adapters.Database.Services
             {
                 try
                 {
-                    var db = BuildContext();
+                        var db = BuildContext();
                     db.Database.Migrate();
                 }
                 catch (Exception ex)
@@ -72,7 +72,7 @@ namespace Topsis.Adapters.Database.Services
         {
             // Db Options.
             var builder = new DbContextOptionsBuilder<WorkspaceDbContext>();
-            builder.Setup(_databaseService.GetDatabaseEngine(), _databaseService.GetMigrationConnectionString());
+            builder.SetupDatabase(_databaseService.GetDatabaseEngine(), _databaseService.GetMigrationConnectionString());
 
             // Migrate.
             var myDbContext = new WorkspaceDbContext(builder.Options, null);

@@ -12,10 +12,15 @@ namespace Topsis.Adapters.Database
         {
             var databaseEngine = Environment.GetEnvironmentVariable("DatabaseSettings__Engine") ?? DatabaseSettings.ENGINE_POSTGRESQL;
             var deployConnectionString = Environment.GetEnvironmentVariable("DeployConnectionString")
-                ?? "Host=127.0.0.1;Port=5432;Username=dbuser;Password=password;Database=topsis-db";
+                ?? "Host=127.0.0.1;Port=5432;Username=dbuser;Password=password;Database=topsis-test";
 
             var optionsBuilder = new DbContextOptionsBuilder<WorkspaceDbContext>();
-            optionsBuilder.Setup(databaseEngine, deployConnectionString);
+            optionsBuilder.SetupDatabase(databaseEngine, deployConnectionString);
+            var isDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
+            if (isDevelopment)
+            {
+                optionsBuilder.EnableDetailedErrors().EnableSensitiveDataLogging();
+            }
 
             return new WorkspaceDbContext(optionsBuilder.Options, null);
         }
