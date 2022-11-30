@@ -18,13 +18,6 @@ namespace Topsis.Adapters.Database.Seed
         private const string ModeratorUserPassword = "!!4921Rfbw3!";
         private const string ModeratorEmail = "kkoasidis@epu.ntua.gr";
 
-        public static void ApplyTo(ModelBuilder builder)
-        {
-            //builder.Entity<ApplicationRole>().HasData(Roles());
-            //builder.Entity<ApplicationUser>().HasData(Users());
-            //builder.Entity<IdentityUserRole<string>>().HasData(UsersInRoles());
-        }
-
         public static void ApplyTo(WorkspaceDbContext db)
         {
             foreach (var item in GetRoles())

@@ -141,9 +141,6 @@ namespace Topsis.Adapters.Database
 
         private void SeedData(ModelBuilder builder)
         {
-            // Identity.
-            IdentitySeed.ApplyTo(builder);
-
             // Workspace.
             builder.Entity<Country>().HasData(Country.AllCountries());
             builder.Entity<JobCategory>().HasData(JobCategory.AllJobCategories());

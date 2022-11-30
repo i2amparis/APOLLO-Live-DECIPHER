@@ -27,3 +27,16 @@
 ### Testing
 - Some basic tests are added to ensure algorithm correctness and behavior logic
 
+### Evolution
+- You can write code and add data tables and/or columns (Code-First approach)
+	- WorkspaceDbContext class is responsible of handing the code/data mapping
+- You can add a new column with these steps:
+	- Add "Education" property/column to ApplicationUser class
+		- Handle the creation/update behavior
+	- Open a terminal to the root folder of Topsis.Adapters.Database proj
+	- Execute > dotnet ef migrations add add_user_education (this needs to have dotnet ef core tools installed, with default version 3.1)
+		- This cmd will use the connection string inside DatabaseFactory class in order to check the current state of the database
+		- (Optional) You can test this into a new database changing the connection string or using the DeployConnectionString env var, 
+		  executing the cmd > dotnet ef database update
+	- Test it (Debug-F5, this will run the migration process in MigrationHostedService)
+
