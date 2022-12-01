@@ -40,7 +40,7 @@ Body: {Body}";
         public async Task<Unit> Handle(SendEmailCommand request, CancellationToken cancellationToken)
         {
             Debug.WriteLine("EMAIL: " + request);
-            await _emailService.ExecuteAsync(request);
+            await _emailService.SendWithSmtpAsync(request);
             return Unit.Value;
         }
     }

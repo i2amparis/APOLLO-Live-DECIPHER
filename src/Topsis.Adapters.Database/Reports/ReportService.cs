@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Topsis.Application.Contracts.Algorithm;
 using Topsis.Application.Contracts.Caching;
 using Topsis.Application.Contracts.Database;
+using Topsis.Application.Contracts.Identity;
 using Topsis.Domain;
 using Topsis.Domain.Common;
 using Topsis.Domain.Contracts;
@@ -196,6 +197,27 @@ namespace Topsis.Adapters.Database.Reports
                         select new StakeholderDemographicsDto(item.Id, item.GenderId, item.JobCategoryId)).AsQueryable();
 
             return query.AsNoTracking().ToArray();
+        }
+
+        public async Task<IList<ApplicationUser>> GetUsersAsync(string term = null, int page = 1, int pageSize = 20)
+        {
+            var zeroBasedPage = 0;
+            if (page > 0)
+            {
+                zeroBasedPage = page - 1;
+            }
+
+            if (pageSize < 1 || pageSize > 100)
+            {
+                pageSize = 20;
+            }
+
+            return await _db.Users
+                .Include(x => x.Created)
+                .OrderBy(x => x.Email)
+                .Skip(zeroBasedPage * pageSize)
+                .Take(pageSize)
+                .ToArrayAsync();
         }
         #endregion
 

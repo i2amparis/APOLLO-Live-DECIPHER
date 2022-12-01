@@ -6,6 +6,6 @@ namespace Topsis.Application.Interfaces
 
     public interface IEmailService
     {
-        Task ExecuteAsync(SendEmailCommand request);
+        Task SendWithSmtpAsync(SendEmailCommand request);
     }
 }

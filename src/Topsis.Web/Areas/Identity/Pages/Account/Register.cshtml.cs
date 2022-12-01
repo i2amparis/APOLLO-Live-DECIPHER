@@ -94,7 +94,7 @@ namespace Topsis.Web.Areas.Identity.Pages.Account
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        return RedirectToPage("/Account/RegisterConfirmation", new { area = "Identity", email = Input.Email, returnUrl = returnUrl });
                     }
                     else
                     {
@@ -106,6 +106,7 @@ namespace Topsis.Web.Areas.Identity.Pages.Account
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+
             }
 
             // If we got this far, something failed, redisplay form

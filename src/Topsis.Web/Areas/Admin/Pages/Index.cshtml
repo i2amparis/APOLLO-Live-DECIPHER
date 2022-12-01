@@ -1,0 +1,37 @@
+﻿@page
+@using Domain.Common
+
+@model Admin.Pages.IndexModel
+@{
+    var allCountries = Domain.Country.AllCountries().ToDictionary(x => x.Id, x => x.Title);
+}
+
+@{ ViewData["Title"] = "Guest"; }
+
+<h2>All Users</h2>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col" class="w-auto">Email</th>
+                    <th scope="col" class="w-auto">Lastname</th>
+                    <th scope="col" class="w-auto">Firstname</th>
+                    <th scope="col" class="w-auto">Country</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Users)
+                {
+                    <tr>
+                        <td>@item.Email</td>
+                        <td>@item.LastName</td>
+                        <td>@item.FirstName</td>
+                        <td>@(item.CountryId != null && allCountries.TryGetValue(item.CountryId, out var country) ? country : string.Empty)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -29,6 +29,7 @@ namespace Topsis.Web
 {
     public class Startup
     {
+        public const string RequireAdminPolicy = "RequireAdminPolicy";
         public const string RequireModeratorPolicy = "RequireModeratorPolicy";
         public const string RequireGuestPolicy = "RequireGuestPolicy";
 
@@ -59,11 +60,11 @@ namespace Topsis.Web
             services.Configure<CookiePolicyOptions>(options => {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
+                options.MinimumSameSitePolicy = SameSiteMode.Strict;
             });
 
             services
-                .AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<ApplicationRole>()
                 .AddEntityFrameworkStores<WorkspaceDbContext>();
 
@@ -71,6 +72,7 @@ namespace Topsis.Web
 
             services.AddAuthorization(opt =>
             {
+                opt.AddPolicy(RequireAdminPolicy, policy => policy.RequireRole(RoleNames.Admin));
                 opt.AddPolicy(RequireModeratorPolicy, policy => policy.RequireRole(RoleNames.Moderator));
                 opt.AddPolicy(RequireGuestPolicy, policy => policy.RequireRole(RoleNames.Stakeholder));
             });
@@ -82,6 +84,7 @@ namespace Topsis.Web
                 opt.Conventions.ConfigureFilter(new DbContextTransactionPageFilter());
                 opt.Conventions.ConfigureFilter(new ValidatorPageFilter());
 
+                opt.Conventions.AuthorizeAreaFolder("Admin", "/", RequireAdminPolicy);
                 opt.Conventions.AuthorizeAreaFolder("Moderator", "/", RequireModeratorPolicy);
                 opt.Conventions.AuthorizeAreaFolder("Guest", "/", RequireGuestPolicy);
 
