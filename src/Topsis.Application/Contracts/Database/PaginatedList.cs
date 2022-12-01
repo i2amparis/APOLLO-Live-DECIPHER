@@ -3,9 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Topsis.Application.Contracts.Database;
 
-namespace Topsis.Adapters.Database
+namespace Topsis.Application.Contracts.Database
 {
     public class PaginatedList<T> : List<T>, IPaginatedList<T>
     {
@@ -26,7 +25,7 @@ namespace Topsis.Adapters.Database
 
         public static async Task<PaginatedList<T>> CreateAsync(IQueryable<T> source, int page, int pageSize)
         {
-             if (page < 1)
+            if (page < 1)
                 page = 1;
 
             var count = await source.CountAsync();

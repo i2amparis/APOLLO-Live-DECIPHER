@@ -199,7 +199,7 @@ namespace Topsis.Adapters.Database.Reports
             return query.AsNoTracking().ToArray();
         }
 
-        public async Task<IList<ApplicationUser>> GetUsersAsync(string term = null, int page = 1, int pageSize = 20)
+        public async Task<PaginatedList<ApplicationUser>> GetUsersAsync(string term = null, int page = 1, int pageSize = 20)
         {
             var zeroBasedPage = 0;
             if (page > 0)
@@ -212,12 +212,18 @@ namespace Topsis.Adapters.Database.Reports
                 pageSize = 20;
             }
 
-            return await _db.Users
-                .Include(x => x.Created)
+            var query = _db.Users
                 .OrderBy(x => x.Email)
-                .Skip(zeroBasedPage * pageSize)
-                .Take(pageSize)
-                .ToArrayAsync();
+                .AsQueryable();
+
+            if (string.IsNullOrWhiteSpace(term) == false)
+            {
+                query = query.Where(x => x.Email.Contains(term) 
+                                || (x.LastName != null && x.LastName.Contains(term))
+                                || (x.FirstName != null && x.FirstName.Contains(term)));
+            }
+
+            return await PaginatedList<ApplicationUser>.CreateAsync(query, page, pageSize);
         }
         #endregion
 

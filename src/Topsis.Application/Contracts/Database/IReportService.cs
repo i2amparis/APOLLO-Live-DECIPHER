@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Topsis.Application.Contracts.Algorithm;
 using Topsis.Application.Contracts.Identity;
@@ -23,6 +25,6 @@ namespace Topsis.Application.Contracts.Database
 
         public void ClearWorkspaceCache(int workspaceId);
         StakeholderDemographicsDto[] GetStakeholdersDemographicsAsync(string[] userIds);
-        Task<IList<ApplicationUser>> GetUsersAsync(string term = null, int page = 1, int pageSize = 20);
+        Task<PaginatedList<ApplicationUser>> GetUsersAsync(string term = null, int page = 1, int pageSize = 20);
     }
 }

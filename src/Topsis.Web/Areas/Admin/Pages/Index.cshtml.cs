@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,11 +19,15 @@ namespace Topsis.Web.Areas.Admin.Pages
             _reports = reports;
         }
 
-        public IList<ApplicationUser> Users { get; private set; }
+        public string Term { get; private set; }
+        public PaginatedList<ApplicationUser> Data { get; private set; }
 
-        public async Task OnGet()
+        public async Task OnGet([FromQuery] string term,
+            [FromQuery(Name = "p")] int page = 1,
+            [FromQuery] int pageSize = 20)
         {
-            Users = await _reports.GetUsersAsync();
+            Term = term;
+            Data = await _reports.GetUsersAsync(term, page, pageSize);
         }
     }
 }

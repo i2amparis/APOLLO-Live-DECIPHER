@@ -6,12 +6,48 @@
     var allCountries = Domain.Country.AllCountries().ToDictionary(x => x.Id, x => x.Title);
 }
 
-@{ ViewData["Title"] = "Guest"; }
+@{ ViewData["Title"] = "Admin/Users"; }
 
 <h2>All Users</h2>
 <hr />
+<div class="row p-3">
+    <div class="col-4 col-sm-6 offset-2">
+        <input class="form-control" type="text" placeholder="Search by email, lastname, firstname..." id="txtTerm" value="@Model.Term" />
+    </div>
+    <div class="col-2  col-sm-4">
+        <button class="btn btn-primary" id="btnSearch">Search</button>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-md-12">
+        <div class="text-right">
+            @if (true)
+            {
+                var prevDisabled = !Model.Data.HasPreviousPage ? "disabled" : "";
+                var nextDisabled = !Model.Data.HasNextPage ? "disabled" : "";
+
+                <p>
+                    Showing @Model.Data.PageNumber of @Model.Data.TotalPages pages.
+
+                    <a asp-area="Admin"
+                       asp-page="/Index"
+                       asp-route-p="@(Model.Data.PageNumber - 1)"
+                       asp-route-term="@(Model.Term)"
+                       class="btn btn-default @prevDisabled">
+                        Previous
+                    </a>
+                    <a asp-area="Admin"
+                       asp-page="/Index"
+                       asp-route-p="@(Model.Data.PageNumber + 1)"
+                       asp-route-term="@(Model.Term)"
+                       class="btn btn-default @nextDisabled">
+                        Next
+                    </a>
+                </p>
+            }
+        </div>
+
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -22,7 +58,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.Users)
+                @foreach (var item in Model.Data)
                 {
                     <tr>
                         <td>@item.Email</td>
@@ -35,3 +71,32 @@
         </table>
     </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script type="text/javascript">
+        $(function () {
+
+            let pageUrl = '@(Url.Page("Index"))';
+
+            let doSearch = function(){
+                var term = $('#txtTerm').val();
+                window.location = `${pageUrl}?term=${term}`;
+            }
+
+            $('#btnSearch').on('click', doSearch);
+
+            $('#txtTerm').on('keypress', function (e) {
+                if (e.which === 13) {
+
+                    //Disable textbox to prevent multiple submit
+                    $(this).attr("disabled", "disabled");
+                    doSearch();
+                }
+            });
+        });    
+    </script>
+}
