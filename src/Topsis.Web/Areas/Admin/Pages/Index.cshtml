@@ -34,14 +34,14 @@
                        asp-page="/Index"
                        asp-route-p="@(Model.Data.PageNumber - 1)"
                        asp-route-term="@(Model.Term)"
-                       class="btn btn-default @prevDisabled">
+                   class="btn btn-outline-secondary @prevDisabled">
                         Previous
                     </a>
                     <a asp-area="Admin"
                        asp-page="/Index"
                        asp-route-p="@(Model.Data.PageNumber + 1)"
                        asp-route-term="@(Model.Term)"
-                       class="btn btn-default @nextDisabled">
+                       class="btn btn-outline-secondary @nextDisabled">
                         Next
                     </a>
                 </p>
