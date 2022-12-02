@@ -1,0 +1,63 @@
+﻿@page
+@model Topsis.Web.Areas.Admin.Pages.UserModel
+@{
+    var AllRoles = Domain.Contracts.RoleNames.All();
+}
+
+@if(string.IsNullOrEmpty(Model.ErrorMessage) == false)
+{
+<div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+}
+
+
+<h2>User: @Model.Email</h2>
+<hr />
+
+@*<div class="row">
+    <div class="col">
+        <h4>Password</h4>
+        <form>
+            <input type="hidden" name="email" value="@(Model.Email)" />
+            <button type="submit" class="btn btn-secondary">Reset Password</button>
+        </form>
+    </div>
+</div>*@
+
+<div class="row">
+    
+        <div class="col-10">
+            <h4>Roles</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col" class="w-auto">Name</th>
+                    <th scope="col" class="w-auto">Description</th>
+                    <th scope="col" class="w-auto">Has Role?</th>
+                    <th scope="col" class="w-auto">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var kvp in AllRoles)
+                {
+                    var hasRole = Model.Roles.Contains(kvp.Key);
+                    <tr>
+                        <td>
+                            @kvp.Key
+                        </td>
+                        <td>@kvp.Value</td>
+                        <td>@(hasRole ? "Yes" : "No")</td>
+                        <td>
+                            <form asp-page-handler="togglerole" method="post" class="no-ajax">
+                                <input type="hidden" name="email" value="@(Model.Email)" />
+                                <input type="hidden" name="role" value="@(kvp.Key)" />
+                                <input type="hidden" name="add" value="@(hasRole ? false.ToString() : true.ToString())" />
+                                <button type="submit" class="btn btn-outline-secondary">@(hasRole ? "Remove role" : "Add role")</button>
+                            </form>
+                            
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        </div>
+</div>

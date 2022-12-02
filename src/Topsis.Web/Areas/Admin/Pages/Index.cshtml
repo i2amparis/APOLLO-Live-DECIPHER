@@ -61,7 +61,13 @@
                 @foreach (var item in Model.Data)
                 {
                     <tr>
-                        <td>@item.Email</td>
+                        <td>
+                            <a asp-area="Admin"
+                           asp-page="/User"
+                           asp-route-email="@(item.Email)">
+                                @item.Email
+                            </a>
+                        </td>
                         <td>@item.LastName</td>
                         <td>@item.FirstName</td>
                         <td>@(item.CountryId != null && allCountries.TryGetValue(item.CountryId, out var country) ? country : string.Empty)</td>
