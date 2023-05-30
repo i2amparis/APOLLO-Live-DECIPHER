@@ -13,7 +13,9 @@ namespace Topsis.Adapters.Database.Configuration
 
             builder.Property("_analysisResultJson").HasColumnName("AnalysisResultJson");
 
-            builder.HasIndex(x => new { x.WorkspaceId, x.Algorithm }).IsUnique();
+            builder.HasIndex(x => new { x.WorkspaceId, x.Round }).IsUnique().HasName("UIX_WorkspaceId_Round");
+
+            builder.Property(x => x.Round).HasDefaultValue(FeedbackRound.First);
         }
     }
 }

@@ -7,11 +7,11 @@
       "destination": "wwwroot/lib/dropzone/"
     },
     {
-      "library": "bootstrap@4.6.0",
+      "library": "bootstrap@4.6.2",
       "destination": "wwwroot/lib/bootstrap/"
     },
     {
-      "library": "jquery@3.6.0",
+      "library": "jquery@3.6.4",
       "destination": "wwwroot/lib/jquery/"
     },
     {
@@ -19,11 +19,11 @@
       "destination": "wwwroot/lib/chartjs"
     },
     {
-      "library": "jquery-validate@1.19.2",
+      "library": "jquery-validate@1.19.5",
       "destination": "wwwroot/lib/jquery-validation"
     },
     {
-      "library": "jquery-validation-unobtrusive@3.2.10",
+      "library": "jquery-validation-unobtrusive@3.2.12",
       "destination": "jquery-validation-unobtrusive"
     }
   ]

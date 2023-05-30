@@ -13,6 +13,21 @@ namespace Topsis.Domain
         Topsis = 0
     }
 
+    public enum FeedbackRound : short 
+    {
+        Undefined = 0,
+        First = 1,
+        Second = 2,
+        Third = 3,
+        Fourth = 4,
+        Fifth = 5,
+        Sixth = 6,
+        Seventh = 7,
+        Eighth = 8,
+        Ninth = 9,
+        Tenth = 10
+    }
+
     public class WorkspaceReport : Entity 
     {
         private string _analysisResultJson;
@@ -24,12 +39,13 @@ namespace Topsis.Domain
             Criteria = string.Empty;
             Alternatives = string.Empty;
             Algorithm = AlgorithmType.Topsis;
+            Round = FeedbackRound.First;
         }
 
         public Workspace Workspace { get; set; }
         public int WorkspaceId { get; set; }
         public AlgorithmType Algorithm { get; set; }
-
+        public FeedbackRound Round { get; set; }
         public int VotesCount { get; set; }
         public string Criteria { get; set; }
         public string Alternatives { get; set; }
@@ -55,13 +71,14 @@ namespace Topsis.Domain
             return Serializer.DeserializeFromJson<WorkspaceAnalysisResult>(_analysisResultJson);
         }
 
-        public static WorkspaceReport Create(Workspace workspace, AlgorithmType algorithm)
+        public static WorkspaceReport Create(Workspace workspace, FeedbackRound round)
         {
             var result = new WorkspaceReport
             {
                 WorkspaceId = workspace.Id,
                 CreatedAtUtc = DateTime.UtcNow,
-                Algorithm = algorithm
+                Algorithm = AlgorithmType.Topsis,
+                Round = round
             };
 
             result.InitializeFrom(workspace);

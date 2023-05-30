@@ -111,6 +111,8 @@
 
 @if (isFinalized)
 {
+    var currentRound = Model.Data.GetCurrentRound();
+
     <div class="row pb-5">
         <div class="col-md-12">
             <h4>Results</h4>
@@ -120,16 +122,33 @@
                     <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
 
                     <div class="form-group">
-                        <label class="control-label mr-2">Algorithm</label>
-                        <select name="algorithm" class="form-control mr-2">
+                        <label class="control-label mr-2">Round</label>
+                        <select name="round" class="form-control mr-2">
                             @{
-                                var options = Enum.GetValues(typeof(Domain.AlgorithmType))
-                                    .Cast<Domain.AlgorithmType>().ToArray();
-                                for (int i = 0; i < options.Length; i++)
-                                {
-                                    var item = options[i];
-                                                <option selected="@(i==0 ? "selected" : "")" value="@(item)">@item.ToString()</option>
+                                var options = Enum.GetValues(typeof(Domain.FeedbackRound))
+                                                    .Cast<Domain.FeedbackRound>().ToArray();
 
+                                foreach (var item in options)
+                                {
+                                    var itemId = (short)item;
+                                    var currentId = (short)currentRound;
+                                    if (itemId < currentId)
+                                    {
+                                        continue;
+                                    }
+
+                                    if (item == currentRound)
+                                    {
+                                        <option selected="selected" value="@(item)">@((short)item)</option>
+                                    }
+                                    else if (itemId - currentId > 1)
+                                    {
+                                        <option value="@(item)" disabled="disabled">@((short)item)</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@(item)">@((short)item)</option>
+                                    }
                                 }
                             }
 
@@ -147,6 +166,7 @@
                 <table class="@tableCls">
                     <thead>
                         <tr>
+                            <th scope="col">Round</th>
                             <th scope="col">Votes</th>
                             <th scope="col">Created At</th>
                             <th scope="col">Completed At</th>
@@ -157,6 +177,9 @@
                     @foreach (var item in Model.Data.Reports)
                     {
                         <tr>
+                            <td class="text-center text-dark">
+                                @((short)item.Round)
+                            </td>
                             <td class="text-center">
                                 @item.VotesCount
                             </td>
@@ -175,7 +198,7 @@
                 </table>
                 @if (Model.Data.Reports.Count == 0)
                 {
-                    <p>No calculation started. Select the appropriate algorithm and calculate the results.</p>
+                    <p>No calculation started. Select the appropriate round and calculate the results.</p>
                 }
             </div>
 

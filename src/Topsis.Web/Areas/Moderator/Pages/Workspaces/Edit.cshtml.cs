@@ -221,9 +221,9 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
             await LoadPageAsync(id);
         }
 
-        public async Task OnPostCalculateResultsAsync(string id, AlgorithmType algorithm)
+        public async Task OnPostCalculateResultsAsync(string id, FeedbackRound round)
         {
-            var cmd = new CalculateResults.Command { WorkspaceId = id, Algorithm = algorithm };
+            var cmd = new CalculateResults.Command { WorkspaceId = id, Round = round };
 
             await _bus.SendAsync(cmd);
             await LoadPageAsync(id);

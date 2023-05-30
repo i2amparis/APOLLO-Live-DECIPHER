@@ -16,11 +16,13 @@
             noResultsMessage = "Workspace voting not started yet.";
             break;
         case Domain.WorkspaceStatus.AcceptingVotes:
-            noResultsMessage = $"Workspace is currently accepting votes. If you've already voted, refresh this page in a few minutes.";
+            noResultsMessage = hasReports 
+                ? $"Based on the previous discussion you can make your adjustment vote."
+                : $"Thank you for your vote.";
             break;
         case Domain.WorkspaceStatus.Finalized:
         case Domain.WorkspaceStatus.FinalizedWithFeedback:
-            noResultsMessage = "Workspace voting completed. Waiting for the results.";
+            noResultsMessage = "Workspace voting completed. Waiting for results.";
             break;
         case Domain.WorkspaceStatus.Archived:
             noResultsMessage = "Workspace has archived.";
@@ -52,12 +54,12 @@
         <p>@Model.Data.Workspace.Description</p>
         @if (hasReports == false)
         {
-            <p class="text-danger">@noResultsMessage</p>
+            <p class="text-warning">@noResultsMessage</p>
         }
 
         @if (canVote)
         {
-            <p>You can vote <a href="@Url.Page("Vote", new { id = Model.Data.Workspace.Id.Hash() })">here</a>.</p>
+            <p>You can change your vote <a href="@Url.Page("Vote", new { id = Model.Data.Workspace.Id.Hash() })">here</a>.</p>
         }
     </div>
     @if (hasReports)
@@ -100,7 +102,7 @@
     <div class="row">
 
         <div class="col-md-12">
-            <h3>Alternatives</h3>
+            <h3>Prioritization</h3>
             <div class="col-md-3 float-md-right">
                 <h5>Consensus</h5>
                 <p class="lead">

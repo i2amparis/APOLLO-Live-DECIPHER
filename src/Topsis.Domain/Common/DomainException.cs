@@ -20,6 +20,7 @@ namespace Topsis.Domain.Common
         WorkspaceStatus_CannotFindCriterionWeight = 13,
         WorkspaceImport_AlreadyExist = 14,
         WorkspaceImport_InvalidStakeholderWeight = 15,
+        Workspace_InvalidReportRound = 16,
     }
 
     public class DomainException : Exception

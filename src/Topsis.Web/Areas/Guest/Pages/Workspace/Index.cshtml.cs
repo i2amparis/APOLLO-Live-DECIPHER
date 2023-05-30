@@ -93,7 +93,7 @@ namespace Topsis.Web.Areas.Guest.Pages.Workspace
                 {
                     if (absDelta > 2)
                     {
-                        return "badge-danger";
+                        return "badge-info";
                     }
 
                     return "badge-warning";

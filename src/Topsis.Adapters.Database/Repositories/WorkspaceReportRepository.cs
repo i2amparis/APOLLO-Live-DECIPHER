@@ -12,11 +12,11 @@ namespace Topsis.Adapters.Database.Repositories
         {
         }
 
-        public async Task<WorkspaceReport> FindAsync(int workspaceId, AlgorithmType algorithm)
+        public async Task<WorkspaceReport> FindAsync(int workspaceId, FeedbackRound round)
         {
             return await _db.WsWorkspacesReports
                 .SingleOrDefaultAsync(x => x.WorkspaceId == workspaceId
-                                        && x.Algorithm == algorithm);
+                                        && x.Round == round);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Topsis.Adapters.Database;
@@ -9,9 +10,10 @@ using Topsis.Adapters.Database;
 namespace Topsis.Adapters.Database.Migrations
 {
     [DbContext(typeof(WorkspaceDbContext))]
-    partial class WorkspaceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230530104330_report_round")]
+    partial class report_round
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2319,9 +2321,7 @@ namespace Topsis.Adapters.Database.Migrations
                         .HasColumnType("text");
 
                     b.Property<short>("Round")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("smallint")
-                        .HasDefaultValue((short)1);
+                        .HasColumnType("smallint");
 
                     b.Property<int>("VotesCount")
                         .HasColumnType("integer");
@@ -2335,9 +2335,8 @@ namespace Topsis.Adapters.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("WorkspaceId", "Round")
-                        .IsUnique()
-                        .HasName("UIX_WorkspaceId_Round");
+                    b.HasIndex("WorkspaceId", "Algorithm")
+                        .IsUnique();
 
                     b.ToTable("WsWorkspacesReports");
                 });

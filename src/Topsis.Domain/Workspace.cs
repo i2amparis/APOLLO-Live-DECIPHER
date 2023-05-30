@@ -186,9 +186,9 @@ namespace Topsis.Domain
         /// </summary>
         /// <param name="algorithm"></param>
         /// <returns>The created or updated report.</returns>
-        public WorkspaceReport CreateOrUpdateReport(AlgorithmType algorithm)
+        public WorkspaceReport CreateOrUpdateReport(FeedbackRound round)
         {
-            var report = Reports.SingleOrDefault(x => x.Algorithm == algorithm);
+            var report = Reports.SingleOrDefault(x => x.Round == round);
             if (report != null)
             {
                 report.InitializeFrom(this);
@@ -196,7 +196,13 @@ namespace Topsis.Domain
             }
 
             // create new report.
-            report = WorkspaceReport.Create(this, algorithm);
+            var currentRound = GetCurrentRound();
+            if ((short)round - (short)currentRound > 1)
+            {
+                throw new DomainException(DomainErrors.Workspace_InvalidReportRound, $"{round}<{currentRound}");
+            }
+
+            report = WorkspaceReport.Create(this, round);
             Reports.Add(report);
             return report;
         }
@@ -217,6 +223,16 @@ namespace Topsis.Domain
             return IsFinalized() && Reports?.Any() == true;
         }
 
+        public FeedbackRound GetCurrentRound()
+        {
+            var result = Reports?.LastOrDefault()?.Round;
+            if (result == null || result == FeedbackRound.Undefined)
+            {
+                return FeedbackRound.First;
+            }
+
+            return (FeedbackRound)result;
+        }
         #endregion
 
         #region [ Helpers ]

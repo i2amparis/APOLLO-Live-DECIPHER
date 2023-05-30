@@ -59,6 +59,6 @@ namespace Topsis.Application.Contracts.Database
 
     public interface IWorkspaceReportRepository : IIntRepository<WorkspaceReport>
     {
-        Task<WorkspaceReport> FindAsync(int workspaceId, AlgorithmType algorithm);
+        Task<WorkspaceReport> FindAsync(int workspaceId, FeedbackRound round);
     }
 }

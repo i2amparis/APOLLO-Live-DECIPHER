@@ -16,7 +16,7 @@ namespace Topsis.Application.Features
         public class Command : IRequest<string>
         {
             public string WorkspaceId { get; set; }
-            public AlgorithmType Algorithm { get; set; }
+            public FeedbackRound Round { get; set; }
         }
 
         public class PrecalculateCommand : IRequest<PrecalculationResult>
@@ -33,7 +33,6 @@ namespace Topsis.Application.Features
             private readonly ICalculateResultsProcessor _calculationProcessor;
 
             public Handler(IWorkspaceRepository workspaces,
-                IWorkspaceReportRepository workspaceReportRepository,
                 ICalculateResultsProducer calculationProducer,
                 ICalculateResultsProcessor calculationProcessor)
             {
@@ -51,7 +50,7 @@ namespace Topsis.Application.Features
                     throw new DomainException(DomainErrors.WorkspaceStatus_CannotCalculateResults, $"status: {item.CurrentStatus}");
                 }
 
-                var report = item.CreateOrUpdateReport(command.Algorithm);
+                var report = item.CreateOrUpdateReport(command.Round);
                 await _workspaces.UnitOfWork.SaveChangesAsync();
 
                 // Send to queue.
