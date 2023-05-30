@@ -49,10 +49,10 @@
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 }
 
-<div class="row">
-    <div class="col-md-6">
+<div class="row pb-5">
+    <div class="col-md-12">
         <h2>@Model.Data.Workspace.Title</h2>
-        <p>@Model.Data.Workspace.Description</p>
+        <p class="lead">@Model.Data.Workspace.Description</p>
         @if (hasReports == false)
         {
             <p class="text-warning">@noResultsMessage</p>
@@ -63,38 +63,6 @@
             <p>You can change your vote <a href="@Url.Page("Vote", new { id = Model.Data.Workspace.Id.Hash() })">here</a>.</p>
         }
     </div>
-    @if (hasReports)
-    {
-        <div class="col-md-6">
-
-            <div class="col-md-9 float-right">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            @*<th>Algorithm</th>*@
-                            <th>Created</th>
-                            <th>Finished</th>
-                            <th>Votes</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @foreach (var item in Model.Data.Workspace.Reports)
-                        {
-                            <tr>
-                                @*<td>@item.Algorithm</td>*@
-                                <td>@item.CreatedAtUtc.FormatUtcDate("yyyy/MM/dd HH:mm")</td>
-                                <td>@item.CompletedAtUtc?.FormatUtcDate("yyyy/MM/dd HH:mm")</td>
-                                <td class="text-center">@item.VotesCount</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-
-
-        </div>
-    }
 </div>
 
 
@@ -104,6 +72,8 @@
 
         <div class="col-md-12">
             <h3>Prioritization</h3>
+            <p class="lead">todo: Prioritization desc</p>
+
             <div class="col-md-3 float-md-right">
                 <h5>Consensus</h5>
                 <p class="lead">
@@ -128,14 +98,12 @@
             <canvas id="chAlternatives"></canvas>
         </div>
 
-        
     </div>
-
 
     <div class="row mt-5">
         <div class="col-md-12">
             <h3>Consensus</h3>
-
+            <p class="lead">todo: Consensus desc</p>
         </div>
         @*<div class="col-md-4">
             <canvas id="chCompareConsensus"></canvas>
@@ -150,6 +118,7 @@
     <div class="row mt-5">
         <div class="col-md-12">
             <h3>Categories</h3>
+            <p class="lead">todo: Categories desc</p>
             <canvas id="chCategories"></canvas>
         </div>
     </div>
@@ -158,7 +127,8 @@
     {
         <div class="row mt-5">
             <div class="col-md-12">
-                <h3>Reports Comparison</h3>
+                <h3>Round Comparison</h3>
+                <p class="lead">todo: Round Comparison desc</p>
                 <canvas id="chReportComparison"></canvas>
             </div>
         </div>

@@ -310,7 +310,7 @@ namespace Topsis.Web.ChartJs
                 datasets.Add(new ChartJsDataset
                 {
                      BackgroundColor = color,
-                     Label = item.Key.ToString(),
+                     Label = $"{item.Key} Round",
                      Data = item.Value.OrderBy(x => x.AlternativeOrder).Select(x => x.GroupTopsis).ToList()
                 });
                 count++;
