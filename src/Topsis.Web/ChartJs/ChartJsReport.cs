@@ -24,7 +24,7 @@ namespace Topsis.Web.ChartJs
         //private const string Color1 = "rgba(255, 99, 132, 0.2)";
         //private const string Color2 = "rgba(54, 162, 235, 0.2)";
 
-        private static string Color1 = Colors[1];
+        private static string Color1 = Colors[2];
         private static string Color2 = Colors[4];
 
         public ChartJsReport()
@@ -285,6 +285,66 @@ namespace Topsis.Web.ChartJs
                             }
                         }
                 },
+                Options = new ChartJsDatasetOptions
+                {
+                    Scales = scales
+                }
+            };
+        }
+
+        internal static ChartJsReport BuildReportComparison(WorkspaceReportViewModel vm)
+        {
+            if (vm.ReportComparison == null)
+            {
+                return null;
+            }
+
+            var labels = vm.ChartAlternatives.OrderBy(x => x.AlternativeOrder).Select(x => x.AlternativeTitle).ToList();
+
+            int count = 1;
+            var datasets = new List<ChartJsDataset>();
+
+            foreach (var item in vm.ReportComparison.OrderBy(x => x.Key))
+            {
+                var color = Colors[count % Colors.Length];
+                datasets.Add(new ChartJsDataset
+                {
+                     BackgroundColor = color,
+                     Label = item.Key.ToString(),
+                     Data = item.Value.OrderBy(x => x.AlternativeOrder).Select(x => x.GroupTopsis).ToList()
+                });
+                count++;
+            }
+
+            var settings = vm.Workspace.Questionnaire.GetSettings();
+            var suggestedMaxY = (int)Math.Ceiling(datasets.Select(x => x.Data.Max()).Max());
+            var suggestedMinY = (int)Math.Floor(datasets.Select(x => x.Data.Min()).Min());
+
+            var scales = new ChartJsDatasetOptions.ChartJsScales(
+                new ChartJsDatasetOptions.ChartJsAxes("Alternatives"),
+                new ChartJsDatasetOptions.ChartJsAxes("Evaluation", suggestedMin: suggestedMinY, suggestedMax: suggestedMaxY, ticksMin: suggestedMinY, stepSize: 1));
+
+            return new ChartJsReport()
+            {
+                Data = new ChartJsData
+                {
+                    Labels = labels,
+                    Datasets = datasets.ToArray()
+                        //    new ChartJsDataset
+                        //    {
+                        //        BackgroundColor = Color1,
+                        //        Label = "My Vote",
+                        //        Data = myData
+                        //    },
+                        //    new ChartJsDataset
+                        //    {
+                        //        BackgroundColor = Color2,
+                        //        Label = "Group Vote",
+                        //        Data = groupData
+                        //    }
+                        //}
+                },
+                Type = "bar",
                 Options = new ChartJsDatasetOptions
                 {
                     Scales = scales

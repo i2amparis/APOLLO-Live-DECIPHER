@@ -35,6 +35,23 @@ namespace Topsis.Application.Contracts.Database
             }
 
             Tips = BuildTips(report, workspace).OrderByDescending(x => x.Distance).Take(MaxNumberOfTipsCount).ToArray();
+
+            if (workspace.Reports.Count > 1)
+            {
+                ReportComparison = BuildReportComparisonChartData(workspace);
+            }
+        }
+
+        private IDictionary<FeedbackRound, AlternativeChartItem[]> BuildReportComparisonChartData(Workspace workspace)
+        {
+            var result = new Dictionary<FeedbackRound, AlternativeChartItem[]>();
+            foreach (var report in workspace.Reports.OrderByDescending(x => x.CreatedAtUtc))
+            {
+                var alternatives = BuildAlternativesChartData(workspace, report.GetAnalysisResult(), null).ToArray();
+                result[report.Round] = alternatives;
+            }
+
+            return result;
         }
 
         private IEnumerable<AlternativeChartItem> BuildAlternativesChartData(Workspace workspace, 
@@ -65,6 +82,7 @@ namespace Topsis.Application.Contracts.Database
         public Workspace Workspace { get; set; }
         public string UserId { get; }
         public AlternativeChartItem[] ChartAlternatives { get; set; }
+        public IDictionary<FeedbackRound, AlternativeChartItem[]> ReportComparison { get; }
         public IDictionary<string, double> ChartConsensus { get; set; }
         public Dictionary<string, AlternativeTopsis[]> ChartGroups { get; }
         public IDictionary<int, double> AlternativesConsensusDegree { get; }

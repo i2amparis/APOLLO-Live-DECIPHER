@@ -4,6 +4,7 @@
 @{
     var currentStatus = Model.Data.Workspace.CurrentStatus;
     var hasReports = Model.Data.Workspace.IsFinalized() && Model.Data.Workspace.Reports?.Any() == true;
+    var reportCount = Model.Data.Workspace.Reports?.Count() ?? 0;
     var noResultsMessage = string.Empty;
     var canVote = currentStatus == Domain.WorkspaceStatus.AcceptingVotes;
     
@@ -153,12 +154,22 @@
         </div>
     </div>
 
-    <div class="row mt-5">
+    @if (reportCount > 1)
+    {
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <h3>Reports Comparison</h3>
+                <canvas id="chReportComparison"></canvas>
+            </div>
+        </div>
+    }
+    
+    @*<div class="row mt-5">
         <div class="col-md-12">
             <h3>Consensus</h3>
             <canvas id="chConsensusDegree"></canvas>
         </div>
-    </div>
+    </div>*@
 }
 @section Scripts {
 
@@ -185,8 +196,13 @@
         configCategories.options.scales['y'].ticks.callback = alternativesTicksCallback;
         let categoriesChart = new Chart(document.getElementById('chCategories'), configCategories);
 
-        let configConsensusDegree = JSON.parse('@Html.Raw(Model.ConsensusDegreeJson)');
-        let chConsensusDegreeChart = new Chart(document.getElementById('chConsensusDegree'), configConsensusDegree);
+        //let configConsensusDegree = JSON.parse('@Html.Raw(Model.ConsensusDegreeJson)');
+        //let chConsensusDegreeChart = new Chart(document.getElementById('chConsensusDegree'), configConsensusDegree);
+
+        if (@reportCount > 1) {
+            let reportComparison = JSON.parse('@Html.Raw(Model.ReportComparisonJson)');
+            let chReportComparison = new Chart(document.getElementById('chReportComparison'), reportComparison);
+        }
     </script>
 }
 
