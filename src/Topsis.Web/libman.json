@@ -11,6 +11,10 @@
       "destination": "wwwroot/lib/bootstrap/"
     },
     {
+      "library": "bootswatch@4.6.2",
+      "destination": "wwwroot/lib/bootswatch/"
+    },
+    {
       "library": "jquery@3.6.4",
       "destination": "wwwroot/lib/jquery/"
     },

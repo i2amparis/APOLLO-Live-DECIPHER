@@ -1,12 +1,20 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var themes = new[] { "cerulean", "cosmo", "cyborg", "darkly", "flatly", "journal", "litera", "lumen", "lux", "materia", 
+        "minty", "pulse", "sandstone", "simplex", "sketchy", "slate", "solar", "spacelab", "superhero", "united", "yeti" };
+    var selectedTheme = this.Context.Request.Query.TryGetValue("theme", out var theme) ? theme.ToString() : "lux";
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Topsis</title>
-
-    <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.css" />
+    
+    <environment include="Development">@*
+        <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.css" />*@
+       @*<link href="~/lib/bootswatch/minty/bootstrap.min.css" rel="stylesheet" />*@
+        @*<link href="~/lib/bootswatch/lux/bootstrap.min.css" rel="stylesheet" />*@
+        <link href="~/lib/bootswatch/@(selectedTheme)/bootstrap.min.css" rel="stylesheet" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment exclude="Development">
@@ -48,11 +56,39 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Guest" asp-page="/Index">Read More</a>
                         </li>
+
+                        <li class="nav-item">
+                           
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Theme: @selectedTheme
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    @foreach (var item in themes)
+                                    {
+                                        <a class="dropdown-item theme-button" href="#" data-theme="@item">@item</a>
+                                    }
+                                </div>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4">Apollon</h1>
+            <p class="lead">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+            <hr class="my-4">
+            <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+            <p class="lead">
+                <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+            </p>
+        </div>
+    </div>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -85,5 +121,15 @@
     </environment>
 
     @RenderSection("Scripts", required: false)
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".theme-button").click(function () {
+                var url = `${document.location}`.split('?')[0];
+                var theme = $(this).data('theme');
+                var newUrl = `${url}?theme=${theme}`;
+                document.location = newUrl;
+            });
+        });
+    </script>
 </body>
 </html>
