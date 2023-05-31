@@ -16,15 +16,16 @@
 <h4>Profile</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form method="post" class="no-ajax">
             @Html.ValidationDiv()
             @Html.FormBlock(m => m.Data.Country)
             @Html.FormBlock(m => m.Data.JobCategory)
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
-                <p>@CommonLocalizer.Get("Your vote is anonymous.")</p>
             </div>
+            <p class="alert alert-info">@CommonLocalizer.Get("The voting process is anonymous. 'Job Category' and 'Country' will be used for aggregated statistics. The anonymised survey results may be used for scientific publications.")</p>
+
         </form>
     </div>
 </div>
