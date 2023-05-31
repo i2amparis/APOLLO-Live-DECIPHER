@@ -126,27 +126,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            <div class="row mt-3">
-                <div class="col-md-4">
-                    
-                    <img src="~/img/eu-flag.png" />
-                   
-                </div>
-                <div class="col-md-4">
-                    <h3>Map</h3>
-                    <a asp-area="" asp-page="/Index">Home</a><br />
-                    <a asp-area="Guest" asp-page="/Index">Guest Account</a>
-                </div>
-                
-                <hr />
-                <div class="col-md-2 offset-10">
-                    <p>&copy; 2021 - APOLLO-Live</p>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <partial name="_FooterPartial" />
 
     <environment include="Development">
         <script src="~/lib/jquery/jquery.js"></script>
