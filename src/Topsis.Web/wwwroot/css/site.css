@@ -71,7 +71,7 @@ body {
   line-height: 30px; /* Vertically center the text there */
   background-color: var(--light);
 }
-
+/*
 #wrapper {
     padding-left: 0;
     -webkit-transition: all 0.5s ease;
@@ -112,10 +112,10 @@ body {
 #wrapper.toggled #page-content-wrapper {
     position: absolute;
     margin-right: -250px;
-}
+}*/
 
 /* Sidebar Styles */
-
+/*
 .sidebar-nav {
     position: absolute;
     top: 0;
@@ -188,4 +188,4 @@ body {
         position: relative;
         margin-right: 0;
     }
-}
+}*/
