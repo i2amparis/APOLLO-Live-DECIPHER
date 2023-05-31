@@ -18,10 +18,17 @@
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment exclude="Development">
-        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/4.6.0/css/bootstrap.min.css"
+        @*<link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/4.6.0/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position"
-              asp-fallback-test-value="absolute" />
+              asp-fallback-test-value="absolute" />*@
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/@(selectedTheme)/bootstrap.min.css"
+              integrity="sha384-3fdgwJw17Bi87e1QQ4fsLn4rUFqWw//KU0g8TvV6quvahISRewev6/EocKNuJmEw" 
+            crossorigin="anonymous"
+              asp-fallback-href="~/lib/bootswatch/@(selectedTheme)/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position"
+              asp-fallback-test-value="absolute">
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
 </head>
