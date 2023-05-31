@@ -19,6 +19,7 @@ namespace Topsis.Application.Features
             public Country Country { get; set; }
 
             public JobCategory JobCategory { get; set; }
+            public Gender Gender { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>

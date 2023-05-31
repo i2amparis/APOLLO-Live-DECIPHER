@@ -5,6 +5,7 @@ using Topsis.Domain;
 
 namespace Topsis.Web.Pages
 {
+
     public static class PageModelExtensions
     {
         public static ActionResult RedirectToPageJson<TPage>(this TPage controller, string pageName, object values = null)
