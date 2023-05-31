@@ -7,7 +7,7 @@
     var reportCount = Model.Data.Workspace.Reports?.Count() ?? 0;
     var noResultsMessage = string.Empty;
     var canVote = currentStatus == Domain.WorkspaceStatus.AcceptingVotes;
-    
+    var icon = string.Empty;
     switch (Model.Data.Workspace.CurrentStatus)
     {
         case Domain.WorkspaceStatus.Draft:
@@ -23,6 +23,7 @@
             break;
         case Domain.WorkspaceStatus.Finalized:
         case Domain.WorkspaceStatus.FinalizedWithFeedback:
+            icon = "hourglass_top";
             noResultsMessage = "Workspace voting completed. Waiting for results.";
             break;
         case Domain.WorkspaceStatus.Archived:
@@ -55,7 +56,13 @@
         <p class="lead">@Model.Data.Workspace.Description</p>
         @if (hasReports == false)
         {
-            <p class="text-warning">@noResultsMessage</p>
+            <p class="text-warning">
+                @if (string.IsNullOrEmpty(icon) == false)
+                {
+                    <span class="material-icons md-48">@icon</span>
+                }
+                @noResultsMessage
+            </p>
         }
 
         @if (canVote)
