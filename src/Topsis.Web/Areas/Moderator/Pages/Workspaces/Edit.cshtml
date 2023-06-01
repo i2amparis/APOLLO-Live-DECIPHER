@@ -108,7 +108,7 @@
         </form>
     </div>
 
-    <div class="col-md-3">
+    @*<div class="col-md-3">
         <h4>Send Msg to Voters</h4>
         <form asp-page-handler="sendinfo" method="post">
             <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
@@ -122,7 +122,7 @@
                 <input type="submit" value="Send Info" class="btn btn-primary float-right" />
             </div>
         </form>
-    </div>
+    </div>*@
 </div>
 
 @if (isFinalized)
