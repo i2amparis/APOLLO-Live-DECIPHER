@@ -97,11 +97,13 @@ namespace Topsis.Application.Features
         {
             private readonly IUserContext _userContext;
             private readonly IVoteRepository _votes;
+            private readonly IReportService _reports;
 
-            public Handler(IUserContext userContext, IVoteRepository votes)
+            public Handler(IUserContext userContext, IVoteRepository votes, IReportService reports)
             {
                 _userContext = userContext;
                 _votes = votes;
+                _reports = reports;
             }
 
             public async Task<string> Handle(Command command, CancellationToken cancellationToken)
@@ -117,6 +119,8 @@ namespace Topsis.Application.Features
                 vote.Accept(command.Answers.Select(x => x.ToDomainModel()).ToArray(), command.CriteriaImportance);
                 await _votes.AddAsync(vote);
                 await _votes.UnitOfWork.SaveChangesAsync();
+
+                _reports.ClearWorkspaceCache(workspaceId);
 
                 return vote.Id.Hash();    
             }

@@ -17,9 +17,19 @@
             noResultsMessage = "Workspace voting not started yet.";
             break;
         case Domain.WorkspaceStatus.AcceptingVotes:
-            noResultsMessage = hasReports 
-                ? $"Based on the previous discussion you can make your adjustment vote."
-                : $"Thank you for your vote.";
+            icon = "how_to_vote";
+
+            if (Model.Data.HasUserVoted)
+            {
+                noResultsMessage = hasReports
+                    ? $"Based on the previous discussion you can make your adjustment vote."
+                    : $"Your vote has been registered. Thank you for your participation.";
+            }
+            else
+            {
+                noResultsMessage = $"Please vote.";
+            }
+            
             break;
         case Domain.WorkspaceStatus.Finalized:
         case Domain.WorkspaceStatus.FinalizedWithFeedback:
@@ -27,6 +37,7 @@
             noResultsMessage = "Workspace voting completed. Waiting for results.";
             break;
         case Domain.WorkspaceStatus.Archived:
+            icon = "inventory_2";
             noResultsMessage = "Workspace has archived.";
             break;
         default:
@@ -67,7 +78,7 @@
 
         @if (canVote)
         {
-            <p>You can change your vote <a href="@Url.Page("Vote", new { id = Model.Data.Workspace.Id.Hash() })">here</a>.</p>
+            <p>You can@(Model.Data.HasUserVoted ? " change your" : "") vote <a href="@Url.Page("Vote", new { id = Model.Data.Workspace.Id.Hash() })">here</a>.</p>
         }
     </div>
     <div class="col-md-4">

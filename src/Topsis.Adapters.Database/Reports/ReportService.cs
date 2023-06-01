@@ -185,6 +185,7 @@ namespace Topsis.Adapters.Database.Reports
         {
             return await _db.WsWorkspaces
                 .Include(x => x.Reports)
+                .Include(x => x.Votes)
                 .Include(x => x.Questionnaire)
                     .ThenInclude(x => x.Alternatives)
                 .SingleOrDefaultAsync(x => x.Id == workspaceId);
