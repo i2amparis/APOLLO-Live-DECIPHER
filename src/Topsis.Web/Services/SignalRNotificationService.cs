@@ -37,11 +37,12 @@ namespace Topsis.Web.Services
                 (short)workspace.CurrentStatus);
         }
 
-        public async Task OnWorkspaceMessageSendAsync(Workspace workspace, string message)
+        public async Task OnWorkspaceMessageSendAsync(Workspace workspace, string title, string message)
         {
             var groupName = VotingHub.GetWorkspaceGroupName(workspace.Id);
             await _voting.Clients.Group(groupName).SendAsync(Method_WorkspaceSendMessage,
                 workspace.Id.Hash(),
+                title,
                 message);
         }
     }

@@ -51,7 +51,7 @@
 }
 
 <div class="row pb-5">
-    <div class="col-md-12">
+    <div class="col-md-8">
         <h2>@Model.Data.Workspace.Title</h2>
         <p class="lead">@Model.Data.Workspace.Description</p>
         @if (hasReports == false)
@@ -70,9 +70,23 @@
             <p>You can change your vote <a href="@Url.Page("Vote", new { id = Model.Data.Workspace.Id.Hash() })">here</a>.</p>
         }
     </div>
+    <div class="col-md-4">
+        <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
+            <div class="toast" style="position: absolute; top: 0; right: 0; min-width:150px;" data-autohide="false">
+                <div class="toast-header">
+                    <span class="material-icons">notifications</span>
+                    <strong class="mr-auto"><span id="notifyTitle"></span></strong>
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="toast-body">
+                    <span id="notifyMessage"></span>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-
 
 @if (hasReports)
 {
@@ -197,28 +211,41 @@
     </environment>
 
     @* https://learn.microsoft.com/en-us/aspnet/signalr/overview/guide-to-the-api/hubs-api-guide-javascript-client#how-to-get-a-proxy-for-a-hub-class *@
+    @* https://getbootstrap.com/docs/4.6/components/toasts/#options *@
+
     <script type="text/javascript">
         
-        let groupName = "@(Hubs.VotingHub.GetWorkspaceGroupName(Model.Data.Workspace.Id))";
-        let connection = connectToGroup("@(Hubs.VotingHub.RouteUrl)", groupName, function (){
-            console.log(`Connected.`);
-        });
+        $(function(){
+            let groupName = "@(Hubs.VotingHub.GetWorkspaceGroupName(Model.Data.Workspace.Id))";
+            let connection = connectToGroup("@(Hubs.VotingHub.RouteUrl)", groupName, function () {
+                console.log(`Connected.`);
+            });
 
-        connection.onreconnecting(function () {
-            console.log(`Connection lost. Reconnecting...`);
-        });
+            connection.onreconnecting(function () {
+                console.log(`Connection lost. Reconnecting...`);
+            });
 
-        connection.onreconnected(function () {
-            console.log("Reconnected.");
-        });
+            connection.onreconnected(function () {
+                console.log("Reconnected.");
+            });
 
-        connection.on("workspace_status_changed", function (id, status) {
-            console.log(`Received message from 'workspace:${id}' that status has changed to: ${status}.`);
-            location.reload();
-        });
+            connection.on("workspace_status_changed", function (id, status) {
+                console.log(`Received message from 'workspace:${id}' that status has changed to: ${status}.`);
+                location.reload();
+            });
 
-        connection.on("workspace_message", function (id, message) {
-            console.log(`Received 'message:${message}' from 'workspace:${id}'.`);
+            connection.on("workspace_message", function (id, title, message) {
+                console.log(`Received 'message:${message}' from 'workspace:${id}'.`);
+                
+                if (message) {
+                    $('#notifyTitle').text(title);
+                    $('#notifyMessage').text(message);
+                    $('.toast').toast('show');
+                }
+            });
+
+            $('.toast').toast({ delay: 3000 });
+
         });
     </script>
 }
