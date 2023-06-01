@@ -72,6 +72,8 @@
     </div>
 </div>
 
+
+
 @if (hasReports)
 {
     <div class="row">
@@ -149,29 +151,14 @@
 }
 @section Scripts {
 
-    <script type="text/javascript">
-    let workspaceId = '@Model.Data.Workspace.Id.Hash()';
-    var CONNECTION_GROUP = `workspace-${workspaceId}`;
-    </script>
-
-    <environment include="Development">
-        <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
-        <script src="~/js/votingHub.js"></script>
-    </environment>
-    <environment exclude="Development">
-        <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
-        <script src="~/js/votingHub.min.js"></script>
-    </environment>
-
     <script>
         Chart.defaults.datasets.bar.minBarLength = 7;
 
         @*let configCompareConsensus = JSON.parse('@Html.Raw(Model.ConsensusCompareReportJson)');
         let compareChart = new Chart(document.getElementById('chCompareConsensus'), configCompareConsensus);*@
-        
-        let jsHasReports = @(hasReports ? "true" : "false");
-        if (jsHasReports)
-        {
+
+            let jsHasReports = @(hasReports ? "true" : "false");
+        if (jsHasReports) {
             let alternativesYLabels = JSON.parse('@Html.Raw(Model.AlternativesYLabelsJson)');
             let alternativesTicksCallback = function (value, idx) {
                 return alternativesYLabels[idx];
@@ -197,8 +184,17 @@
                 let chReportComparison = new Chart(document.getElementById('chReportComparison'), reportComparison);
             }
         }
-        
+
     </script>
+
+    <environment include="Development">
+        <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+        <script src="~/js/votingHub.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+        <script src="~/js/votingHub.min.js"></script>
+    </environment>
 
     @* https://learn.microsoft.com/en-us/aspnet/signalr/overview/guide-to-the-api/hubs-api-guide-javascript-client#how-to-get-a-proxy-for-a-hub-class *@
     <script type="text/javascript">
@@ -210,7 +206,6 @@
 
         connection.onreconnecting(function () {
             console.log(`Connection lost. Reconnecting...`);
-            document.getElementById("sendButton").disabled = true;
         });
 
         connection.onreconnected(function () {
@@ -221,6 +216,9 @@
             console.log(`Received message from 'workspace:${id}' that status has changed to: ${status}.`);
             location.reload();
         });
+
+        connection.on("workspace_message", function (id, message) {
+            console.log(`Received 'message:${message}' from 'workspace:${id}'.`);
+        });
     </script>
 }
-

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Topsis.Application;
+using Topsis.Application.Contracts.Results;
 using Topsis.Application.Features;
 using Topsis.Domain;
 using Topsis.Domain.Specifications;
@@ -106,6 +107,15 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
 
             await _bus.SendAsync(cmd);
             await LoadPageAsync(id);
+        }
+
+        public async Task OnPostSendInfo([FromServices] IWorkspaceNotificationService notifications,
+            string id, 
+            string notifyMessage)
+        {
+            await LoadPageAsync(id);
+
+            await notifications.OnWorkspaceMessageSendAsync(Data, notifyMessage);
         }
 
         public async Task OnPostChangeStatus(string id, WorkspaceStatus status)

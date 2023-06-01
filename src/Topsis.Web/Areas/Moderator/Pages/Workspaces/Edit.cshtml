@@ -88,8 +88,8 @@
         }
     </div>
 
-    <div class="col-md-5">
-        <h4>Information</h4>
+    <div class="col-md-4">
+        <h4>General Information</h4>
         <form asp-page-handler="changeinfo" method="post">
             <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
             <div class="form-group">
@@ -104,6 +104,22 @@
 
             <div class="form-group">
                 <input type="submit" value="Change Info" class="btn btn-primary float-right" />
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-3">
+        <h4>Send Msg to Voters</h4>
+        <form asp-page-handler="sendinfo" method="post">
+            <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
+
+            <div class="form-group">
+                <label class="control-label">Message</label>
+                <input type="text" name="notifyMessage" value="" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Send Info" class="btn btn-primary float-right" />
             </div>
         </form>
     </div>
@@ -162,7 +178,7 @@
             </div>
 
 
-            <div class="col-md-8 pt-2">
+            <div class="col-md-12 pt-2">
                 <table class="@tableCls">
                     <thead>
                         <tr>

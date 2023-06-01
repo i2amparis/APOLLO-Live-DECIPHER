@@ -21,7 +21,6 @@ function connectToGroup(hubUrl, groupName, onConnectedToGroup) {
                 .catch(function (err) {
                     console.log.error(err.toString());
                 });
-            console.log(`Connected to 'hub:${hubUrl}:${groupName}'.`);
         }).catch(function (err) {
             return console.error(err.toString());
         });

@@ -20,6 +20,8 @@ namespace Topsis.Web.Services
     public class SignalRNotificationService : IWorkspaceNotificationService
     {
         private const string Method_WorkspaceStatusChanged = "workspace_status_changed";
+        private const string Method_WorkspaceSendMessage = "workspace_message";
+
         private readonly IHubContext<VotingHub> _voting;
 
         public SignalRNotificationService(IHubContext<VotingHub> voting)
@@ -33,6 +35,14 @@ namespace Topsis.Web.Services
             await _voting.Clients.Group(groupName).SendAsync(Method_WorkspaceStatusChanged, 
                 workspace.Id.Hash(), 
                 (short)workspace.CurrentStatus);
+        }
+
+        public async Task OnWorkspaceMessageSendAsync(Workspace workspace, string message)
+        {
+            var groupName = VotingHub.GetWorkspaceGroupName(workspace.Id);
+            await _voting.Clients.Group(groupName).SendAsync(Method_WorkspaceSendMessage,
+                workspace.Id.Hash(),
+                message);
         }
     }
 }

@@ -6,5 +6,6 @@ namespace Topsis.Application.Contracts.Results
     public interface IWorkspaceNotificationService
     {
         Task OnWorkspaceStatusChangedAsync(Workspace workspace);
+        Task OnWorkspaceMessageSendAsync(Workspace workspace, string message);
     }
 }
