@@ -7,6 +7,7 @@ namespace Topsis.Web.Hubs
     public class VotingHub : Hub
     {
         // https://learn.microsoft.com/en-us/aspnet/core/signalr/javascript-client?view=aspnetcore-7.0&tabs=visual-studio
+        public const string RouteUrl = "/votingHub";
 
         public async Task JoinGroup(string groupName)
         {

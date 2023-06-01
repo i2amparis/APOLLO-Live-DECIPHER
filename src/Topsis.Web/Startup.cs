@@ -185,7 +185,7 @@ namespace Topsis.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
-                endpoints.MapHub<VotingHub>("/votingHub");
+                endpoints.MapHub<VotingHub>(VotingHub.RouteUrl);
             });
 
         }

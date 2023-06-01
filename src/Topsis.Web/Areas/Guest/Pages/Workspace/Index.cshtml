@@ -72,30 +72,6 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <td>User</td>
-                    <td>Message</td>
-                    <td>&nbsp;</td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><input id="userInput" type="text" placeholder="Type your name" /></td>
-                    <td><input id="messageInput" type="text" placeholder="Type your msg" /></td>
-                    <td><button id="sendButton" name="sendButton">Send</button></td>
-                </tr>
-            </tbody>
-        </table>
-        <ul id="messagesList">
-
-        </ul>
-    </div>
-</div>
-
 @if (hasReports)
 {
     <div class="row">
@@ -228,8 +204,8 @@
     <script type="text/javascript">
         
         let groupName = "@(Hubs.VotingHub.GetWorkspaceGroupName(Model.Data.Workspace.Id))";
-        let connection = connectToGroup("votingHub", groupName, function (){
-            document.getElementById("sendButton").disabled = false;
+        let connection = connectToGroup("@(Hubs.VotingHub.RouteUrl)", groupName, function (){
+            console.log(`Connected.`);
         });
 
         connection.onreconnecting(function () {
@@ -239,24 +215,11 @@
 
         connection.onreconnected(function () {
             console.log("Reconnected.");
-            document.getElementById("sendButton").disabled = false;
         });
-
-        //Disable the send button until connection is established.
-        document.getElementById("sendButton").disabled = true;
 
         connection.on("workspace_status_changed", function (id, status) {
             console.log(`Received message from 'workspace:${id}' that status has changed to: ${status}.`);
             location.reload();
-        });
-
-        document.getElementById("sendButton").addEventListener("click", function (event) {
-            var user = document.getElementById("userInput").value;
-            var message = document.getElementById("messageInput").value;
-            connection.invoke("SendMessage", user, message).catch(function (err) {
-                return console.error(err.toString());
-            });
-            event.preventDefault();
         });
     </script>
 }
