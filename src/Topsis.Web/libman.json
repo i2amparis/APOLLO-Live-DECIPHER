@@ -29,6 +29,15 @@
     {
       "library": "jquery-validation-unobtrusive@3.2.12",
       "destination": "jquery-validation-unobtrusive"
+    },
+    {
+      "provider": "unpkg",
+      "library": "@microsoft/signalr@7.0.5",
+      "destination": "wwwroot/lib/microsoft/signalr/",
+      "files": [
+        "dist/browser/signalr.js",
+        "dist/browser/signalr.min.js"
+      ]
     }
   ]
 }

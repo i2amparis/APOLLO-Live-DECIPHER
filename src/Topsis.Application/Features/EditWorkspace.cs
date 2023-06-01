@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Topsis.Application.Contracts.Database;
+using Topsis.Application.Contracts.Results;
 using Topsis.Domain;
 using Topsis.Domain.Common;
 
@@ -162,12 +163,17 @@ namespace Topsis.Application.Features
         {
             private readonly IWorkspaceRepository _workspaces;
             private readonly IReportService _reports;
+            private readonly IWorkspaceNotificationService _notifications;
             private readonly ILogger<Handler> _log;
 
-            public Handler(IWorkspaceRepository workspaces, IReportService reports, ILogger<Handler> log)
+            public Handler(IWorkspaceRepository workspaces, 
+                IReportService reports, 
+                IWorkspaceNotificationService notifications,
+                ILogger<Handler> log)
             {
                 _workspaces = workspaces;
                 _reports = reports;
+                _notifications = notifications;
                 _log = log;
             }
 
@@ -202,6 +208,8 @@ namespace Topsis.Application.Features
                 item.ChangeStatus(command.Status);
                 var result = await SaveAsync(item);
                 
+                await _notifications.OnWorkspaceStatusChangedAsync(item);
+
                 return result;
             }
 

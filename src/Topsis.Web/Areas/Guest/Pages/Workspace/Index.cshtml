@@ -72,6 +72,29 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-4">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <td>User</td>
+                    <td>Message</td>
+                    <td>&nbsp;</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input id="userInput" type="text" placeholder="Type your name" /></td>
+                    <td><input id="messageInput" type="text" placeholder="Type your msg" /></td>
+                    <td><button id="sendButton" name="sendButton">Send</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <ul id="messagesList">
+
+        </ul>
+    </div>
+</div>
 
 @if (hasReports)
 {
@@ -150,36 +173,91 @@
 }
 @section Scripts {
 
+    <script type="text/javascript">
+    let workspaceId = '@Model.Data.Workspace.Id.Hash()';
+    var CONNECTION_GROUP = `workspace-${workspaceId}`;
+    </script>
+
+    <environment include="Development">
+        <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+        <script src="~/js/votingHub.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+        <script src="~/js/votingHub.min.js"></script>
+    </environment>
+
     <script>
         Chart.defaults.datasets.bar.minBarLength = 7;
 
         @*let configCompareConsensus = JSON.parse('@Html.Raw(Model.ConsensusCompareReportJson)');
         let compareChart = new Chart(document.getElementById('chCompareConsensus'), configCompareConsensus);*@
+        
+        let jsHasReports = @(hasReports ? "true" : "false");
+        if (jsHasReports)
+        {
+            let alternativesYLabels = JSON.parse('@Html.Raw(Model.AlternativesYLabelsJson)');
+            let alternativesTicksCallback = function (value, idx) {
+                return alternativesYLabels[idx];
+            };
 
-        let alternativesYLabels = JSON.parse('@Html.Raw(Model.AlternativesYLabelsJson)');
-        let alternativesTicksCallback = function (value, idx) {
-            return alternativesYLabels[idx];
-        };
+            let configAlternatives = JSON.parse('@Html.Raw(Model.AlternativesReportJson)');
+            configAlternatives.options.scales['y'].ticks.callback = alternativesTicksCallback;
 
-        let configAlternatives = JSON.parse('@Html.Raw(Model.AlternativesReportJson)');
-        configAlternatives.options.scales['y'].ticks.callback = alternativesTicksCallback;
+            let altChart = new Chart(document.getElementById('chAlternatives'), configAlternatives);
 
-        let altChart = new Chart(document.getElementById('chAlternatives'), configAlternatives);
+            let configConsensus = JSON.parse('@Html.Raw(Model.ConsensusReportJson)');
+            let consensusChart = new Chart(document.getElementById('chConsensus'), configConsensus);
 
-        let configConsensus = JSON.parse('@Html.Raw(Model.ConsensusReportJson)');
-        let consensusChart = new Chart(document.getElementById('chConsensus'), configConsensus);
+            let configCategories = JSON.parse('@Html.Raw(Model.CategoriesReportJson)');
+            configCategories.options.scales['y'].ticks.callback = alternativesTicksCallback;
+            let categoriesChart = new Chart(document.getElementById('chCategories'), configCategories);
 
-        let configCategories = JSON.parse('@Html.Raw(Model.CategoriesReportJson)');
-        configCategories.options.scales['y'].ticks.callback = alternativesTicksCallback;
-        let categoriesChart = new Chart(document.getElementById('chCategories'), configCategories);
+            //let configConsensusDegree = JSON.parse('@Html.Raw(Model.ConsensusDegreeJson)');
+            //let chConsensusDegreeChart = new Chart(document.getElementById('chConsensusDegree'), configConsensusDegree);
 
-        //let configConsensusDegree = JSON.parse('@Html.Raw(Model.ConsensusDegreeJson)');
-        //let chConsensusDegreeChart = new Chart(document.getElementById('chConsensusDegree'), configConsensusDegree);
-
-        if (@reportCount > 1) {
-            let reportComparison = JSON.parse('@Html.Raw(Model.ReportComparisonJson)');
-            let chReportComparison = new Chart(document.getElementById('chReportComparison'), reportComparison);
+            if (@reportCount > 1) {
+                let reportComparison = JSON.parse('@Html.Raw(Model.ReportComparisonJson)');
+                let chReportComparison = new Chart(document.getElementById('chReportComparison'), reportComparison);
+            }
         }
+        
+    </script>
+
+    @* https://learn.microsoft.com/en-us/aspnet/signalr/overview/guide-to-the-api/hubs-api-guide-javascript-client#how-to-get-a-proxy-for-a-hub-class *@
+    <script type="text/javascript">
+        
+        let groupName = "@(Hubs.VotingHub.GetWorkspaceGroupName(Model.Data.Workspace.Id))";
+        let connection = connectToGroup("votingHub", groupName, function (){
+            document.getElementById("sendButton").disabled = false;
+        });
+
+        connection.onreconnecting(function () {
+            console.log(`Connection lost. Reconnecting...`);
+            document.getElementById("sendButton").disabled = true;
+        });
+
+        connection.onreconnected(function () {
+            console.log("Reconnected.");
+            document.getElementById("sendButton").disabled = false;
+        });
+
+        //Disable the send button until connection is established.
+        document.getElementById("sendButton").disabled = true;
+
+        connection.on("workspace_status_changed", function (id, status) {
+            console.log(`Received message from 'workspace:${id}' that status has changed to: ${status}.`);
+            location.reload();
+        });
+
+        document.getElementById("sendButton").addEventListener("click", function (event) {
+            var user = document.getElementById("userInput").value;
+            var message = document.getElementById("messageInput").value;
+            connection.invoke("SendMessage", user, message).catch(function (err) {
+                return console.error(err.toString());
+            });
+            event.preventDefault();
+        });
     </script>
 }
 

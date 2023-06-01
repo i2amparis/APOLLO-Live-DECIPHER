@@ -21,6 +21,7 @@ using Topsis.Adapters.Import;
 using Topsis.Application;
 using Topsis.Application.Contracts.Identity;
 using Topsis.Domain.Contracts;
+using Topsis.Web.Hubs;
 using Topsis.Web.Infrastructure;
 using Topsis.Web.Infrastructure.Tags;
 using Topsis.Web.Services;
@@ -111,6 +112,9 @@ namespace Topsis.Web
                 opts => { opts.ResourcesPath = "Resources"; })
             .AddDataAnnotationsLocalization();
 
+            services.AddSignalR();
+            services.AddSignalRNotificationService();
+
             services.AddTransient<IEmailSender, EmailSender>();
 
             AddLocalization(services);
@@ -181,7 +185,9 @@ namespace Topsis.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+                endpoints.MapHub<VotingHub>("/votingHub");
             });
+
         }
     }
 }
