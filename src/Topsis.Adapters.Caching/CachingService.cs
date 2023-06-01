@@ -34,5 +34,21 @@ namespace Topsis.Adapters.Caching
         {
             _cache.Remove(key);
         }
+
+        public void Set(string key, object value, TimeSpan? slidingExpiration = null)
+        {
+            if (slidingExpiration.HasValue)
+            {
+                _cache.Set(key, value, absoluteExpirationRelativeToNow: slidingExpiration.Value);
+                return;
+            }
+
+            _cache.Set(key, value);
+        }
+
+        public object Get(string key)
+        { 
+            return _cache.Get(key);
+        }
     }
 }

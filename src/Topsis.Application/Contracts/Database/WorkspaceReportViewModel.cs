@@ -13,12 +13,12 @@ namespace Topsis.Application.Contracts.Database
     {
         private const int MaxNumberOfTipsCount = 1;
 
-        public WorkspaceReportViewModel(Workspace workspace, IUserContext user)
+        public WorkspaceReportViewModel(Workspace workspace, IUserContext user, int? voteId)
         {
             Workspace = workspace;
             UserId = user.UserId;
             var report = workspace.GetReportData();
-            HasUserVoted = workspace.Votes.Any(x => x.ApplicationUserId == UserId);
+            UserVoteId = voteId;
             ChartAlternatives = BuildAlternativesChartData(workspace, report, user).ToArray();
             ChartConsensus = report?.StakeholdersConsensus;
             ChartGroups = report?.GroupTopsis;
@@ -83,7 +83,7 @@ namespace Topsis.Application.Contracts.Database
 
         public Workspace Workspace { get; set; }
         public string UserId { get; }
-        public bool HasUserVoted { get; }
+        public int? UserVoteId { get; }
         public AlternativeChartItem[] ChartAlternatives { get; set; }
         public IDictionary<FeedbackRound, AlternativeChartItem[]> ReportComparison { get; }
         public IDictionary<string, double> ChartConsensus { get; set; }

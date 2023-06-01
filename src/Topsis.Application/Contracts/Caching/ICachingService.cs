@@ -9,5 +9,7 @@ namespace Topsis.Application.Contracts.Caching
             Func<Task<TItem>> factory,
             TimeSpan? slidingExpiration = null);
         void Remove(string key);
+        void Set(string key, object value, TimeSpan? slidingExpiration = null);
+        object Get(string key);
     }
 }

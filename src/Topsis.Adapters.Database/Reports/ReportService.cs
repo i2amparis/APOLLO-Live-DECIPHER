@@ -17,6 +17,7 @@ namespace Topsis.Adapters.Database.Reports
     {
         private const int StakeholderVoteViewModelCacheIntervalInSeconds = 300;
         private const int WorkspaceReportCacheIntervalInSeconds = 300;
+        private const int StakeholderUserVoteIdCacheIntervalInSeconds = 300;
         private readonly WorkspaceDbContext _db;
         private readonly ICachingService _cache;
 
@@ -96,7 +97,8 @@ namespace Topsis.Adapters.Database.Reports
                     () => LoadWorkspaceForReportAsync(workspaceId),
                     slidingExpiration: TimeSpan.FromSeconds(WorkspaceReportCacheIntervalInSeconds));
                 
-                return new WorkspaceReportViewModel(workspace, user);
+                var userVoteId = await GetUserVoteAsync(user?.UserId, workspaceId);
+                return new WorkspaceReportViewModel(workspace, user, userVoteId);
             }
             catch (Exception ex)
             {
@@ -117,6 +119,36 @@ namespace Topsis.Adapters.Database.Reports
             var key2 = GetWorkspaceReportCacheKey(workspaceId);
             _cache.Remove(key2);
         }
+
+        #region [ User / Vote ]
+        private static string GetUserVoteKey(string userId, int workspaceId)
+        {
+            return $"__user_vote_{userId}_{workspaceId}".ToLower();
+        }
+
+        public void AddUserVoteToCache(StakeholderVote vote)
+        {
+            _cache.Set(GetUserVoteKey(vote.ApplicationUserId, vote.WorkspaceId), 
+                vote.Id, 
+                TimeSpan.FromSeconds(StakeholderUserVoteIdCacheIntervalInSeconds));
+        }
+
+        public async Task<int?> GetUserVoteAsync(string userId, int workspaceId)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                return null;
+            }
+
+            var key = GetUserVoteKey(userId, workspaceId);
+            var result = await _cache.GetOrCreateAsync(key, async () => { 
+                var vote = await _db.WsStakeholderVotes.Where(x => x.ApplicationUserId == userId && x.WorkspaceId == workspaceId)
+                    .FirstOrDefaultAsync();
+                return vote?.Id;
+            });
+            return result;
+        }
+        #endregion
 
         #region [ Helpers ]
         #region [ Vote ]
@@ -185,7 +217,6 @@ namespace Topsis.Adapters.Database.Reports
         {
             return await _db.WsWorkspaces
                 .Include(x => x.Reports)
-                .Include(x => x.Votes)
                 .Include(x => x.Questionnaire)
                     .ThenInclude(x => x.Alternatives)
                 .SingleOrDefaultAsync(x => x.Id == workspaceId);

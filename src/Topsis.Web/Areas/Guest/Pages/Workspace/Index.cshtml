@@ -19,7 +19,7 @@
         case Domain.WorkspaceStatus.AcceptingVotes:
             icon = "how_to_vote";
 
-            if (Model.Data.HasUserVoted)
+            if (Model.Data.UserVoteId.HasValue)
             {
                 noResultsMessage = hasReports
                     ? $"Based on the previous discussion you can make your adjustment vote."
@@ -78,7 +78,7 @@
 
         @if (canVote)
         {
-            <p>You can@(Model.Data.HasUserVoted ? " change your" : "") vote <a href="@Url.Page("Vote", new { id = Model.Data.Workspace.Id.Hash() })">here</a>.</p>
+            <p>You can@(Model.Data.UserVoteId.HasValue ? " change your" : "") vote <a href="@Url.Page("Vote", new { id = Model.Data.Workspace.Id.Hash() })">here</a>.</p>
         }
     </div>
     <div class="col-md-4">

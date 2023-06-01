@@ -120,7 +120,7 @@ namespace Topsis.Application.Features
                 await _votes.AddAsync(vote);
                 await _votes.UnitOfWork.SaveChangesAsync();
 
-                _reports.ClearWorkspaceCache(workspaceId);
+                _reports.AddUserVoteToCache(vote);
 
                 return vote.Id.Hash();    
             }

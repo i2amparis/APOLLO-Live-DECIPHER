@@ -26,5 +26,6 @@ namespace Topsis.Application.Contracts.Database
         public void ClearWorkspaceCache(int workspaceId);
         StakeholderDemographicsDto[] GetStakeholdersDemographicsAsync(string[] userIds);
         Task<PaginatedList<ApplicationUser>> GetUsersAsync(string term = null, int page = 1, int pageSize = 20);
+        void AddUserVoteToCache(StakeholderVote vote);
     }
 }
