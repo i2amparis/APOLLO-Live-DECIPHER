@@ -116,7 +116,7 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
         {
             await LoadPageAsync(id);
 
-            await notifications.OnWorkspaceMessageSendAsync(Data, notifyTitle, notifyMessage);
+            await notifications.OnWorkspaceMessageSendAsync(new WorkspaceNotificationMessage(Data.Id, notifyTitle, notifyMessage));
         }
 
         public async Task OnPostChangeStatus(string id, WorkspaceStatus status)

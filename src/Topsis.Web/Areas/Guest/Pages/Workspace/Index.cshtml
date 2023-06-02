@@ -227,7 +227,7 @@
     <script type="text/javascript">
         
         $(function(){
-            let groupName = "@(Hubs.VotingHub.GetWorkspaceGroupName(Model.Data.Workspace.Id))";
+            let groupName = "@(Hubs.VotingHub.GetWorkspaceGroupName(Model.Data.Workspace.Id.Hash()))";
             let connection = connectToGroup("@(Hubs.VotingHub.RouteUrl)", groupName, function () {
                 console.log(`Connected.`);
             });
@@ -240,17 +240,17 @@
                 console.log("Reconnected.");
             });
 
-            connection.on("workspace_status_changed", function (id, status) {
-                console.log(`Received message from 'workspace:${id}' that status has changed to: ${status}.`);
+            connection.on("workspace_status_changed", function (payload) {
+                console.log(`Received message from 'workspace:${payload.workspaceId}' that status has changed to: ${payload.status}.`);
                 location.reload();
             });
 
-            connection.on("workspace_message", function (id, title, message) {
-                console.log(`Received 'message:${message}' from 'workspace:${id}'.`);
+            connection.on("workspace_message", function (payload) {
+                console.log(`Received 'message:${payload.message}' from 'workspace:${payload.workspaceId}'.`);
                 
-                if (message) {
-                    $('#notifyTitle').text(title);
-                    $('#notifyMessage').text(message);
+                if (payload) {
+                    $('#notifyTitle').text(payload.title);
+                    $('#notifyMessage').text(payload.message);
                     $('.toast').toast('show');
                 }
             });

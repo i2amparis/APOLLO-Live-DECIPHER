@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading.Tasks;
 using Topsis.Application.Contracts.Results;
 using Topsis.Domain;
 using Topsis.Domain.Common;
+using Topsis.Domain.Contracts;
 using Topsis.Web.Hubs;
 
 namespace Topsis.Web.Services
@@ -23,27 +25,39 @@ namespace Topsis.Web.Services
         private const string Method_WorkspaceSendMessage = "workspace_message";
 
         private readonly IHubContext<VotingHub> _voting;
+        private readonly IUserContext _userContext;
 
-        public SignalRNotificationService(IHubContext<VotingHub> voting)
+        public SignalRNotificationService(IHubContext<VotingHub> voting, IUserContext userContext)
         {
             _voting = voting;
+            _userContext = userContext;
         }
 
-        public async Task OnWorkspaceStatusChangedAsync(Workspace workspace)
+        public async Task OnWorkspaceStatusChangedAsync(WorkspaceStatusChangedMessage message)
         {
-            var groupName = VotingHub.GetWorkspaceGroupName(workspace.Id);
-            await _voting.Clients.Group(groupName).SendAsync(Method_WorkspaceStatusChanged, 
-                workspace.Id.Hash(), 
-                (short)workspace.CurrentStatus);
+            AllowModerator(_userContext);
+
+            var groupName = VotingHub.GetWorkspaceGroupName(message.WorkspaceId);
+            await _voting.Clients.Group(groupName).SendAsync(Method_WorkspaceStatusChanged, message);
         }
 
-        public async Task OnWorkspaceMessageSendAsync(Workspace workspace, string title, string message)
+        public async Task OnWorkspaceMessageSendAsync(WorkspaceNotificationMessage message)
         {
-            var groupName = VotingHub.GetWorkspaceGroupName(workspace.Id);
-            await _voting.Clients.Group(groupName).SendAsync(Method_WorkspaceSendMessage,
-                workspace.Id.Hash(),
-                title,
-                message);
+            AllowModerator(_userContext);
+
+            var groupName = VotingHub.GetWorkspaceGroupName(message.WorkspaceId);
+            await _voting.Clients.Group(groupName).SendAsync(Method_WorkspaceSendMessage, message);
         }
+
+        private void AllowModerator(IUserContext userContext)
+        {
+            if (userContext.IsInRole(RoleNames.Moderator))
+            {
+                return;
+            }
+
+            throw new UnauthorizedAccessException();
+        }
+
     }
 }

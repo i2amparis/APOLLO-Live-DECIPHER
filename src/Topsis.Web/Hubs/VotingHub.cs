@@ -5,6 +5,11 @@ using Topsis.Domain.Common;
 
 namespace Topsis.Web.Hubs
 {
+    public interface IVotingHub
+    {
+        Task JoinGroup(string groupName);
+    }
+
     [Authorize]
     public class VotingHub : Hub
     {
@@ -17,9 +22,9 @@ namespace Topsis.Web.Hubs
             // await Clients.Group(groupName).SendAsync("ReceiveMessage", "System", $"{Context.ConnectionId} has joined the group {groupName}.");
         }
 
-        public static string GetWorkspaceGroupName(int workspaceId)
+        public static string GetWorkspaceGroupName(string workspaceId)
         {
-            return $"workspace-{workspaceId.Hash()}".ToLower();
+            return $"workspace-{workspaceId}".ToLower();
         }
     }
 }

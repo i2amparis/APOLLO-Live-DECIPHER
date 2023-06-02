@@ -5,6 +5,8 @@ namespace Topsis.Web
 {
     public class Program
     {
+        public static string Version = "1.0.3";
+
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();

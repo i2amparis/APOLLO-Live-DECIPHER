@@ -14,14 +14,19 @@ namespace Topsis.Adapters.Database.Identity
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public string UserId => _httpContextAccessor.HttpContext.GetClaimValue(ClaimTypes.NameIdentifier); 
+        public string UserId => _httpContextAccessor.HttpContext.GetClaimValue(ClaimTypes.NameIdentifier);
+
+        public bool IsInRole(string role)
+        {
+            return _httpContextAccessor.HttpContext.User.IsInRole(role);
+        }
     }
 
     public static class HttpContextExtensions
     {
         public static string GetClaimValue(this HttpContext httpContext, string type)
         {
-            return httpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            return httpContext.User.Claims.FirstOrDefault(x => x.Type == type)?.Value;
         }
     }
 }
