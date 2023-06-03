@@ -1,5 +1,5 @@
 ﻿@{
-    var themes = new[] { "cerulean", "cosmo", "cyborg", "darkly", "flatly", "journal", "litera", "lumen", "lux", "materia", 
+    var themes = new[] { "none", "cerulean", "cosmo", "cyborg", "darkly", "flatly", "journal", "litera", "lumen", "lux", "materia", 
         "minty", "pulse", "sandstone", "simplex", "sketchy", "slate", "solar", "spacelab", "superhero", "united", "yeti" };
     var selectedTheme = this.Context.Request.Query.TryGetValue("theme", out var theme) ? theme.ToString() : "lux";
 
@@ -13,27 +13,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Topsis</title>
     
-    <environment include="Development">@*
-        <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.css" />*@
-       @*<link href="~/lib/bootswatch/minty/bootstrap.min.css" rel="stylesheet" />*@
-        @*<link href="~/lib/bootswatch/lux/bootstrap.min.css" rel="stylesheet" />*@
+    @if (selectedTheme == "none")
+    {
+        <environment include="Development">
+            <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.css" />
+            <link rel="stylesheet" href="~/css/site.css" />
+        </environment>
+        <environment exclude="Development">
+            <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/4.6.0/css/bootstrap.min.css"
+                asp-fallback-href="~/lib/bootstrap/css/bootstrap.min.css"
+                asp-fallback-test-class="sr-only" asp-fallback-test-property="position"
+                asp-fallback-test-value="absolute" />
+            <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        </environment>
+    }
+    else
+    {
         <link href="~/lib/bootswatch/@(selectedTheme)/bootstrap.min.css" rel="stylesheet" />
         <link rel="stylesheet" href="~/css/site.css" />
-    </environment>
-    <environment exclude="Development">
-        @*<link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/4.6.0/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position"
-              asp-fallback-test-value="absolute" />*@
-
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.6.2/dist/@(selectedTheme)/bootstrap.min.css"
-            crossorigin="anonymous"
-              asp-fallback-href="~/lib/bootswatch/@(selectedTheme)/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position"
-              asp-fallback-test-value="absolute">
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-    </environment>
-
+    }
+    
     @if (string.IsNullOrEmpty(selectedImage) == false && selectedImage != "none")
     {
         <style>
