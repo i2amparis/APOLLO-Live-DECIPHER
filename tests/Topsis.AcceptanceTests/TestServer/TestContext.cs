@@ -45,6 +45,11 @@ namespace Topsis.AcceptanceTests.TestServer
 
         public string UserId { get; set; }
 
+        public bool IsInRole(string role)
+        {
+            return true;
+        }
+
         internal void SwitchUser(string userId)
         {
             UserId = userId;

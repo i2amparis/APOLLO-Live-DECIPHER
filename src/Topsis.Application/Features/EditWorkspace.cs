@@ -55,6 +55,13 @@ namespace Topsis.Application.Features
             public string Description { get; set; }
         }
 
+        public class ChangeSettingsCommand : IRequest<string>
+        {
+            public string WorkspaceId { get; set; }
+            public WorkspaceLoginFields LoginFormFields => Fields.Aggregate(WorkspaceLoginFields.None, (acc, f) => acc | f);
+            public WorkspaceLoginFields[] Fields { get; set; }
+        }
+
         public class ChangeInfoCommandValidator : AbstractValidator<ChangeInfoCommand>
         {
             public ChangeInfoCommandValidator()
@@ -146,6 +153,7 @@ namespace Topsis.Application.Features
         public class Handler : 
             IRequestHandler<ChangeOrderCommand, string>,
             IRequestHandler<ChangeInfoCommand, string>,
+            IRequestHandler<ChangeSettingsCommand, string>,
             IRequestHandler<ChangeStatusCommand, string>,
             IRequestHandler<AddCriterionCommand, string>,
             IRequestHandler<AddAlternativeCommand, string>,
@@ -198,6 +206,16 @@ namespace Topsis.Application.Features
             {
                 var item = await LoadWorkspaceAsync(command.WorkspaceId);
                 item.ChangeInfo(command.Title, command.Description);
+
+                return await SaveAsync(item);
+            }
+
+            public async Task<string> Handle(ChangeSettingsCommand command, CancellationToken cancellationToken)
+            {
+                var item = await LoadWorkspaceAsync(command.WorkspaceId);
+                item.ChangeSettings(new WorkspaceSettings { 
+                    LoginFormFields = command.LoginFormFields
+                });
 
                 return await SaveAsync(item);
             }

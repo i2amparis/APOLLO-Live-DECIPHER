@@ -14,6 +14,8 @@ namespace Topsis.Adapters.Database.Configuration
             builder.HasOne(x => x.Parent).WithOne();
             builder.HasMany(x => x.Votes).WithOne(x => x.Workspace);
             builder.HasMany(x => x.Reports).WithOne(x => x.Workspace);
+
+            builder.Property("_settings").HasColumnName("SettingsJson");
         }
     }
 }

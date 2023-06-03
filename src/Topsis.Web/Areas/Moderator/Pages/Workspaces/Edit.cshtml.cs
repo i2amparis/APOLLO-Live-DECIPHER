@@ -10,6 +10,7 @@ using Topsis.Application.Contracts.Results;
 using Topsis.Application.Features;
 using Topsis.Domain;
 using Topsis.Domain.Specifications;
+using static Topsis.Application.Features.EditWorkspace;
 
 namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
 {
@@ -107,6 +108,12 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
 
             await _bus.SendAsync(cmd);
             await LoadPageAsync(id);
+        }
+
+        public async Task OnPostChangeSettings(ChangeSettingsCommand cmd)
+        {
+            await _bus.SendAsync(cmd);
+            await LoadPageAsync(cmd.WorkspaceId);
         }
 
         public async Task OnPostSendInfo([FromServices] IWorkspaceNotificationService notifications,

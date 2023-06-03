@@ -72,6 +72,22 @@ namespace Topsis.Domain
         public List<StakeholderVote> Votes { get; set; }
         public List<WorkspaceReport> Reports { get; set; }
 
+        #region [ Settings: saved as json string in db. ]
+        // dont change the name of it.
+        private string _settings;
+        public WorkspaceSettings GetSettings()
+        {
+            return string.IsNullOrEmpty(_settings)
+                ? new WorkspaceSettings()
+                : Serializer.DeserializeFromJson<WorkspaceSettings>(_settings);
+        }
+
+        public void ChangeSettings(WorkspaceSettings value)
+        {
+            _settings = Serializer.SerializeToJson(value);
+        }
+        #endregion
+
         [StringLength(255)]
         public string UserId { get; set; }
 
