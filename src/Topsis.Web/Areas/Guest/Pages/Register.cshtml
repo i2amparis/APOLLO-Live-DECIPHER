@@ -1,12 +1,16 @@
 ﻿@page
 @model RegisterModel
 @using Topsis.Web.Infrastructure
+@using Topsis.Domain.Common
 
 @inject CommonLocalizationService CommonLocalizer
 
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
 @{
+    var showCountry = Model.WorkspaceSettings?.LoginFormFields.HasFlag(Domain.WorkspaceLoginFields.Country) == true;
+    var showJobCategory = Model.WorkspaceSettings?.LoginFormFields.HasFlag(Domain.WorkspaceLoginFields.JobCategory) == true;
+    var showGender = Model.WorkspaceSettings?.LoginFormFields.HasFlag(Domain.WorkspaceLoginFields.Gender) == true;
 }
 
 @{ ViewData["Title"] = CommonLocalizer.Get("Registration"); }
@@ -19,8 +23,45 @@
     <div class="col-md-6">
         <form method="post" class="no-ajax">
             @Html.ValidationDiv()
-            @Html.FormBlock(m => m.Data.Country)
-            @Html.FormBlock(m => m.Data.JobCategory)
+
+            @if (showCountry)
+            {
+                @Html.FormBlock(m => m.Data.Country)
+            }
+
+            @if (showJobCategory)
+            {
+                @Html.FormBlock(m => m.Data.JobCategory)
+            }
+
+            @if (showGender)
+            {
+                <div class="form-group">
+                    <label for="Data_Gender" class="control-label">Gender</label>
+                    <select asp-for="Data.Gender" class="form-control">
+                        @{
+                            var options = Enum.GetValues(typeof(Domain.Contracts.Gender)).Cast<Domain.Contracts.Gender>().ToArray();
+                            foreach (var item in options)
+                            {
+                                if (item == Domain.Contracts.Gender.Unknown)
+                                {
+                                    continue;
+                                }
+
+                                if (Model.Data.Gender == item)
+                                {
+                                    <option selected="selected" value="@item">@item.GetDescription()</option>
+                                }
+                                else
+                                {
+                                    <option value="@item">@item.GetDescription()</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+            }
+            
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

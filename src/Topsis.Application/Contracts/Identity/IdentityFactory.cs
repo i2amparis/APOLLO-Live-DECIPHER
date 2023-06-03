@@ -15,8 +15,20 @@ namespace Topsis.Application.Contracts.Identity
             var id = EntityFactory.NewId();
             var result = BuildUser(id, email: $"{id}@ntua.gr", password: id.GetHashCode().Hash(), creator);
 
-            result.CountryId = cmd.Country.Id;
-            result.JobCategoryId = cmd.JobCategory.Id;
+            if (cmd.Country != null)
+            {
+                result.CountryId = cmd.Country.Id;
+            }
+
+            if (cmd.JobCategory != null)
+            {
+                result.JobCategoryId = cmd.JobCategory.Id;
+            }
+
+            if (cmd.Gender != Gender.Unknown)
+            {
+                result.GenderId = cmd.Gender;
+            }
 
             return result;
         }

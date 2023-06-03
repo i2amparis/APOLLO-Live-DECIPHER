@@ -8,7 +8,7 @@ namespace Topsis.Domain
         None = 0,
         JobCategory = 1,
         Country = 2,
-        Sex = 4,
+        Gender = 4,
     }
 
     public class WorkspaceSettings

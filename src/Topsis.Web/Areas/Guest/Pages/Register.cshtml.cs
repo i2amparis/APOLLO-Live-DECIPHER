@@ -1,11 +1,16 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using Topsis.Application;
 using Topsis.Application.Contracts.Database;
 using Topsis.Application.Contracts.Identity;
 using Topsis.Application.Features;
+using Topsis.Domain;
 using Topsis.Web.Pages;
 
 namespace Topsis.Web.Areas.Guest.Pages
@@ -19,6 +24,7 @@ namespace Topsis.Web.Areas.Guest.Pages
         public CreateStakeholder.Command Data { get; set; }
 
         public string ReturnUrl { get; set; }
+        public WorkspaceSettings WorkspaceSettings { get; private set; }
 
         private string GetReturnUrl(string returnUrl)
         {
@@ -31,14 +37,32 @@ namespace Topsis.Web.Areas.Guest.Pages
             _signInManager = signInManager;
         }
 
-        public void OnGet(string returnUrl = null, string cid = "300", int jid = 1)
+        public async Task OnGet([FromServices] IMessageBus bus,
+            string returnUrl = null, 
+            string cid = "300", 
+            int jid = 1)
         {
+            WorkspaceSettings = new WorkspaceSettings();
+
+            if (string.IsNullOrEmpty(returnUrl) == false)
+            {
+                var query = returnUrl.Split('?').LastOrDefault();
+                var collection = HttpUtility.ParseQueryString(query);
+                var id = collection.GetValues("id").FirstOrDefault();
+                if (string.IsNullOrEmpty(id) == false)
+                {
+                    var response = await _bus.SendAsync(new GetWorkspace.ById.Request(id));
+                    WorkspaceSettings = response.Result.GetSettings();
+                }
+            }
+
             ReturnUrl = GetReturnUrl(returnUrl);
 
             Data = new CreateStakeholder.Command
             {
                 Country = new Domain.Country { Id = cid },
-                JobCategory = new Domain.JobCategory { Id = jid }
+                JobCategory = new Domain.JobCategory { Id = jid },
+                Gender = Domain.Contracts.Gender.NotAnswered
             };
         }
 
