@@ -1,11 +1,11 @@
-﻿@{
+﻿@*@{
     var themes = new[] { "none", "cerulean", "cosmo", "cyborg", "darkly", "flatly", "journal", "litera", "lumen", "lux", "materia", 
         "minty", "pulse", "sandstone", "simplex", "sketchy", "slate", "solar", "spacelab", "superhero", "united", "yeti" };
     var selectedTheme = this.Context.Request.Query.TryGetValue("theme", out var theme) ? theme.ToString() : "lux";
 
     var images = new[] { "none", "8", "9", "10", "11", "12", "13", "14", "16", "17" };
     var selectedImage = this.Context.Request.Query.TryGetValue("image", out var image) ? image.ToString() : "none";
-}
+}*@
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,35 +13,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Topsis</title>
     
-    @if (selectedTheme == "none")
-    {
-        <environment include="Development">
-            <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.css" />
-            <link rel="stylesheet" href="~/css/site.css" />
-        </environment>
-        <environment exclude="Development">
-            <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/4.6.0/css/bootstrap.min.css"
-                asp-fallback-href="~/lib/bootstrap/css/bootstrap.min.css"
-                asp-fallback-test-class="sr-only" asp-fallback-test-property="position"
-                asp-fallback-test-value="absolute" />
-            <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-        </environment>
-    }
-    else
-    {
-        <link href="~/lib/bootswatch/@(selectedTheme)/bootstrap.min.css" rel="stylesheet" />
+    <environment include="Development">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.6.2/dist/cerulean/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
-    }
-    
-    @if (string.IsNullOrEmpty(selectedImage) == false && selectedImage != "none")
-    {
-        <style>
-            .jumbotron {
-                background-image: url("https://picsum.photos/id/@(selectedImage)/1600/800");
-                background-size: cover;
-            }
-        </style>
-    }
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.6.2/dist/cerulean/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootswatch/cerulean/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position"
+              asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
 </head>
 <body>
     <mini-profiler />
@@ -71,7 +53,7 @@
                             </li>
                         }
 
-                        <li class="nav-item">
+                        @*<li class="nav-item">
                            
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -84,9 +66,9 @@
                                     }
                                 </div>
                             </div>
-                        </li>
+                        </li>*@
 
-                        <li class="nav-item">
+                        @*<li class="nav-item">
 
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonImage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -99,7 +81,7 @@
                                     }
                                 </div>
                             </div>
-                        </li>
+                        </li>*@
                     </ul>
                 </div>
             </div>
