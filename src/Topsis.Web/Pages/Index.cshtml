@@ -17,15 +17,18 @@
     </div>
 </div>
 
-<div class="row">
-<div class="col-md-12">
-        <h4>Workspaces</h4>
+@if(Model.Workspaces.Any())
+{
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Workspaces</h4>
 
-        <partial name="_WorkspacesPartial" model="Model.Workspaces" />
+            <partial name="_WorkspacesPartial" model="Model.Workspaces" />
+        </div>
     </div>
-</div>
 
-<h4>More</h4>
+    <h4>More</h4>
+}
 
 <div class="row mb-5">
 

@@ -13,6 +13,13 @@
     <div class="col-md-12">
         <h4>Workspaces</h4>
 
-        <partial name="_WorkspacesPartial" model="Model.Workspaces"/>
+        @if(Model.Workspaces.Any())
+        {
+            <partial name="_WorkspacesPartial" model="Model.Workspaces" />
+        }
+        else
+        {
+            <p>No workspaces found.</p>
+        }
     </div>
 </div>
