@@ -11,21 +11,20 @@ namespace Topsis.Web.ChartJs
     {
         private static readonly string[] Colors = new []
         {
-            "rgba(47, 75, 124, 0.2)", // "#2f4b7c",
-            "rgba(255, 166, 0, 0.2)", // "#ffa600",
-            "rgba(255, 124, 67, 0.2)", // "#ff7c43",
-            "rgba(249, 93, 106, 0.2)", // "#f95d6a",
-            "rgba(212, 80, 135, 0.2)", // "#d45087",
-            "rgba(160, 81, 149, 0.2)", // "#a05195",
-            "rgba(102, 81, 145, 0.2)", // "#665191",
-            "rgba(0, 63, 92, 0.2)", // #665191
+            // https://colorbrewer2.org/#type=diverging&scheme=RdYlBu&n=10
+         
+            "rgba(215, 25, 28, 0.4)", // "#d7191c",
+            "rgba(253, 174, 97, 0.4)", // "#fdae61",
+            "rgba(255, 124, 67, 0.4)", // "#ffffbf",
+            "rgba(171, 217, 233, 0.4)", // "#abd9e9",
+            "rgba(212, 80, 135, 0.4)", // "#2c7bb6",
+            "rgba(165, 0, 38, 0.4)", // "#a50026",
+            "rgba(102, 81, 145, 0.4)", // "#665191",
+            "rgba(0, 63, 92, 0.4)", // #665191
         };
 
-        //private const string Color1 = "rgba(255, 99, 132, 0.2)";
-        //private const string Color2 = "rgba(54, 162, 235, 0.2)";
-
-        private static string Color1 = Colors[2];
-        private static string Color2 = Colors[4];
+        private static string Color1 = Colors[0];
+        private static string Color2 = Colors[1];
 
         public ChartJsReport()
         {

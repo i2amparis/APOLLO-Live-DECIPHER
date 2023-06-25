@@ -27,42 +27,25 @@
 {
     <div class="row">
         <div class="col-md-12">
-            <h4>Workspaces</h4>
+            <h4>Open Voting Sessions</h4>
 
             <partial name="_WorkspacesPartial" model="Model.Workspaces" />
         </div>
     </div>
 
-    <h4>More</h4>
 }
 
+<h4>Read more about the tool and the projects supporting it</h4>
 <div class="row mb-5">
 
     <div class="col-md-4">
         <div class="card mb-4 shadow-sm">
-            <img src="https://loremflickr.com/320/240/bird" />
 
-            <div class="card-body">
-                <h5 class="card-title">Vote</h5>
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group">
-                        @*<button type="button" class="btn btn-sm btn-outline-secondary">View</button>*@
-                        <a class="btn btn-sm btn-outline-secondary" asp-area="Guest" asp-page="/Index">Guest Account</a>
-                    </div>
-                    @*<small class="text-muted">9 mins</small>*@
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card mb-4 shadow-sm">
-            <img src="https://loremflickr.com/320/240/fish" />
+            <img src="~/img/apollo_256.png" />
 
             <div class="card-body">
                 <h5 class="card-title">APOLLO</h5>
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <p class="card-text">You may find more information about the methodological aspects of the tool in the following link.</p>
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">
                         <a class="btn btn-sm btn-outline-secondary" href="https://doi.org/10.2991/ijcis.d.200924.002" target="_blank">Read More</a>
@@ -74,11 +57,11 @@
 
     <div class="col-md-4">
         <div class="card mb-4 shadow-sm">
-            <img src="https://loremflickr.com/320/240/wildanimal" />
+            <img src="~/img/paris_reinforce_256.png" />
 
             <div class="card-body">
                 <h5 class="card-title">Paris Reinforce</h5>
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <p class="card-text">PARIS REINFORCE is a Horizon 2020 EU-funded project aimed at effectively supporting the design of climate policies in a co-creative manner. Find more below:</p>
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">
                         <a class="btn btn-sm btn-outline-secondary" href="https://paris-reinforce.eu/" target="_blank">Read More</a>
@@ -87,5 +70,22 @@
             </div>
         </div>
     </div>
+
+    <div class="col-md-4">
+        <div class="card mb-4 shadow-sm">
+            <img src="~/img/justem_256.png" />
+
+            <div class="card-body">
+                <h5 class="card-title">JUSTEM</h5>
+                <p class="card-text">JUSTEM, an EU-funded LIFE project aims to involve citizens in the process of the just transition and co-develop coal-depended regions’ energy and climate plans in the EU. Find more below:</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                        <a class="btn btn-sm btn-outline-secondary" href="https://ieecp.org/projects/justem/" target="_blank">Read More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 

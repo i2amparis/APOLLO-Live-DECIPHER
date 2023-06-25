@@ -5,15 +5,28 @@
 *@
 @{
     var list = Model.GroupBy(x => x.WorkspaceId).Select(x => x.Last()).OrderByDescending(x => x.CurrentStatus == Domain.WorkspaceStatus.AcceptingVotes).ToArray();
+    
+    string GetStatusImageUrl(Topsis.Application.Contracts.Database.StakeholderWorkspaceDto item)
+    {
+        return item.CurrentStatus switch
+        {
+            Domain.WorkspaceStatus.Finalized => "~/img/voting_session_finalized.jpg",
+            Domain.WorkspaceStatus.FinalizedWithFeedback => "~/img/voting_session_finalized.jpg",
+            Domain.WorkspaceStatus.AcceptingVotes => "~/img/voting_session_accepting.jpg",
+            _ => "~/img/voting_session.jpg",
+        };
+    }
 }
 
 <div class="row mb-5">
 @foreach (var item in list)
 {
+    var statusImage = GetStatusImageUrl(item);
     var isPublished = item.CurrentStatus == Domain.WorkspaceStatus.Published;
+
     <div class="col-md-4">
         <div class="card mb-4 shadow-sm">
-            @*<img src="https://pic.pnnet.dev/256x256" />*@
+            <img src="@(Url.Content(statusImage))" />
 
             <div class="card-body">
                 <h5 class="card-title">@item.WorkspaceTitle</h5>
