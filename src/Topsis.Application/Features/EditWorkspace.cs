@@ -62,6 +62,12 @@ namespace Topsis.Application.Features
             public WorkspaceLoginFields[] Fields { get; set; }
         }
 
+        public class ChangeVoteFormSettingsCommand : IRequest<string>
+        {
+            public string WorkspaceId { get; set; }
+            public string VoteTitle { get; set; }
+        }
+
         public class ChangeInfoCommandValidator : AbstractValidator<ChangeInfoCommand>
         {
             public ChangeInfoCommandValidator()
@@ -154,6 +160,7 @@ namespace Topsis.Application.Features
             IRequestHandler<ChangeOrderCommand, string>,
             IRequestHandler<ChangeInfoCommand, string>,
             IRequestHandler<ChangeSettingsCommand, string>,
+            IRequestHandler<ChangeVoteFormSettingsCommand, string>,
             IRequestHandler<ChangeStatusCommand, string>,
             IRequestHandler<AddCriterionCommand, string>,
             IRequestHandler<AddAlternativeCommand, string>,
@@ -331,6 +338,17 @@ namespace Topsis.Application.Features
                 sw.Stop();
                 _log.LogInformation($"Deletion took {sw.ElapsedMilliseconds / 1000} secs.");
                 return id.Hash();
+            }
+
+            public async Task<string> Handle(ChangeVoteFormSettingsCommand command, CancellationToken cancellationToken)
+            {
+                var item = await LoadWorkspaceAsync(command.WorkspaceId);
+                item.ChangeSettings(new WorkspaceSettings
+                {
+                    VoteFormTitle = command.VoteTitle
+                });
+
+                return await SaveAsync(item);
             }
 
             #region [ Helpers ]

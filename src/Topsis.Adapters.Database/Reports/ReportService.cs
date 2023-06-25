@@ -167,15 +167,17 @@ namespace Topsis.Adapters.Database.Reports
                     .ThenInclude(x => x.Alternatives)
                 .FirstOrDefaultAsync(x => x.Id == workspaceId);
 
-            var settings = workspace.Questionnaire.GetSettings();
+            var questionnaireSettings = workspace.Questionnaire.GetSettings();
+            var settings = workspace.GetSettings();
 
             return new StakeholderVoteViewModel
             {
                 WorkspaceId = workspace.Id.Hash(),
                 WorkspaceStatus = workspace.CurrentStatus,
                 WorkspaceTitle = workspace.Title,
-                AlternativeRange = settings.AlternativeRange,
-                CriteriaImportanceRange = settings.CriteriaWeightRange,
+                VoteFormTitle = settings.VoteFormTitle,
+                AlternativeRange = questionnaireSettings.AlternativeRange,
+                CriteriaImportanceRange = questionnaireSettings.CriteriaWeightRange,
                 CriteriaOrdered = workspace.Questionnaire.Criteria.OrderBy(x => x.Order).ToArray(),
                 AlternativesOrdered = workspace.Questionnaire.Alternatives.OrderBy(x => x.Order).Select(x => new KeyValuePair<int, string>(x.Id, x.Title)).ToArray(),
                 Settings = workspace.Questionnaire.GetSettings()

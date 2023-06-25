@@ -15,9 +15,11 @@ namespace Topsis.Domain
     {
         public WorkspaceSettings()
         {
+            VoteFormTitle = null;
             LoginFormFields = WorkspaceLoginFields.JobCategory | WorkspaceLoginFields.Country;
         }
 
+        public string VoteFormTitle { get; set; }
         public WorkspaceLoginFields LoginFormFields { get; set; }
     }
 }

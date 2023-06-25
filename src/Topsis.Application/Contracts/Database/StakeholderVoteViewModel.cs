@@ -24,6 +24,7 @@ namespace Topsis.Application.Contracts.Database
         public WorkspaceStatus WorkspaceStatus { get; set; }
         public IDictionary<int, FeedbackTip> Tips { get; private set; }
         public QuestionnaireSettings Settings { get; set; }
+        public string VoteFormTitle { get; set; }
 
         public void AddStakeholderAnswers(List<StakeholderAnswerDto> answers, WorkspaceReportViewModel report)
         {

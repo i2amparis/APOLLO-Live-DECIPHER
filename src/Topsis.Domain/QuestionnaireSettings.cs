@@ -15,7 +15,6 @@ namespace Topsis.Domain
         public QuestionnaireSettings()
         {
             Rigorousness = 1;
-
             AlternativeRange = new List<NameValueOption>();
             CriteriaWeightRange = new List<NameValueOption>();
         }

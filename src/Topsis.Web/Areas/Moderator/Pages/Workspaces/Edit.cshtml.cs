@@ -116,6 +116,12 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
             await LoadPageAsync(cmd.WorkspaceId);
         }
 
+        public async Task OnPostChangeVoteFormSettings(ChangeVoteFormSettingsCommand cmd)
+        {
+            await _bus.SendAsync(cmd);
+            await LoadPageAsync(cmd.WorkspaceId);
+        }
+
         public async Task OnPostSendInfo([FromServices] IWorkspaceNotificationService notifications,
             string id, 
             string notifyTitle, 
