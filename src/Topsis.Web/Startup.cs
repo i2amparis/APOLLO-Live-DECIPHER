@@ -33,6 +33,7 @@ namespace Topsis.Web
         public const string RequireAdminPolicy = "RequireAdminPolicy";
         public const string RequireModeratorPolicy = "RequireModeratorPolicy";
         public const string RequireGuestPolicy = "RequireGuestPolicy";
+        private int CookieExpirationInDays = 30;
 
         public Startup(IConfiguration configuration)
         {
@@ -77,7 +78,7 @@ namespace Topsis.Web
             {
                 // Cookie settings
                 options.Cookie.HttpOnly = true;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
+                options.ExpireTimeSpan = TimeSpan.FromDays(CookieExpirationInDays);
 
                 options.LoginPath = "/Identity/Account/Login";
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
