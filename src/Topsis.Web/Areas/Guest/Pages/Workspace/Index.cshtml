@@ -21,8 +21,8 @@
 
             if (Model.Data.UserVoteId.HasValue)
             {
-                noResultsMessage = hasReports
-                    ? $"Based on the previous discussion you can make your adjustment vote."
+                noResultsMessage = reportCount > 1
+                    ? $"Following the discussion and the tips provided, you can change your vote."
                     : $"Your vote has been registered. Please stay on this page while the rest of the participants finish voting. Thank you for your participation!";
             }
             else
@@ -61,7 +61,7 @@
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 }
 
-<div class="row pb-5">
+<div class="row pb-2">
     <div class="col-md-8">
         <h2>@Model.Data.Workspace.Title</h2>
         <p class="lead">@Model.Data.Workspace.Description</p>
@@ -78,7 +78,21 @@
 
         @if (canVote)
         {
-            <p>You can@(Model.Data.UserVoteId.HasValue ? " change your" : "") vote <a href="@Url.Page("Vote", new { id = Model.Data.Workspace.Id.Hash() })">here</a>.</p>
+            @if(Model.Data.UserVoteId.HasValue)
+            {
+                <p>Change your vote <a href="@Url.Page("Vote", new { id = Model.Data.Workspace.Id.Hash() })">here</a>.</p>
+            }
+            else
+            {
+                <p>You can vote <a href="@Url.Page("Vote", new { id = Model.Data.Workspace.Id.Hash() })">here</a>.</p>
+            }
+
+            @if(reportCount > 1)
+            {
+                <div class="alert alert-info" role="alert">
+                    <span class="text-small">Please note that the tips provided are only suggestions, and you are not obliged to adapt your votes. You can change your votes even if you didn’t receive specific tips.</span>
+                </div>
+            }
         }
     </div>
     <div class="col-md-4">
@@ -107,7 +121,7 @@
             <h3>Prioritization</h3>
             <p class="lead">The votes of all participants are merged to create a unique solution that represents the solution of the group. In this diagram you may see how your results compare to this “group solution” for each of the options. A higher rating for an option indicates a higher priority/importance. A large difference in the two bars indicates a large disagreement between your votes and those of the rest of the participants. In some cases, a large difference may trigger a suggestion to adapt your vote in the next voting round, depending on the other participants as well.</p>
 
-            <div class="col-md-6 float-md-right">
+            <div class="col-md-5 float-md-right">
                 <h5>Consensus</h5>
                 <p class="text-secondary">The consensus indicates how close the results of the participants are. Hover over the shares for more information.</p>
                 <p class="lead">
