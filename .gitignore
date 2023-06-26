@@ -365,3 +365,5 @@ FodyWeavers.xsd
 # db files
 Docker/db
 /Docker/data/postgres
+
+.DS_Store
