@@ -153,7 +153,7 @@ namespace Topsis.Web.ChartJs
 
             var datasets = vm.ChartGroups.Select(x => new ChartJsDataset
             {
-                Label = x.Key,
+                Label = x.Key == StakeholderTopsis.DefaultGroupName ? "Group Vote" : x.Key,
                 BackgroundColor = GetRandomColor(),
                 Data = x.Value.OrderBy(x => alternativeDict[x.AlternativeId].Order).Select(x => x.Topsis).ToList()
             }).ToList();
