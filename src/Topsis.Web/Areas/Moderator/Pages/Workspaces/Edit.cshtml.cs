@@ -22,7 +22,7 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
         None = 0,
         [Description("Calculate in same round")]
         Calculate = 1,
-        [Description("Increase round and calculate")]
+        [Description("Calculate at next round")]
         CalculateAndChangeRound = 2
     }
 
@@ -75,9 +75,21 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
 
         public IEnumerable<SelectListItem> GetFinalizeOptions()
         {
+            var currentRound = Data.GetCurrentRound();
             foreach(FinalizeOptions item in Enum.GetValues(typeof(FinalizeOptions)))
             {
-                yield return new SelectListItem(item.GetDescription(), 
+                var label = $"{item.GetDescription()}";
+                switch (item)
+                {
+                    case FinalizeOptions.Calculate:
+                        label = $"{label} (round: {(short)Data.GetCurrentRound()})";
+                        break;
+                    case FinalizeOptions.CalculateAndChangeRound:
+                        label = $"{label} (round: {(short)Data.GetNextRound()})";
+                        break;
+                }
+
+                yield return new SelectListItem(label, 
                     ((short)item).ToString(), 
                     item == DEFAULT_FINALIZE_OPTION);
             }
