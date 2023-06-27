@@ -33,16 +33,18 @@ namespace Topsis.Adapters.Algorithm.Queue
             using var scope = _scopeFactory.CreateScope();
             var reports = scope.ServiceProvider.GetRequiredService<IReportService>();
             var repository = scope.ServiceProvider.GetRequiredService<IWorkspaceRepository>();
+            var notifications = scope.ServiceProvider.GetRequiredService<IWorkspaceNotificationService>();
 
             _logger.LogDebug($"Fetched workspace report data: {reportKey}");
 
-            await DoWorkAsync(reportKey, _algorithm, repository, reports, _logger);
+            await DoWorkAsync(reportKey, _algorithm, repository, reports, notifications, _logger);
         }
 
         public static async Task DoWorkAsync(WorkspaceReportKey reportKey,
             ITopsisAlgorithm algorithm,
             IWorkspaceRepository repository,
             IReportService reports,
+            IWorkspaceNotificationService notifications,
             ILogger logger)
         {
             try
@@ -56,6 +58,13 @@ namespace Topsis.Adapters.Algorithm.Queue
                 await repository.UnitOfWork.SaveChangesAsync();
 
                 reports.ClearWorkspaceCache(workspace.Id);
+
+                if (notifications != null)
+                {
+                    var msg = new WorkspaceStatusChangedMessage(workspace.Id, workspace.CurrentStatus);
+                    await notifications.OnWorkspaceStatusChangedAsync(msg, false); 
+                }
+
                 logger.LogDebug($"Workspace report finalized: {reportKey}");
             }
             catch (System.Exception ex)

@@ -33,9 +33,12 @@ namespace Topsis.Web.Services
             _userContext = userContext;
         }
 
-        public async Task OnWorkspaceStatusChangedAsync(WorkspaceStatusChangedMessage message)
+        public async Task OnWorkspaceStatusChangedAsync(WorkspaceStatusChangedMessage message, bool authorizeUser)
         {
-            AllowModerator(_userContext);
+            if (authorizeUser)
+            {
+                AllowModerator(_userContext);
+            }
 
             var groupName = VotingHub.GetWorkspaceGroupName(message.WorkspaceId);
             await _voting.Clients.Group(groupName).SendAsync(Method_WorkspaceStatusChanged, message);

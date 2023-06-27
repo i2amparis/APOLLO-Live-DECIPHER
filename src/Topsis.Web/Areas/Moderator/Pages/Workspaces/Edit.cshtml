@@ -20,29 +20,47 @@
 <div class="row pt-3">
     <div class="col-md-6 float-right pb-3">
 
-        <h4>Status</h4>
-        <form asp-page-handler="changestatus" method="post" class="form-inline">
-            <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
-            <div class="form-group">
-                <select type="text" name="status" class="form-control ml-2">
-                    @foreach (var item in Model.StatusOptions)
-                    {
-                        if (item.Value)
+        <div class="col-md-12 pb-5">
+            <h4>Status</h4>
+            <form asp-page-handler="changestatus" method="post" class="form">
+                <input type="hidden" name="id" value="@Model.Data.Id.Hash()" />
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" type="text" name="status" class="form-control ml-2">
+                        @foreach (var item in Model.StatusOptions)
                         {
-                            <option value="@item.Key" selected="selected">@item.Key</option>
+                            if (item.Value)
+                            {
+                                <option value="@item.Key" selected="selected">@item.Key</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Key">@item.Key</option>
+                            }
                         }
-                        else
-                        {
-                            <option value="@item.Key">@item.Key</option>
-                        }
-                    }
-                </select>
-            </div>
+                    </select>
+                </div>
 
-            <div class="form-group ml-3">
-                <input type="submit" value="Change Status" class="btn btn-primary float-right" />
-            </div>
-        </form>
+                @if (isAcceptingVotes)
+                {
+                    <div class="form-group" id="finalizeOptionDiv" style="display:none;">
+                        <label for="finalizeOption">Calculate Results</label>
+                        <select id="finalizeOption" 
+                            disabled="disabled"
+                            type="text" 
+                            name="finalizeOption" 
+                            class="form-control ml-2" 
+                            asp-items="Model.GetFinalizeOptions()">
+                        </select>
+                    </div>
+                }
+
+                <div class="form-group ml-3">
+                    <input type="submit" value="Change Status" class="btn btn-primary float-right" />
+                </div>
+            </form>
+        </div>
+        
 
         @if (isAcceptingVotes)
         {
@@ -801,107 +819,127 @@
 @section scripts{
 
     <script type="text/javascript">
-        $('.delete-criterion-option').on('click', function () {
-            var self = $(this);
-            var data = {
-                "id": self.data('id'),
-                "index": self.data('index'),
-                "__RequestVerificationToken": "@this.HttpContext.GetAntiforgeryToken()"
-            };
 
-            // send ajax
-            $.ajax({
-                url: '/Moderator/Workspaces/Edit?handler=DeleteCriterionOption', // url where to submit the request
-                type: "POST", // type of action POST || GET
-                dataType: 'json', // data type
-                data: data, // post data || get data
-                success: function (result) {
-                    // you can see the result from the console
-                    // tab of the developer tools
-                    window.location.reload();
-                },
-                error: function (xhr, resp, text) {
-                    console.log(xhr, resp, text);
+        $(function(){
+            $('#status').on('change', function (item) {
+                let _self = $(this),
+                    status = _self.val(),
+                    $selectFinalizeOption = $('#finalizeOption'),
+                    $divFinalizeOption = $('#finalizeOptionDiv');
+
+                let enableFinalizeOption = $selectFinalizeOption
+                    && (status == '@(Domain.WorkspaceStatus.Finalized)' || status == '@(Domain.WorkspaceStatus.FinalizedWithFeedback)');
+                if ($selectFinalizeOption) {
+                    $selectFinalizeOption.prop("disabled", !enableFinalizeOption);
+                    if (enableFinalizeOption){
+                        $divFinalizeOption.show();
+                    } else {
+                        $divFinalizeOption.hide();
+                    }
                 }
-            })
-        });
+            });
 
-        $('#pre-calculate-button').on('click', function () {
-            var self = $(this);
-            var data = {
-                "id": self.data('id'),
-                "index": self.data('index'),
-                "__RequestVerificationToken": "@this.HttpContext.GetAntiforgeryToken()"
-            };
+            $('.delete-criterion-option').on('click', function () {
+                var self = $(this);
+                var data = {
+                    "id": self.data('id'),
+                    "index": self.data('index'),
+                    "__RequestVerificationToken": "@this.HttpContext.GetAntiforgeryToken()"
+                };
 
-            // send ajax
-            $.ajax({
-                url: '/Moderator/Workspaces/Edit?handler=Precalculate', // url where to submit the request
-                type: "POST", // type of action POST || GET
-                dataType: 'json', // data type
-                data: data, // post data || get data
-                success: function (result) {
-                    // you can see the result from the console
-                    // tab of the developer tools
-                    console.log(result);
-                    $('#pre-calculate-result-div').html(`<ul>
-                    <li>Votes: ${result.votesCount}</li>
-                    <li>Stakeholder Consensus AVG: ${result.stakeholderConsensusAvg || "empty"}</li>
-                    </ul>`)
-                },
-                error: function (xhr, resp, text) {
-                    console.log(xhr, resp, text);
+                // send ajax
+                $.ajax({
+                    url: '/Moderator/Workspaces/Edit?handler=DeleteCriterionOption', // url where to submit the request
+                    type: "POST", // type of action POST || GET
+                    dataType: 'json', // data type
+                    data: data, // post data || get data
+                    success: function (result) {
+                        // you can see the result from the console
+                        // tab of the developer tools
+                        window.location.reload();
+                    },
+                    error: function (xhr, resp, text) {
+                        console.log(xhr, resp, text);
+                    }
+                })
+            });
+
+            $('#pre-calculate-button').on('click', function () {
+                var self = $(this);
+                var data = {
+                    "id": self.data('id'),
+                    "index": self.data('index'),
+                    "__RequestVerificationToken": "@this.HttpContext.GetAntiforgeryToken()"
+                };
+
+                // send ajax
+                $.ajax({
+                    url: '/Moderator/Workspaces/Edit?handler=Precalculate', // url where to submit the request
+                    type: "POST", // type of action POST || GET
+                    dataType: 'json', // data type
+                    data: data, // post data || get data
+                    success: function (result) {
+                        // you can see the result from the console
+                        // tab of the developer tools
+                        console.log(result);
+                        $('#pre-calculate-result-div').html(`<ul>
+                            <li>Votes: ${result.votesCount}</li>
+                            <li>Stakeholder Consensus AVG: ${result.stakeholderConsensusAvg || "empty"}</li>
+                            </ul>`)
+                    },
+                    error: function (xhr, resp, text) {
+                        console.log(xhr, resp, text);
+                    }
+                })
+            });
+
+            $('#criterion-title-form').on('show.bs.modal', function (event) {
+                let button = $(event.relatedTarget);
+                let criterionId = button.data('criterionid');
+
+                let modal = $(this);
+                modal.find('#form-alternative').hide();
+                modal.find('#form-criterion').hide();
+
+                if (criterionId) {
+                    let criterionTypeId = button.data('criteriontypeid');
+
+                    modal.find('#form-criterion').show();
+                    modal.find('#entity').text("Criterion");
+                    let title = button.data('criterion-title');
+                    modal.find('#criterion-title').val(title);
+
+                    modal.find('#criterionid').val(criterionId);
+                    let radioBtn = modal.find('#radio-' + criterionTypeId.toLowerCase())[0];
+                    radioBtn.checked = true;
+
+                } else {
+                    let alternativeId = button.data('alternativeid');
+                    modal.find('#form-alternative').show();
+                    modal.find('#alternativeid').val(alternativeId);
+                    let title = button.data('alternative-title');
+                    modal.find('#alternative-title').val(title);
                 }
-            })
+            });
+
+            $('#settings-label-form').on('show.bs.modal', function (event) {
+                let button = $(event.relatedTarget);
+                let alternativesRange = button.data('scale');
+                let criteriaWeightRange = button.data('weight');
+
+                let modal = $(this);
+                modal.find('#form-alternatives-range').hide();
+                modal.find('#form-criteria-range').hide();
+
+                if (alternativesRange) {
+                    modal.find('#form-alternatives-range').show();
+
+                } else if (criteriaWeightRange) {
+                    modal.find('#form-criteria-range').show();
+                }
+            });
         });
 
-        $('#criterion-title-form').on('show.bs.modal', function (event) {
-            let button = $(event.relatedTarget);
-            let criterionId = button.data('criterionid');
-
-            let modal = $(this);
-            modal.find('#form-alternative').hide();
-            modal.find('#form-criterion').hide();
-
-            if (criterionId) {
-                let criterionTypeId = button.data('criteriontypeid');
-
-                modal.find('#form-criterion').show();
-                modal.find('#entity').text("Criterion");
-                let title = button.data('criterion-title');
-                modal.find('#criterion-title').val(title);
-
-                modal.find('#criterionid').val(criterionId);
-                let radioBtn = modal.find('#radio-' + criterionTypeId.toLowerCase())[0];
-                radioBtn.checked = true;
-
-            } else {
-                let alternativeId = button.data('alternativeid');
-                modal.find('#form-alternative').show();
-                modal.find('#alternativeid').val(alternativeId);
-                let title = button.data('alternative-title');
-                modal.find('#alternative-title').val(title);
-            }
-        });
-
-        $('#settings-label-form').on('show.bs.modal', function (event) {
-            let button = $(event.relatedTarget);
-            let alternativesRange = button.data('scale');
-            let criteriaWeightRange = button.data('weight');
-
-            let modal = $(this);
-            modal.find('#form-alternatives-range').hide();
-            modal.find('#form-criteria-range').hide();
-
-            if (alternativesRange) {
-                modal.find('#form-alternatives-range').show();
-
-            } else if(criteriaWeightRange) {
-                modal.find('#form-criteria-range').show();
-            }
-        });
-
-        
     </script>
 }
 

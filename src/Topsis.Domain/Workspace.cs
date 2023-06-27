@@ -249,6 +249,11 @@ namespace Topsis.Domain
 
             return (FeedbackRound)result;
         }
+
+        public FeedbackRound GetNextRound()
+        {
+            return GetCurrentRound() + 1;
+        }
         #endregion
 
         #region [ Helpers ]

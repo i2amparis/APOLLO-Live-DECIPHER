@@ -37,6 +37,7 @@ namespace Topsis.AcceptanceTests.Fakes
                 _algorithm,
                 _repository,
                 _reports,
+                null,
                 _logger);
         }
     }

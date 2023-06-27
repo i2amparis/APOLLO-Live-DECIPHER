@@ -12,22 +12,31 @@ namespace Topsis.Web.ChartJs
         private static readonly string[] Colors = new []
         {
             // https://colorbrewer2.org/#type=diverging&scheme=RdYlBu&n=10
-         
-            "rgba(215, 25, 28, 0.4)", // "#d7191c",
-            "rgba(253, 174, 97, 0.4)", // "#fdae61",
-            "rgba(255, 124, 67, 0.4)", // "#ffffbf",
-            "rgba(171, 217, 233, 0.4)", // "#abd9e9",
-            "rgba(212, 80, 135, 0.4)", // "#2c7bb6",
-            "rgba(165, 0, 38, 0.4)", // "#a50026",
-            "rgba(166, 206, 227, 0.4)", // "#a6cee3"
-            "rgba(31, 120, 180, 0.4)", // #1f78b4
+         /*
+118,42,131
+153,112,171
+194,165,207
+231,212,232
+217,240,211
+166,219,160
+90,174,97
+27,120,55
+          */
+            "rgba(118,42,131, 0.8)", // "#d7191c",
+            "rgba(153,112,171, 0.8)", // "#fdae61",
+            "rgba(194,165,207, 0.8)", // "#ffffbf",
+            "rgba(231,212,232, 0.8)", // "#abd9e9",
+            "rgba(217,240,211, 0.8)", // "#2c7bb6",
+            "rgba(166,219,160, 0.8)", // "#a50026",
+            "rgba(90,174,97, 0.8)", // "#a6cee3"
+            "rgba(27,120,55, 0.8)", // #1f78b4
         };
 
-        private static string MyVoteColor = "rgba(166, 206, 227, 0.4)"; // "#a6cee3"
-        private static string GroupVoteColor = "rgba(31, 120, 180, 0.4)"; // #1f78b4
+        private static string MyVoteColor = "rgba(166, 206, 227, 0.8)"; // "#a6cee3"
+        private static string GroupVoteColor = "rgba(31, 120, 180, 0.8)"; // #1f78b4
 
-        private static string PreviousRoundColor = "rgba(166, 206, 227, 0.4)";
-        private static string CurrentRoundColor = "rgba(31, 120, 180, 0.4)";
+        private static string PreviousRoundColor = "rgba(166, 206, 227, 0.8)";
+        private static string CurrentRoundColor = "rgba(31, 120, 180, 0.8)";
 
         public ChartJsReport()
         {

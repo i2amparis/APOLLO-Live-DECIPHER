@@ -32,7 +32,7 @@ namespace Topsis.Application.Contracts.Results
 
     public interface IWorkspaceNotificationService
     {
-        Task OnWorkspaceStatusChangedAsync(WorkspaceStatusChangedMessage message);
+        Task OnWorkspaceStatusChangedAsync(WorkspaceStatusChangedMessage message, bool authorizeUser);
         Task OnWorkspaceMessageSendAsync(WorkspaceNotificationMessage message);
     }
 }

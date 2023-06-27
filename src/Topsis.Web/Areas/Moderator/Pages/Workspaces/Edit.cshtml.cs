@@ -3,19 +3,33 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Topsis.Application;
 using Topsis.Application.Contracts.Results;
 using Topsis.Application.Features;
 using Topsis.Domain;
+using Topsis.Domain.Common;
 using Topsis.Domain.Specifications;
 using static Topsis.Application.Features.EditWorkspace;
 
 namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
 {
+    public enum FinalizeOptions : short
+    {
+        [Description("No calculation")]
+        None = 0,
+        [Description("Calculate in same round")]
+        Calculate = 1,
+        [Description("Increase round and calculate")]
+        CalculateAndChangeRound = 2
+    }
+
     public class EditModel : PageModel
     {
+        private const FinalizeOptions DEFAULT_FINALIZE_OPTION = FinalizeOptions.Calculate;
+
         private readonly IMessageBus _bus;
 
         [BindProperty]
@@ -57,6 +71,16 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
             }
 
             return result;
+        }
+
+        public IEnumerable<SelectListItem> GetFinalizeOptions()
+        {
+            foreach(FinalizeOptions item in Enum.GetValues(typeof(FinalizeOptions)))
+            {
+                yield return new SelectListItem(item.GetDescription(), 
+                    ((short)item).ToString(), 
+                    item == DEFAULT_FINALIZE_OPTION);
+            }
         }
 
         public IEnumerable<SelectListItem> GetScaleOptions()
@@ -132,7 +156,7 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
             await notifications.OnWorkspaceMessageSendAsync(new WorkspaceNotificationMessage(Data.Id, notifyTitle, notifyMessage));
         }
 
-        public async Task OnPostChangeStatus(string id, WorkspaceStatus status)
+        public async Task OnPostChangeStatus(string id, WorkspaceStatus status, FinalizeOptions? finalizeOption)
         {
             var cmd = new EditWorkspace.ChangeStatusCommand()
             {
@@ -142,6 +166,14 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
 
             await _bus.SendAsync(cmd);
             await LoadPageAsync(id);
+
+            if (finalizeOption.HasValue && finalizeOption.Value != FinalizeOptions.None)
+            {
+                var round = finalizeOption.Value == FinalizeOptions.CalculateAndChangeRound
+                    ? Data.GetNextRound()
+                    : Data.GetCurrentRound();
+                await OnPostCalculateResultsAsync(id, round);
+            }
         }
 
         public async Task OnPostAddCriterion(string id, string title)

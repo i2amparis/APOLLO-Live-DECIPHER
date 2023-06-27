@@ -233,7 +233,7 @@ namespace Topsis.Application.Features
                 item.ChangeStatus(command.Status);
                 var result = await SaveAsync(item);
                 
-                await _notifications.OnWorkspaceStatusChangedAsync(new WorkspaceStatusChangedMessage(item.Id, item.CurrentStatus));
+                await _notifications.OnWorkspaceStatusChangedAsync(new WorkspaceStatusChangedMessage(item.Id, item.CurrentStatus), true);
 
                 return result;
             }
