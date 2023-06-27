@@ -5,16 +5,10 @@
 *@
 @{
     var list = Model.GroupBy(x => x.WorkspaceId).Select(x => x.Last()).OrderByDescending(x => x.CurrentStatus == Domain.WorkspaceStatus.AcceptingVotes).ToArray();
-    
+
     string GetStatusImageUrl(Topsis.Application.Contracts.Database.StakeholderWorkspaceDto item)
     {
-        return item.CurrentStatus switch
-        {
-            Domain.WorkspaceStatus.Finalized => "~/img/voting_session_finalized.jpg",
-            Domain.WorkspaceStatus.FinalizedWithFeedback => "~/img/voting_session_finalized.jpg",
-            Domain.WorkspaceStatus.AcceptingVotes => "~/img/voting_session_accepting.jpg",
-            _ => "~/img/voting_session.jpg",
-        };
+        return "~/img/maze.jpg";
     }
 }
 
