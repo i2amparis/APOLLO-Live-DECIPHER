@@ -47,12 +47,12 @@
 
         <a asp-page="Index"
             asp-route-pagenumber="@(Model.Data.PageNumber - 1)"
-           class="btn btn-outline-secondary @prevDisabled">
+           class="btn btn-outline-info @prevDisabled">
             Previous
         </a>
         <a asp-page="Index"
             asp-route-pagenumber="@(Model.Data.PageNumber + 1)"
-           class="btn btn-outline-secondary @nextDisabled">
+           class="btn btn-outline-info @nextDisabled">
             Next
         </a>
     </div>
