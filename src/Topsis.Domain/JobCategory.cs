@@ -34,6 +34,7 @@
                 new JobCategory(15, "Think tank"),
                 new JobCategory(16, "Responsible investment advisory firm (and actuary)"),
                 new JobCategory(17, "Multiple affiliations; Gov, NGO, Ac & industry"),
+                new JobCategory(18, "Citizen"),
 
                 new JobCategory(OtherJobCategoryId, "Other"),
             };

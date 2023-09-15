@@ -54,7 +54,7 @@ namespace Topsis.Web.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
-            if (IsGuestArea(returnUrl))
+            if (IsGuestRequest(returnUrl))
             {
                 // this is a guest request.
                 return RedirectToPage("/Register", new { returnUrl, area = "Guest" });
@@ -77,7 +77,7 @@ namespace Topsis.Web.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private static bool IsGuestArea(string returnUrl)
+        private static bool IsGuestRequest(string returnUrl)
         {
             return returnUrl?.IndexOf("guest", System.StringComparison.OrdinalIgnoreCase) > -1;
         }

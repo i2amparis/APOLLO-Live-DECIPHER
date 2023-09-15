@@ -31,7 +31,7 @@
 
             @if (showJobCategory)
             {
-                @Html.FormBlock(m => m.Data.JobCategory)
+                @Html.FormBlock(m => m.Data.JobCategory, l => l.Text("Job Category / Background"))
             }
 
             @if (showGender)
