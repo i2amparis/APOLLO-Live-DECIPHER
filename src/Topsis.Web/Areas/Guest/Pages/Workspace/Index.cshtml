@@ -127,12 +127,12 @@
                 <p class="lead">
                     <span title="Your personal consensus (“me”) expresses (%) how close your votes were to the votes of the rest of the group. If your personal consensus is lower than the average consensus you will receive a tip to adapt certain votes and improve your consensus."
                         class="badge @Model.CompareReport.MyBadgeCls"
-                          data-toggle="tooltip" data-placement="bottom"
+                          data-toggle="tooltip" data-placement="auto"
                         >Me: @(Model.CompareReport.MyConsensus)%
                     </span>&nbsp;
                     <span title="The average consensus (“avg”) expresses (%) how close the votes of all participants are to the group solution. A percentage above 85% usually represents a high consensus, between 70-85% an average consensus, and below 70% a low consensus among the group."
                         class="badge @Model.CompareReport.AverageBadgeCls"
-                        data-toggle="tooltip" data-placement="bottom"
+                        data-toggle="tooltip" data-placement="auto"
                         >Avg: @(Model.CompareReport.AverageConsensus)%
                     </span>
                 </p>
@@ -281,6 +281,9 @@
 
             $('.toast').toast({ delay: 3000 });
 
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
         });
     </script>
 }
