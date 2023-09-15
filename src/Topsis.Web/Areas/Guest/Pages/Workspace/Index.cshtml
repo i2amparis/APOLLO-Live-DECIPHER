@@ -203,6 +203,9 @@
     <script>
         Chart.defaults.datasets.bar.minBarLength = 7;
 
+        // https://www.chartjs.org/docs/3.5.1/configuration/tooltip.html
+        Chart.defaults.plugins.tooltip.enabled = false;
+
         @*let configCompareConsensus = JSON.parse('@Html.Raw(Model.ConsensusCompareReportJson)');
         let compareChart = new Chart(document.getElementById('chCompareConsensus'), configCompareConsensus);*@
 
