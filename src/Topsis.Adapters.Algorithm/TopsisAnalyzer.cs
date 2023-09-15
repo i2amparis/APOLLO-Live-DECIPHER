@@ -83,7 +83,7 @@ namespace Topsis.Adapters.Algorithm
                     var subGroupAnswers = result.StakeholderTopsis.Where(x => userIds.Contains(x.StakeholderId)).ToList();
                     var voteCount = subGroupAnswers.GroupBy(x => x.StakeholderId).Count();
                     var alternativeSubgroupItems = CalculateSubgroupTopsis(settings, subGroupAnswers, voteCount);
-                    result.AddGroupSolution(alternativeSubgroupItems, $"w:{title} ({voteCount})");
+                    result.AddGroupSolution(alternativeSubgroupItems, $"{title} ({voteCount})");
                 }
             }
 
