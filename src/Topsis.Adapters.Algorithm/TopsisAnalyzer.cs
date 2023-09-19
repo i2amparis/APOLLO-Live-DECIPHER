@@ -98,7 +98,7 @@ namespace Topsis.Adapters.Algorithm
                     var alternativeSubgroupItems = CalculateSubgroupTopsis(settings, subGroupAnswers, voteCount);
                     
                     var title = genderGroup.Key.GetDescription();
-                    result.AddGroupSolution(alternativeSubgroupItems, $"g:{title} ({voteCount})");
+                    result.AddGroupSolution(alternativeSubgroupItems, $"{title} ({voteCount})");
                 }
             }
 
