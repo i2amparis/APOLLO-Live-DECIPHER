@@ -248,6 +248,7 @@ namespace Topsis.Adapters.Database.Reports
 
             var query = _db.Users
                 .OrderBy(x => x.Email)
+                .Include(x => x.JobCategory)
                 .AsQueryable();
 
             if (string.IsNullOrWhiteSpace(term) == false)

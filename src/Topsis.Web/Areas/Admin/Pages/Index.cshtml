@@ -34,14 +34,14 @@
                        asp-page="/Index"
                        asp-route-p="@(Model.Data.PageNumber - 1)"
                        asp-route-term="@(Model.Term)"
-                   class="btn btn-outline-secondary @prevDisabled">
+                       class="btn btn-outline-info @prevDisabled">
                         Previous
                     </a>
                     <a asp-area="Admin"
                        asp-page="/Index"
                        asp-route-p="@(Model.Data.PageNumber + 1)"
                        asp-route-term="@(Model.Term)"
-                       class="btn btn-outline-secondary @nextDisabled">
+                       class="btn btn-outline-info @nextDisabled">
                         Next
                     </a>
                 </p>
@@ -55,6 +55,7 @@
                     <th scope="col" class="w-auto">Lastname</th>
                     <th scope="col" class="w-auto">Firstname</th>
                     <th scope="col" class="w-auto">Country</th>
+                    <th scope="col" class="w-auto">Job/Background</th>
                 </tr>
             </thead>
             <tbody>
@@ -71,6 +72,7 @@
                         <td>@item.LastName</td>
                         <td>@item.FirstName</td>
                         <td>@(item.CountryId != null && allCountries.TryGetValue(item.CountryId, out var country) ? country : string.Empty)</td>
+                        <td>@(item.JobCategory?.Title)</td>
                     </tr>
                 }
             </tbody>

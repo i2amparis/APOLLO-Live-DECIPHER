@@ -25,6 +25,13 @@
                             <a class="nav-link text-dark" asp-area="Guest" asp-page="/Index">Guest Account</a>
                         </li>
                     }
+
+                    @if (User.IsInRole(Topsis.Domain.Contracts.RoleNames.Admin))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Admin" asp-page="/Index">Users</a>
+                        </li>
+                    }
                 </ul>
             </div>
         </div>

@@ -51,7 +51,7 @@
                                 <input type="hidden" name="email" value="@(Model.Email)" />
                                 <input type="hidden" name="role" value="@(kvp.Key)" />
                                 <input type="hidden" name="add" value="@(hasRole ? false.ToString() : true.ToString())" />
-                                <button type="submit" class="btn btn-outline-secondary">@(hasRole ? "Remove role" : "Add role")</button>
+                                <button type="submit" class="btn btn-outline-@(hasRole ? "danger" : "success")">@(hasRole ? "Remove role" : "Add role")</button>
                             </form>
                             
                         </td>
