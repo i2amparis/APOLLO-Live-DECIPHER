@@ -62,7 +62,7 @@ namespace Topsis.Application.Features
                 var moderator = _map.Map<Moderator>(cmd);
                 var user = moderator.BuildUser(_userContext);
                 user = await _users.AddAsync(user);
-                await _users.AddUserToRoleAsync(user.Id, RoleNames.Stakeholder);
+                await _users.AddUserToRoleAsync(user.Id, RoleNames.Moderator);
 
                 await _users.UnitOfWork.SaveChangesAsync();
 
