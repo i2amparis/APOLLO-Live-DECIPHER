@@ -1,3 +1,4 @@
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using HtmlTags;
 using Microsoft.AspNetCore.Builder;
@@ -66,6 +67,8 @@ namespace Topsis.Web
                 
             });
 
+            services.AddDatabaseDeveloperPageExceptionFilter();
+
             services
                 .AddDefaultIdentity<ApplicationUser>(options =>
                 {
@@ -107,11 +110,14 @@ namespace Topsis.Web
 
                 opt.Conventions.AllowAnonymousToAreaPage("Guest", "/Register");
             })
-            .AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<MessageBus>(); })
+            //.AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<MessageBus>(); })
             .AddViewLocalization(
                 LanguageViewLocationExpanderFormat.Suffix,
                 opts => { opts.ResourcesPath = "Resources"; })
             .AddDataAnnotationsLocalization();
+
+            services.AddFluentValidationAutoValidation()
+                .AddValidatorsFromAssemblyContaining<MessageBus>();
 
             services.AddSignalR();
             services.AddSignalRNotificationService();
@@ -163,7 +169,8 @@ namespace Topsis.Web
             {
 
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseDeveloperExceptionPage();
+                app.UseMigrationsEndPoint();
             }
             else
             {
