@@ -6,7 +6,7 @@ using Topsis.Application.Interfaces;
 
 namespace Topsis.Application.Features.SendEmail
 {
-    public class SendEmailCommand : IRequest<Unit>
+    public class SendEmailCommand : IRequest<bool>
     {
         public SendEmailCommand(string toEmail, string subject, string body)
         {
@@ -28,7 +28,7 @@ Body: {Body}";
         }
     }
 
-    public class SendEmailHandler : IRequestHandler<SendEmailCommand>
+    public class SendEmailHandler : IRequestHandler<SendEmailCommand, bool>
     {
         private readonly IEmailService _emailService;
 
@@ -37,11 +37,11 @@ Body: {Body}";
             _emailService = emailService;
         }
 
-        public async Task<Unit> Handle(SendEmailCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(SendEmailCommand request, CancellationToken cancellationToken)
         {
             Debug.WriteLine("EMAIL: " + request);
             await _emailService.SendWithSmtpAsync(request);
-            return Unit.Value;
+            return true;
         }
     }
 }

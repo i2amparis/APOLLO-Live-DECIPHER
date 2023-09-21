@@ -10,7 +10,7 @@ namespace Topsis.Application
         {
             var assembly = typeof(Bootstrap).Assembly;
             services.AddAutoMapper(assembly);
-            services.AddMediatR(assembly);
+            services.AddMediatR(x => x.RegisterServicesFromAssembly(assembly));
 
             services.AddScoped<IMessageBus, MessageBus>();
 

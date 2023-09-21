@@ -15,7 +15,7 @@ namespace Topsis.Adapters.Database.Configuration
 
             builder.HasIndex(p => p.WorkspaceId)
                 .IsUnique(false)
-                .HasName("IX_STAKEHOLDERVOTE_WORKSPACEID");
+                .HasDatabaseName("IX_STAKEHOLDERVOTE_WORKSPACEID");
         }
     }
 }
