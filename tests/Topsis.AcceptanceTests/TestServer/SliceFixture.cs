@@ -45,7 +45,7 @@ namespace Topsis.AcceptanceTests.TestServer
 
             _checkpoint = new Checkpoint()
             {
-                TablesToIgnore = new[] { "AspNetRoles", "WsCountries", "WsJobCategories" },
+                TablesToIgnore = new[] { "AspNetRoles", "WsCountries", "WsJobCategories", "pg_largeobject" },
                 DbAdapter = DbAdapter.Postgres
             };
         }

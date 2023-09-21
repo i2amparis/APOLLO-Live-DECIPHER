@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Topsis.AcceptanceTests.TestServer;
 using Topsis.Application.Features;
 using Xunit;
@@ -20,7 +21,8 @@ namespace Topsis.AcceptanceTests.Features
         public async Task Create_Workspace_TestAsync()
         {
             // arrange
-            var moderatorId = await _fixture.SendAsync(new CreateModerator.Command("moderator1", "password", "George", "Moderatorakis"));
+            var email = $"{new Random().Next(1_000, 10_000)}@email.com";
+            var moderatorId = await _fixture.SendAsync(new CreateModerator.Command(email, "password", "George", "Moderatorakis"));
             _fixture.SwitchUser(moderatorId);
 
             // act

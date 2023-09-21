@@ -17,7 +17,7 @@ namespace Topsis.AcceptanceTests.Features
         public async Task Create_Workspace_TestAsync()
         {
             // arrange
-            await _fixture.SendAsync(new SendEmailCommand("a.soursos@gmail.com", "test", "test"));
+            await _fixture.SendAsync(new SendEmailCommand("test@gmail.com", "test", "test"));
         }
     }
 }
