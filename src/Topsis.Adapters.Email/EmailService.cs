@@ -54,6 +54,10 @@ namespace Topsis.Adapters.Email
 
                 _logger.LogInformation($"Finished sending to 'email:{request.ToEmail}'.");
             }
+            catch(SmtpException smtpEx)
+            {
+                _logger.LogError(smtpEx, $"Smtp error: {smtpEx.Message}", _settings.SenderEmail, request.ToEmail);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message, _settings.SenderEmail, request.ToEmail);

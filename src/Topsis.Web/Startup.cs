@@ -110,7 +110,6 @@ namespace Topsis.Web
 
                 opt.Conventions.AllowAnonymousToAreaPage("Guest", "/Register");
             })
-            //.AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<MessageBus>(); })
             .AddViewLocalization(
                 LanguageViewLocationExpanderFormat.Suffix,
                 opts => { opts.ResourcesPath = "Resources"; })
@@ -167,8 +166,6 @@ namespace Topsis.Web
 
             if (env.IsDevelopment())
             {
-
-                app.UseDeveloperExceptionPage();
                 app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
             }
