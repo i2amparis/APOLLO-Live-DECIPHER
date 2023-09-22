@@ -8,7 +8,7 @@ namespace Topsis.Web
 {
     public class Program
     {
-        public static string Version = "2.0.1";
+        public static string Version = "2.0.2";
 
         public static void Main(string[] args)
         {
