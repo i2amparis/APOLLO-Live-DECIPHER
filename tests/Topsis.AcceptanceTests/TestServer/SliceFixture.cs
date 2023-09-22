@@ -52,7 +52,7 @@ namespace Topsis.AcceptanceTests.TestServer
                     "AspNetRoles", 
                     "WsCountries", 
                     "WsJobCategories"
-                }
+                },
                 DbAdapter = DbAdapter.Postgres
             };
         }
