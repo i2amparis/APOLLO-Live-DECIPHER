@@ -3,6 +3,10 @@
 @using Topsis.Web.Infrastructure
 @using Topsis.Domain.Common
 
+@using Microsoft.Extensions.Options
+@using Topsis.Web.Pages;
+@inject IOptions<Topsis.Adapters.Encryption.RecaptchaSettings> Recaptcha
+
 @inject CommonLocalizationService CommonLocalizer
 
 @using Microsoft.AspNetCore.Mvc.Localization
@@ -11,9 +15,15 @@
     var showCountry = Model.WorkspaceSettings?.LoginFormFields.HasFlag(Domain.WorkspaceLoginFields.Country) == true;
     var showJobCategory = Model.WorkspaceSettings?.LoginFormFields.HasFlag(Domain.WorkspaceLoginFields.JobCategory) == true;
     var showGender = Model.WorkspaceSettings?.LoginFormFields.HasFlag(Domain.WorkspaceLoginFields.Gender) == true;
+
+    var RecaptchaKey = Recaptcha.Value?.SiteKey;
+
+    ViewData["Title"] = CommonLocalizer.Get("Registration");
 }
 
-@{ ViewData["Title"] = CommonLocalizer.Get("Registration"); }
+@section HeadScripts {
+    <script src="https://www.google.com/recaptcha/enterprise.js" async defer></script>
+}
 
 <h2>@CommonLocalizer.Get("Registration")</h2>
 
@@ -63,6 +73,9 @@
             }
             
             <div class="form-group">
+                <div class="g-recaptcha" data-sitekey="@(RecaptchaKey)" data-action="@(RecaptchaActions.GUEST_REGISTER)"></div>
+                <br />
+
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
             <p class="alert alert-info">@CommonLocalizer.Get("The voting process is anonymous. 'Job Category' and 'Country' will be used for aggregated statistics. The anonymised survey results may be used for scientific publications.")</p>

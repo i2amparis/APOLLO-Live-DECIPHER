@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Topsis.Application.Contracts.Identity;
+using Topsis.Application.Contracts.Security;
+using Topsis.Web.Pages;
 
 namespace Topsis.Web.Areas.Identity.Pages.Account
 {
@@ -69,11 +71,25 @@ namespace Topsis.Web.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync([FromServices] IRecaptchaService recaptcha,
+            [FromForm(Name = "g-recaptcha-response")] string recaptchaToken,
+            string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            if (ModelState.IsValid)
+
+            var valid = ModelState.IsValid;
+            if (valid)
+            {
+                var errorMessage = await recaptcha.ValidateAsync(recaptchaToken, RecaptchaActions.REGISTER);
+                if (string.IsNullOrWhiteSpace(errorMessage) == false)
+                {
+                    ModelState.AddModelError(string.Empty, errorMessage);
+                    valid = false;
+                }
+            }
+
+            if (valid)
             {
                 var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user, Input.Password);

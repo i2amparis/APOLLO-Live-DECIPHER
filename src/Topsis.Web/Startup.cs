@@ -58,6 +58,7 @@ namespace Topsis.Web
             services.AddEmail(Configuration);
             services.AddAlgorithm();
             services.AddImportServices();
+            services.AddRecaptcha(Configuration);
 
             services.AddDataProtectionToDatabase();
             services.Configure<CookiePolicyOptions>(options => {

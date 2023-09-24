@@ -7,11 +7,19 @@ using System.IO;
 using Topsis.Adapters.Encryption.Services;
 using Topsis.Application.Contracts.Database;
 using Topsis.Application.Contracts.Identity;
+using Topsis.Application.Contracts.Security;
 
 namespace Topsis.Adapters.Encryption
 {
     public static class Bootstrap
     {
+        public static IServiceCollection AddRecaptcha(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<RecaptchaSettings>(configuration.GetSection("RecaptchaSettings"));
+
+            services.AddSingleton<IRecaptchaService, RecaptchaService>();
+            return services;
+        }
 
         public static IServiceCollection AddDataProtectionToDatabase(this IServiceCollection services)
         {

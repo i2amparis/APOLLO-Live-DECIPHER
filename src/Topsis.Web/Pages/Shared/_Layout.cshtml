@@ -24,6 +24,9 @@
               asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
+
+    @RenderSection("HeadScripts", required: false)
+
 </head>
 <body>
     <mini-profiler />

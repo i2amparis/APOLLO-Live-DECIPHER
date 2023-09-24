@@ -1,7 +1,17 @@
 ﻿@page
 @model RegisterModel
+
+@using Microsoft.Extensions.Options
+@using Topsis.Web.Pages;
+@inject IOptions<Topsis.Adapters.Encryption.RecaptchaSettings> Recaptcha
+
 @{
     ViewData["Title"] = "Register";
+    var RecaptchaKey = Recaptcha.Value?.SiteKey;
+}
+
+@section HeadScripts {
+    <script src="https://www.google.com/recaptcha/enterprise.js" async defer></script>
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -27,7 +37,12 @@
                 <input asp-for="Input.ConfirmPassword" class="form-control" />
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-primary">Register</button>
+            <div class="form-group">
+                <div class="g-recaptcha" data-sitekey="@(RecaptchaKey)" data-action="@(RecaptchaActions.REGISTER)"></div>
+                <br />
+
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
         </form>
     </div>
 </div>

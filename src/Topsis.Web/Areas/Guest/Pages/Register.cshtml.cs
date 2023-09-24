@@ -9,6 +9,7 @@ using System.Web;
 using Topsis.Application;
 using Topsis.Application.Contracts.Database;
 using Topsis.Application.Contracts.Identity;
+using Topsis.Application.Contracts.Security;
 using Topsis.Application.Features;
 using Topsis.Domain;
 using Topsis.Web.Pages;
@@ -66,13 +67,31 @@ namespace Topsis.Web.Areas.Guest.Pages
             };
         }
 
-        public async Task<ActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<ActionResult> OnPostAsync([FromServices] IRecaptchaService recaptcha,
+            [FromForm(Name = "g-recaptcha-response")] string recaptchaToken,
+            string returnUrl = null)
         {
             ReturnUrl = GetReturnUrl(returnUrl);
 
-            var user = await _bus.SendAsync(Data);
-            await _signInManager.SignInAsync(user, true);
-            return Redirect(returnUrl);
+            var valid = ModelState.IsValid;
+            if (valid)
+            {
+                var errorMessage = await recaptcha.ValidateAsync(recaptchaToken, RecaptchaActions.GUEST_REGISTER);
+                if (string.IsNullOrWhiteSpace(errorMessage) == false)
+                {
+                    ModelState.AddModelError(string.Empty, errorMessage);
+                    valid = false;
+                }
+            }
+
+            if (valid)
+            {
+                var user = await _bus.SendAsync(Data);
+                await _signInManager.SignInAsync(user, true);
+                return Redirect(returnUrl);
+            }
+               
+            return Page();
         }
     }
 }

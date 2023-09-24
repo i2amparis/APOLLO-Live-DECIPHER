@@ -24,7 +24,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ASPNETCORE_DETAILEDERRORS": "1",
-        "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
+        "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation",
+        "GOOGLE_APPLICATION_CREDENTIALS": "C:\\Users\\asour\\OneDrive\\Υπολογιστής\\work\\NTUA\\TOPSIS\\ReCaptcha\\apollo-live-400009-94f70851bd8c.json"
       },
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
     },
