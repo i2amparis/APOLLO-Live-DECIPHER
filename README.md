@@ -8,7 +8,7 @@
 ### Architecture/Design
 - We use the hexagonal-like architecture
 - We use dependency injection
-- We use .net core 3.1
+- We use .net core 6
 
 ### Database
 - You can use the following database engines (mysql, mariadb, postgresql), you can configure that option in appsettings.json under DatabaseSettings/Engine
