@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MySql.Data.MySqlClient;
 using Npgsql;
 using Respawn;
 using System;
@@ -49,7 +48,11 @@ namespace Topsis.AcceptanceTests.TestServer
                 {
                     "public"
                 },
-                TablesToIgnore = new[] { "AspNetRoles", "WsCountries", "WsJobCategories" },
+                TablesToIgnore = new[] { 
+                    "AspNetRoles", 
+                    "WsCountries", 
+                    "WsJobCategories"
+                },
                 DbAdapter = DbAdapter.Postgres
             };
         }

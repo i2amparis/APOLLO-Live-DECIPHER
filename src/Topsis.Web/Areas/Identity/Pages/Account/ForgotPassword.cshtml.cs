@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Topsis.Application.Contracts.Identity;
+using Topsis.Application.Contracts.Security;
+using Topsis.Web.Pages;
 
 namespace Topsis.Web.Areas.Identity.Pages.Account
 {
@@ -36,9 +38,21 @@ namespace Topsis.Web.Areas.Identity.Pages.Account
             public string Email { get; set; }
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync([FromServices] IRecaptchaService recaptcha,
+            [FromForm(Name = "g-recaptcha-response")] string recaptchaToken)
         {
-            if (ModelState.IsValid)
+            var valid = ModelState.IsValid;
+            if (valid)
+            {
+                var errorMessage = await recaptcha.ValidateAsync(recaptchaToken, RecaptchaActions.FORGOT_PASSWORD);
+                if (string.IsNullOrWhiteSpace(errorMessage) == false)
+                {
+                    ModelState.AddModelError(string.Empty, errorMessage);
+                    valid = false;
+                }
+            }
+
+            if (valid)
             {
                 var user = await _userManager.FindByEmailAsync(Input.Email);
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))

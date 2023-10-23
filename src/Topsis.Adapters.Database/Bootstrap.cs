@@ -51,14 +51,14 @@ namespace Topsis.Adapters.Database
     {
         public static void AddMariaDbOptions(this DbContextOptionsBuilder builder, string connection)
         {
-            var serverVersion = new ServerVersion(new Version(10, 5, 1), ServerType.MariaDb);
-            builder.UseMySql(connection, options => options.ServerVersion(serverVersion));
+            var serverVersion = new MariaDbServerVersion(new Version(10, 5, 1));
+            builder.UseMySql(connection, serverVersion);
         }
 
         public static void AddMySqlDbOptions(this DbContextOptionsBuilder builder, string connection)
         {
-            var serverVersion = new ServerVersion(new Version(5, 7, 34), ServerType.MySql);
-            builder.UseMySql(connection, options => options.ServerVersion(serverVersion));
+            var serverVersion = new MySqlServerVersion(new Version(5, 7, 34));
+            builder.UseMySql(connection, serverVersion);
         }
 
         public static void AddPostgreSql(this DbContextOptionsBuilder builder, string connection)

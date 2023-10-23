@@ -1,3 +1,4 @@
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using HtmlTags;
 using Microsoft.AspNetCore.Builder;
@@ -50,6 +51,8 @@ namespace Topsis.Web
             {
                 opt.RouteBasePath = "/profiler";
                 opt.ResultsAuthorize = IsMonitorAuthorized;
+                opt.ResultsListAuthorize = IsMonitorAuthorized;
+                opt.UserIdProvider = GetUserId;
             })
             .AddEntityFramework();
 
@@ -57,6 +60,7 @@ namespace Topsis.Web
             services.AddEmail(Configuration);
             services.AddAlgorithm();
             services.AddImportServices();
+            services.AddRecaptcha(Configuration);
 
             services.AddDataProtectionToDatabase();
             services.Configure<CookiePolicyOptions>(options => {
@@ -65,6 +69,8 @@ namespace Topsis.Web
                 options.MinimumSameSitePolicy = SameSiteMode.Strict;
                 
             });
+
+            services.AddDatabaseDeveloperPageExceptionFilter();
 
             services
                 .AddDefaultIdentity<ApplicationUser>(options =>
@@ -107,11 +113,13 @@ namespace Topsis.Web
 
                 opt.Conventions.AllowAnonymousToAreaPage("Guest", "/Register");
             })
-            .AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<MessageBus>(); })
             .AddViewLocalization(
                 LanguageViewLocationExpanderFormat.Suffix,
                 opts => { opts.ResourcesPath = "Resources"; })
             .AddDataAnnotationsLocalization();
+
+            services.AddFluentValidationAutoValidation()
+                .AddValidatorsFromAssemblyContaining<MessageBus>();
 
             services.AddSignalR();
             services.AddSignalRNotificationService();
@@ -126,7 +134,13 @@ namespace Topsis.Web
 
         private bool IsMonitorAuthorized(HttpRequest request)
         {
-            return request.HttpContext.User.IsInRole(RoleNames.Admin);
+            var result = request.HttpContext.User.IsInRole(RoleNames.Admin);
+            return result;
+        }
+
+        private static string? GetUserId(HttpRequest request)
+        {
+            return request.HttpContext.User.Identity?.Name;
         }
 
         private static void AddLocalization(IServiceCollection services)
@@ -157,13 +171,10 @@ namespace Topsis.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseMiniProfiler();
-
             if (env.IsDevelopment())
             {
-
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseMigrationsEndPoint();
             }
             else
             {
@@ -180,8 +191,9 @@ namespace Topsis.Web
 
             app.UseRouting();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+            app.UseAuthentication()
+                .UseAuthorization()
+                .UseMiniProfiler();
 
             app.UseEndpoints(endpoints =>
             {

@@ -28,10 +28,9 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
                 var response = await _bus.SendAsync(new GetWorkspace.ByPage.Request(pageNumber ?? 1));
                 Data = response.Result;
             }
-            catch (System.Exception ex)
+            catch
             {
-
-                throw ex;
+                throw;
             }
         }
     }

@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,7 +9,6 @@ using Topsis.Domain.Contracts;
 
 namespace Topsis.Web.Areas.Admin.Pages
 {
-    [Authorize(Policy = Startup.RequireAdminPolicy)]
     public class UserModel : PageModel
     {
         public string Email { get; private set; }
