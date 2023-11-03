@@ -21,7 +21,7 @@
 
             if (Model.Data.UserVoteId.HasValue)
             {
-                noResultsMessage = reportCount > 1
+                noResultsMessage = reportCount > 0
                     ? $"Following the discussion and the tips provided, you can change your vote."
                     : $"Your vote has been registered. Please stay on this page while the rest of the participants finish voting. Thank you for your participation!";
             }
