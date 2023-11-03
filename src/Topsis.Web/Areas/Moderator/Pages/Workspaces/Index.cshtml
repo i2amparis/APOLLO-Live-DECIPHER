@@ -22,7 +22,7 @@
             <thead>
                 <tr>
                     <th>Title</th>
-                    <th>Action</th>
+                    <th colspan="2">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,6 +35,9 @@
                         </td>
                         <td>
                             <a asp-page="Edit" asp-route-id="@item.Id.Hash()">Edit</a>
+                        </td>
+                        <td>
+                            <a href="#" class="delete-link" data-url="@(Url.PageLink(pageHandler: "Delete"))" data-id="@(item.Id.Hash())" data-title="@item.Title">Delete</a>
                         </td>
                     </tr>
                     i++;
@@ -57,3 +60,41 @@
         </a>
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $(".delete-link").click(function () {
+
+                let self = $(this);
+                var title = self.data("title");
+
+                var promptResult = prompt(`Are you sure you want to delete workspace: [${title}]?\r\nType [delete] to proceed.`);
+                if (promptResult === 'delete') {
+                    var url = self.data("url");
+                    console.log(url);
+                    var data = {
+                        "id": self.data('id'),
+                        "__RequestVerificationToken": "@(this.HttpContext.GetAntiforgeryToken())"
+                    };
+
+                    // send ajax
+                    $.ajax({
+                        url: url, // url where to submit the request
+                        type: "POST", // type of action POST || GET
+                        dataType: 'json', // data type
+                        data: data, // post data || get data
+                        success: function (result) {
+                            // you can see the result from the console
+                            // tab of the developer tools
+                            window.location.reload();
+                        },
+                        error: function (xhr, resp, text) {
+                            console.log(xhr, resp, text);
+                        }
+                    })
+                }
+            });
+        });
+    </script>
+}

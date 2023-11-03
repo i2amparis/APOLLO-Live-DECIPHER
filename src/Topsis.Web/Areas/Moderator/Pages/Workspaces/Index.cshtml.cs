@@ -1,6 +1,8 @@
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Topsis.Application;
 using Topsis.Application.Contracts.Database;
@@ -32,6 +34,13 @@ namespace Topsis.Web.Areas.Moderator.Pages.Workspaces
             {
                 throw;
             }
+        }
+
+        public async Task<IActionResult> OnPostDeleteAsync(string id)
+        {
+            var command = new EditWorkspace.DeleteCommand { WorkspaceId = id };
+            await _bus.SendAsync(command);
+            return new OkObjectResult(new { success = true });
         }
     }
 }
