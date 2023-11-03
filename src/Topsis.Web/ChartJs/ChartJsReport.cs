@@ -66,8 +66,8 @@ namespace Topsis.Web.ChartJs
             }
 
             var settings = vm.Workspace.Questionnaire.GetSettings();
-            var suggestedMaxY = (int)Math.Ceiling(Math.Max(myData.Max(), groupData.Max()));
-            var suggestedMinY = (int)Math.Floor(Math.Round(Math.Max(0, groupData.Min() - 0.2), 1));
+            var suggestedMaxY = myData.Count > 0 ? (int)Math.Ceiling(Math.Max(myData.Max(), groupData.Max())) : 0;
+            var suggestedMinY = myData.Count > 0 ? (int)Math.Floor(Math.Round(Math.Max(0, groupData.Min() - 0.2), 1)) : 0;
 
             var scales = new ChartJsDatasetOptions.ChartJsScales(
                 new ChartJsDatasetOptions.ChartJsAxes("Alternatives"),
