@@ -37,7 +37,7 @@
                             <a asp-page="Edit" asp-route-id="@item.Id.Hash()">Edit</a>
                         </td>
                         <td>
-                            <a href="#" class="delete-link" data-url="@(Url.PageLink(pageHandler: "Delete"))" data-id="@(item.Id.Hash())" data-title="@item.Title">Delete</a>
+                            <a href="#" class="delete-link" data-url="@(Url.PageLink(pageHandler: "Delete", values: new { scheme = this.Request.Scheme }))" data-id="@(item.Id.Hash())" data-title="@item.Title">Delete</a>
                         </td>
                     </tr>
                     i++;
