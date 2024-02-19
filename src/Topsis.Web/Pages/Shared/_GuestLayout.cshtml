@@ -34,8 +34,6 @@
         </main>
     </div>
 
-    <partial name="_FooterPartial" />
-
     <environment include="Development">
         <script src="~/lib/jquery/jquery.js"></script>
         <script src="~/lib/bootstrap/js/bootstrap.bundle.js"></script>
@@ -55,6 +53,8 @@
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
     @* integrity https://www.srihash.org/ *@
+
+    <partial name="_FooterPartial" />
 
     @RenderSection("Scripts", required: false)
 </body>

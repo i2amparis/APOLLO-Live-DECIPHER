@@ -33,8 +33,6 @@
         </main>
     </div>
 
-    <partial name="_FooterPartial" />
-
     <environment include="Development">
         <script src="~/lib/jquery/jquery.js"></script>
         <script src="~/lib/bootstrap/js/bootstrap.bundle.js"></script>
@@ -53,6 +51,8 @@
                 integrity="sha384-ZEiV3j24mJ99uunGq2LXkicfbHO18KBrDHpdTjD1NUT07kWB6B8u6U5t6UBimJ7w"></script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
+
+    <partial name="_FooterPartial" />
 
     @RenderSection("Scripts", required: false)
 </body>

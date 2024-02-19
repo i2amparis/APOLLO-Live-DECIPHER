@@ -37,7 +37,7 @@
                             <a asp-page="Edit" asp-route-id="@item.Id.Hash()">Edit</a>
                         </td>
                         <td>
-                            <a href="#" class="delete-link" data-url="@(Url.PageLink(pageHandler: "Delete", values: new { scheme = this.Request.Scheme }))" data-id="@(item.Id.Hash())" data-title="@item.Title">Delete</a>
+                            <a class="delete-link" asp-page-handler="delete" asp-route-id="@item.Id.Hash()" data-title="@item.Title">Delete</a>
                         </td>
                     </tr>
                     i++;
@@ -64,17 +64,20 @@
 @section Scripts{
     <script>
         $(function () {
-            $(".delete-link").click(function () {
+            $(".delete-link").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
 
                 let self = $(this);
                 var title = self.data("title");
 
                 var promptResult = prompt(`Are you sure you want to delete workspace: [${title}]?\r\nType [delete] to proceed.`);
                 if (promptResult === 'delete') {
-                    var url = self.data("url");
-                    console.log(url);
+                    var url = self[0].href;
+                    // console.log(url);
+
                     var data = {
-                        "id": self.data('id'),
+                        // "id": self.data('id'),
                         "__RequestVerificationToken": "@(this.HttpContext.GetAntiforgeryToken())"
                     };
 

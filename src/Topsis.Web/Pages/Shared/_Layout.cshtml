@@ -39,8 +39,6 @@
         </main>
     </div>
 
-    <partial name="_FooterPartial" />
-
     <environment include="Development">
         <script src="~/lib/jquery/jquery.js"></script>
         <script src="~/lib/bootstrap/js/bootstrap.bundle.js"></script>
@@ -61,39 +59,9 @@
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
 
+    <partial name="_FooterPartial" />
+
     @RenderSection("Scripts", required: false)
-    <script type="text/javascript">
-        function getQueryParams(url) {
-            const paramArr = url.slice(url.indexOf('?') + 1).split('&');
-            const params = {};
-            paramArr.map(param => {
-                const [key, val] = param.split('=');
-                params[key] = decodeURIComponent(val);
-            })
-            return params;
-        }
-
-        function reload(theme, image){
-            let params = getQueryParams(document.URL);
-            theme = theme || params['theme'] || 'lux';
-            image = image || params['image'] || 'none';
-
-            let url = document.URL.split('?')[0];
-            var newUrl = `${url}?theme=${theme}&image=${image}`;
-            document.location = newUrl;
-        }
-
-        $(document).ready(function () {
-            $(".theme-button").click(function () {
-                let theme = $(this).data('theme');
-                reload(theme, undefined);
-            });
-
-            $(".image-button").click(function () {
-                let image = $(this).data('image');
-                reload(undefined, image);
-            });
-        });
-    </script>
+    
 </body>
 </html>
