@@ -1,14 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Topsis.Adapters.Database.Seed;
 using Topsis.Application.Contracts.Database;
+using Topsis.Application.Contracts.Identity;
+using Topsis.Domain;
 
 namespace Topsis.Adapters.Database.Services
 {
@@ -29,6 +30,12 @@ namespace Topsis.Adapters.Database.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            await MigrateAsync();
+            await InitializeDatabaseAsync();
+        }
+
+        private async Task MigrateAsync()
+        {
             _logger.LogDebug("Starting migration.");
 
             // Create a new scope to retrieve scoped services
@@ -36,8 +43,8 @@ namespace Topsis.Adapters.Database.Services
             {
                 try
                 {
-                        var db = BuildContext();
-                    db.Database.Migrate();
+                    var db = BuildContext();
+                    await db.Database.MigrateAsync();
                 }
                 catch (Exception ex)
                 {
@@ -45,17 +52,28 @@ namespace Topsis.Adapters.Database.Services
                     throw;
                 }
             }
+            _logger.LogDebug("Finished migration.");
+        }
 
+        private async Task InitializeDatabaseAsync()
+        {
+            _logger.LogDebug("Starting db initialization.");
             using (var scope = _serviceProvider.CreateScope())
             {
                 try
                 {
-                    // Ensure users and roles.
                     var db = BuildContext();
-                    var roles = await db.UserRoles.ToArrayAsync();
-                    if (roles.Length == 0)
+                    if (await db.IsInitializedAsync() == false)
                     {
-                        IdentitySeed.ApplyTo(db);
+                        var settings = scope.ServiceProvider.GetRequiredService<IOptions<AdminSettings>>().Value;
+
+                        var admin = new UserCredentials
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Email = settings.Email,
+                            Password = settings.GetPassword()
+                        };
+                        await db.InitializeAsync(admin);
                     }
                 }
                 catch (Exception ex)
@@ -65,7 +83,7 @@ namespace Topsis.Adapters.Database.Services
                 }
             }
 
-            _logger.LogDebug("Finished migration.");
+            _logger.LogDebug("Finished db initialization.");
         }
 
         private WorkspaceDbContext BuildContext()

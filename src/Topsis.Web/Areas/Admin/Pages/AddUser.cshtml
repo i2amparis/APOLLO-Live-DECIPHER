@@ -1,0 +1,28 @@
+﻿@page
+@model Topsis.Web.Areas.Admin.Pages.AddUserModel
+@{
+}
+
+@if (string.IsNullOrEmpty(Model.ErrorMessage) == false)
+{
+    <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+}
+
+<h2>Add User</h2>
+<hr />
+
+<form method="post" class="no-ajax">
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="@(Model.Email)" required>
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+    </div>
+    <div class="form-group">
+        <label for="password2">Repeat Password</label>
+        <input type="password" class="form-control" id="password2" name="password2" placeholder="Repeat Password" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Add User</button>
+</form>

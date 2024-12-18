@@ -9,6 +9,13 @@
 
 <h2>All Users</h2>
 <hr />
+
+<div class="row">
+    <div class="col">
+        <a asp-page="AddUser" asp-area="Admin" class="btn btn-success">Add User</a>
+    </div>
+</div>
+
 <div class="row p-3">
     <div class="col-4 col-sm-6 offset-2">
         <input class="form-control" type="text" placeholder="Search by email, lastname, firstname..." id="txtTerm" value="@Model.Term" />

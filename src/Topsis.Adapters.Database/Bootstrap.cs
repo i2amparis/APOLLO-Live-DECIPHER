@@ -20,6 +20,7 @@ namespace Topsis.Adapters.Database
 
         public static IServiceCollection AddDataAccess(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<AdminSettings>(configuration.GetSection("AdminSettings"));
             services.Configure<DatabaseSettings>(configuration.GetSection("DatabaseSettings"));
 
             services.AddSingleton<IDatabaseService, DatabaseConfigurationService>();
@@ -28,7 +29,6 @@ namespace Topsis.Adapters.Database
                 var service = serviceProvider.GetRequiredService<IDatabaseService>();
                 dbContextBuilder.SetupDatabase(service.GetDatabaseEngine(), service.GetRuntimeConnectionString());
             });
-
 
             services.AddScoped<IUserContext, UserContext>();
 
@@ -43,8 +43,6 @@ namespace Topsis.Adapters.Database
 
             return services;
         }
-
-        
     }
 
     public static class DatabaseOptions
