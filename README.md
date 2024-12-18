@@ -21,7 +21,7 @@
 - These connection strings can be set either in appsettings.json or as environment variables like:
   - DatabaseSettings__Runtime__Password:<mypassword> (double underscore needed in order settings to work in win or linux)
 
-## Bootstrap
+### Bootstrap
 - You can define your admin's user email in appsettings.json or as an env variable "AdminSettings__Email"
 - You can define your admin's user password in appsettings.json or as an env variable "AdminSettings__InitialPassword" (you can later change it through email and the forgot password link)
 
