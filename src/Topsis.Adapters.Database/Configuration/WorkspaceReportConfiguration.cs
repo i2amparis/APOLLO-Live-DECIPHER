@@ -15,7 +15,7 @@ namespace Topsis.Adapters.Database.Configuration
 
             builder.HasIndex(x => new { x.WorkspaceId, x.Round }).IsUnique().HasDatabaseName("UIX_WorkspaceId_Round");
 
-            builder.Property(x => x.Round).HasDefaultValue(FeedbackRound.First);
+            builder.Property(x => x.Round).HasDefaultValue(FeedbackRound.First).HasSentinel(FeedbackRound.Undefined);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Topsis.Adapters.Database
         {
             var databaseEngine = Environment.GetEnvironmentVariable("DatabaseSettings__Engine") ?? DatabaseSettings.ENGINE_POSTGRESQL;
             var deployConnectionString = Environment.GetEnvironmentVariable("DeployConnectionString")
-                ?? "Host=127.0.0.1;Port=5432;Username=dbuser;Password=password;Database=topsis-test";
+                ?? "Host=127.0.0.1;Port=5433;Username=postgres;Password=password;Database=topsis-test";
 
             var optionsBuilder = new DbContextOptionsBuilder<WorkspaceDbContext>();
             optionsBuilder.SetupDatabase(databaseEngine, deployConnectionString);
