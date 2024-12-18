@@ -7,8 +7,9 @@
 ## Developer
 ### Architecture/Design
 - We use the hexagonal-like architecture
+- We use the mediator pattern
 - We use dependency injection
-- We use .net core 7
+- We use .net core 8
 
 ### Database
 - You can use the following database engines (mysql, mariadb, postgresql), you can configure that option in appsettings.json under DatabaseSettings/Engine
@@ -19,6 +20,10 @@
   - For the system user that does the migrations when the process starts.
 - These connection strings can be set either in appsettings.json or as environment variables like:
   - DatabaseSettings__Runtime__Password:<mypassword> (double underscore needed in order settings to work in win or linux)
+
+## Bootstrap
+- You can define your admin's user email in appsettings.json or as an env variable "AdminSettings__Email"
+- You can define your admin's user password in appsettings.json or as an env variable "AdminSettings__InitialPassword" (you can later change it through email and the forgot password link)
 
 ### Encryption
 - We currently encrypt passwords with the help of the database, where we hold the key rings there
