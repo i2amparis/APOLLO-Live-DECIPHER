@@ -23,7 +23,7 @@
 
 ### Bootstrap
 - You can define your admin's user email in appsettings.json or as an env variable "AdminSettings__Email"
-- You can define your admin's user password in appsettings.json or as an env variable "AdminSettings__InitialPassword" (you can later change it through email and the forgot password link)
+- You can define your admin's user password in appsettings.json or as an env variable "AdminSettings__InitialPassword" (you can later change it through email and the forgot password procedure)
 
 ### Encryption
 - We currently encrypt passwords with the help of the database, where we hold the key rings there
