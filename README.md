@@ -9,7 +9,7 @@
 - We use the hexagonal-like architecture
 - We use the mediator pattern
 - We use dependency injection
-- We use .net core 8
+- We use .net 8
 
 ### Database
 - You can use the following database engines (mysql, mariadb, postgresql), you can configure that option in appsettings.json under DatabaseSettings/Engine
