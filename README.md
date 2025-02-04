@@ -47,4 +47,3 @@
 	- (Optional) You can test this into a new or existing database with the connection string hardcoded or using the DeployConnectionString env var, 
 		executing the cmd > dotnet ef database update
 	- Test it (Debug-F5, this will run the migration process in MigrationHostedService)
-
