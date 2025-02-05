@@ -28,7 +28,7 @@ namespace Topsis.Adapters.Encryption
             string deployConnectionString)
         {
             return builder.UseNpgsql(deployConnectionString,
-                            b => b.MigrationsHistoryTable(DataProtectionKeysContext.MigrationsHistoryTable, DataProtectionKeysContext.DefaultSchema));
+                            b => b.MigrationsHistoryTable(DataProtectionKeysContext.MigrationsHistoryTable));
         }
     }
 
@@ -40,7 +40,6 @@ namespace Topsis.Adapters.Encryption
             : base(options) { }
 
         public const string MigrationsHistoryTable = "__KeysMigrationsHistory";
-        public const string DefaultSchema = "public";
 
         // This maps to the table that stores keys.
         public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = null!;
