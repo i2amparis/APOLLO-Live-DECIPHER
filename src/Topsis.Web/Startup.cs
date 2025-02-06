@@ -132,6 +132,8 @@ namespace Topsis.Web
 
             services
                 .AddMvc(opt => opt.ModelBinderProviders.Insert(0, new EntityModelBinderProvider()));
+
+            services.AddHostedService<MigrationHostedService>();
         }
 
         private bool IsMonitorAuthorized(HttpRequest request)

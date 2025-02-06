@@ -6,12 +6,14 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Topsis.Adapters.Database;
 using Topsis.Adapters.Database.Seed;
+using Topsis.Adapters.Encryption;
 using Topsis.Application.Contracts.Database;
 using Topsis.Application.Contracts.Identity;
 using Topsis.Domain;
 
-namespace Topsis.Adapters.Database.Services
+namespace Topsis.Web.Services
 {
     public class MigrationHostedService : BackgroundService
     {
@@ -30,20 +32,22 @@ namespace Topsis.Adapters.Database.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await MigrateAsync();
+            await MigrateAppDatabaseAsync();
+            await MigrateEncryptionDatabaseAsync();
             await InitializeDatabaseAsync();
         }
 
-        private async Task MigrateAsync()
+        #region [ Helpers ]
+        private async Task MigrateAppDatabaseAsync()
         {
-            _logger.LogDebug("Starting migration.");
+            _logger.LogDebug("Starting app database migration.");
 
             // Create a new scope to retrieve scoped services
             using (var scope = _serviceProvider.CreateScope())
             {
                 try
                 {
-                    var db = BuildContext();
+                    var db = BuildAppDbContext();
                     await db.Database.MigrateAsync();
                 }
                 catch (Exception ex)
@@ -52,7 +56,43 @@ namespace Topsis.Adapters.Database.Services
                     throw;
                 }
             }
-            _logger.LogDebug("Finished migration.");
+
+            _logger.LogDebug("Finished app database migration.");
+        }
+
+        private WorkspaceDbContext BuildAppDbContext()
+        {
+            // db options.
+            var builder = new DbContextOptionsBuilder<WorkspaceDbContext>();
+            builder.SetupDatabase(_databaseService.GetDatabaseEngine(), _databaseService.GetMigrationConnectionString());
+            return new WorkspaceDbContext(builder.Options, null);
+        }
+
+        private async Task MigrateEncryptionDatabaseAsync()
+        {
+            _logger.LogDebug("Starting encryption database migration.");
+
+            // Create a new scope to retrieve scoped services
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                try
+                {
+                    // Db Options.
+                    var builder = new DbContextOptionsBuilder<DataProtectionKeysContext>();
+                    Adapters.Encryption.DatabaseFactory.SetupDatabase(builder, _databaseService.GetMigrationConnectionString());
+
+                    // Migrate.
+                    var db = new DataProtectionKeysContext(builder.Options);
+                    await db.Database.MigrateAsync();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, ex.Message);
+                    throw;
+                }
+            }
+
+            _logger.LogDebug("Finished encryption database migration.");
         }
 
         private async Task InitializeDatabaseAsync()
@@ -62,7 +102,7 @@ namespace Topsis.Adapters.Database.Services
             {
                 try
                 {
-                    var db = BuildContext();
+                    var db = BuildAppDbContext();
                     if (await db.IsInitializedAsync() == false)
                     {
                         var settings = scope.ServiceProvider.GetRequiredService<IOptions<AdminSettings>>().Value;
@@ -85,16 +125,6 @@ namespace Topsis.Adapters.Database.Services
 
             _logger.LogDebug("Finished db initialization.");
         }
-
-        private WorkspaceDbContext BuildContext()
-        {
-            // Db Options.
-            var builder = new DbContextOptionsBuilder<WorkspaceDbContext>();
-            builder.SetupDatabase(_databaseService.GetDatabaseEngine(), _databaseService.GetMigrationConnectionString());
-
-            // Migrate.
-            var myDbContext = new WorkspaceDbContext(builder.Options, null);
-            return myDbContext;
-        }
+        #endregion
     }
 }

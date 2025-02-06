@@ -38,8 +38,6 @@ namespace Topsis.Adapters.Encryption
                 .SetApplicationName("topsisapp")
                 .PersistKeysToDbContext<DataProtectionKeysContext>();
 
-            services.AddHostedService<MigrationHostedService>();
-
             return services;
         }
 

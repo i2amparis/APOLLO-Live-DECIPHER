@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 
 namespace Topsis.Adapters.Encryption
@@ -43,5 +44,24 @@ namespace Topsis.Adapters.Encryption
 
         // This maps to the table that stores keys.
         public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = null!;
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfiguration(new DataProtectionKeyConfiguration());
+        }
+    }
+
+    public class DataProtectionKeyConfiguration : IEntityTypeConfiguration<DataProtectionKey>
+    {
+        public void Configure(EntityTypeBuilder<DataProtectionKey> builder)
+        {
+            builder.ToTable("DataProtectionKeys");
+            builder.HasKey(k => k.Id);
+            builder.Property(k => k.Id).ValueGeneratedNever();
+            builder.Property(k => k.FriendlyName).HasMaxLength(1000);
+            builder.Property(k => k.Xml);
+        }
     }
 }

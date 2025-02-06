@@ -1,20 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+
+#nullable disable
 
 namespace Topsis.Adapters.Encryption.Migrations
 {
+    /// <inheritdoc />
     public partial class init : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
                 name: "DataProtectionKeys",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    FriendlyName = table.Column<string>(nullable: true),
-                    Xml = table.Column<string>(nullable: true)
+                    Id = table.Column<int>(type: "integer", nullable: false),
+                    FriendlyName = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
+                    Xml = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -22,6 +24,7 @@ namespace Topsis.Adapters.Encryption.Migrations
                 });
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

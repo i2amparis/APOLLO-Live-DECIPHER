@@ -39,8 +39,6 @@ namespace Topsis.Adapters.Database
 
             services.AddScoped<IReportService, ReportService>();
 
-            services.AddHostedService<MigrationHostedService>();
-
             return services;
         }
     }
