@@ -56,9 +56,11 @@ namespace Topsis.Web
             })
             .AddEntityFramework();
 
-            services.AddDataAccess(Configuration);
+            services.AddDataAccess(Configuration)
+                .AddDataProtectionToDatabase()
+                .AddAlgorithm();
+
             services.AddEmail(Configuration);
-            services.AddAlgorithm();
             services.AddImportServices();
             services.AddRecaptcha(Configuration);
 
