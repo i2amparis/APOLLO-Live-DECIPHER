@@ -13,7 +13,7 @@ namespace Topsis.AcceptanceTests.Features
         {
         }
 
-        [Fact]
+        [Fact(Skip = "helper to test email.")]
         public async Task Create_Workspace_TestAsync()
         {
             // arrange

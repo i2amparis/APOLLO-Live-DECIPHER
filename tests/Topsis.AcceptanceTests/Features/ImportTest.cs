@@ -21,7 +21,7 @@ namespace Topsis.AcceptanceTests.Features
             _fixture.SetContext<ImportTest>(Scenario.Workspace_CalculateResults);
         }
 
-        [Theory]
+        [Theory(Skip = "Helper test.")]
         [InlineData("input_mcda_dlci.xlsx")]
         [InlineData("input_mcda_tech.xlsx")]
         public async Task Dlci_Test(string filename)

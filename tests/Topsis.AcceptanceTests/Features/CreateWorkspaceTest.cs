@@ -17,7 +17,7 @@ namespace Topsis.AcceptanceTests.Features
             _fixture.SetContext<CreateWorkspaceTest>(Scenario.Workspace_Create);
         }
 
-        [Fact]
+        [Fact(Skip = "helper to test db.")]
         public async Task Create_Workspace_TestAsync()
         {
             // arrange

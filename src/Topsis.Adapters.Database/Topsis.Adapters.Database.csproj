@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Topsis.Adapters.Encryption\Topsis.Adapters.Encryption.csproj" />
     <ProjectReference Include="..\Topsis.Application\Topsis.Application.csproj" />
   </ItemGroup>
 
