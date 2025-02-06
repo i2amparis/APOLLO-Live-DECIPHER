@@ -30,12 +30,6 @@ namespace Topsis.Adapters.Encryption
             });
 
             services.AddDataProtection()
-                .UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration
-                {
-                    EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
-                    ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
-                })
-                .SetApplicationName("topsisapp")
                 .PersistKeysToDbContext<DataProtectionKeysContext>();
 
             return services;
