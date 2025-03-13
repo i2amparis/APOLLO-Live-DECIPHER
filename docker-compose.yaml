@@ -7,7 +7,7 @@ services:
       dockerfile: "Dockerfile"
     hostname: www1
     ports:
-      - "8430:80"
+      - "8080:8080"
     depends_on:
       - topsis-postgres
     networks:
@@ -21,7 +21,7 @@ services:
     image: postgres
     hostname: db1
     environment:
-      POSTGRES_USER: dbuser
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       PGDATA: /data/postgres
     volumes:
