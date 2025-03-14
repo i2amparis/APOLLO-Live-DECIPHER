@@ -367,3 +367,4 @@ Docker/db
 /Docker/data/
 
 .DS_Store
+.secrets

@@ -10,9 +10,12 @@ services:
       - topsis-postgres
     networks:
       - backend
+    volumes:
+       - ./.secrets:/recaptcha_creds
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       DatabaseSettings__Server: db1
+      GOOGLE_APPLICATION_CREDENTIALS: /recaptcha_creds/recaptcha_creds.json
 
   topsis-postgres:
     container_name: postgres_container
