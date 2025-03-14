@@ -21,21 +21,21 @@
                     @if (User.IsInRole(Topsis.Domain.Contracts.RoleNames.Moderator))
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Moderator" asp-page="/Workspaces/Index">Workspaces</a>
+                            <a class="nav-link" asp-area="Moderator" asp-page="/Workspaces/Index">Workspaces</a>
                         </li>
                     }
 
                     @if (User.IsInRole(Topsis.Domain.Contracts.RoleNames.Stakeholder))
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Guest" asp-page="/Index">Guest Account</a>
+                            <a class="nav-link" asp-area="Guest" asp-page="/Index">Guest Account</a>
                         </li>
                     }
 
                     @if (User.IsInRole(Topsis.Domain.Contracts.RoleNames.Admin))
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-page="/Index">Users</a>
+                            <a class="nav-link" asp-area="Admin" asp-page="/Index">Users</a>
                         </li>
                     }
                 </ul>
