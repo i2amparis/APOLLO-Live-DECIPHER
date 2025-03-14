@@ -18,7 +18,7 @@
 
             @foreach (var criterion in Model.ViewModel.CriteriaOrdered)
             {
-                <div class="card mt-3">
+                <div class="card mt-3 bg-dark text-white">
                     <div class="card-body">
                         <h5 class="card-title">@criterion.Title</h5>
 
@@ -146,7 +146,7 @@
             <div class="form-group pt-3">
                 <div asp-validation-summary="All" class="text-danger"></div>
 
-                <input type="submit" value="Submit" class="btn btn-primary float-right" />
+                <input type="submit" value="Submit" class="btn btn-dark float-right" />
             </div>
         </form>
     </div>
