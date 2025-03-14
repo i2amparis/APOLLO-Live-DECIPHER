@@ -11,12 +11,57 @@
         // https://pixabay.com/illustrations/maze-labyrinth-solution-lost-1804499/
         return "~/img/feedback.jpg";
     }
+
+    string GetStatusImageUrlEnvironmental(Topsis.Application.Contracts.Database.StakeholderWorkspaceDto item)
+    {
+        return "~/img/Environmental Impact.jpg";
+    }
+
+    string GetStatusImageUrlResources(Topsis.Application.Contracts.Database.StakeholderWorkspaceDto item)
+    {
+        return "~/img/Resource Management.jpg";
+    }
+
+    string GetStatusImageUrlTech(Topsis.Application.Contracts.Database.StakeholderWorkspaceDto item)
+    {
+        return "~/img/Technological and Cultural Aspects.jpg";
+    }
+
+    string GetStatusImageUrlSocial(Topsis.Application.Contracts.Database.StakeholderWorkspaceDto item)
+    {
+        return "~/img/Social Human Development.jpg";
+    }
+
+    string GetStatusImageUrlEconomic(Topsis.Application.Contracts.Database.StakeholderWorkspaceDto item)
+    {
+        return "~/img/Economic and Political Aspects.jpg";
+    }
 }
 
 <div class="row mb-5">
 @foreach (var item in list)
 {
     var statusImage = GetStatusImageUrl(item);
+
+    switch (@item.WorkspaceTitle)
+    {
+        case "Environmental Impact":
+            statusImage = GetStatusImageUrlEnvironmental(item);
+            break;
+        case "Resource Management":
+            statusImage = GetStatusImageUrlResources(item);
+            break;
+        case "Technological and Cultural Aspects":
+            statusImage = GetStatusImageUrlTech(item);
+            break;
+        case "Social Human Development":
+            statusImage = GetStatusImageUrlSocial(item);
+            break;
+        case "Economic and Political Aspects":
+            statusImage = GetStatusImageUrlEconomic(item);
+            break;
+    }
+
     var isPublished = item.CurrentStatus == Domain.WorkspaceStatus.Published;
 
         <div class="col-md-4  d-flex align-items-stretch">
