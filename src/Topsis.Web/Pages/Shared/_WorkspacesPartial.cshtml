@@ -51,7 +51,7 @@
                                 case Domain.WorkspaceStatus.AcceptingVotes:
                                     <a href="@(Url.Page("/Workspace/Vote", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
                                        role="button"
-                                       class="btn btn-block btn-dark">Vote</a>
+                                       class="btn btn-block btn-dark">Select</a>
                                     break;
                                 default:
                                     break;
@@ -97,7 +97,7 @@
             {
                 <a href="@(Url.Page("/Workspace/Index", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
                    role="button"
-                   class="btn btn-block btn-outline-success float-right">See Report</a>
+                   class="btn btn-block btn-outline-success float-right">See Results</a>
             }
             else
             {
