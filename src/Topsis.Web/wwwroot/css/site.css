@@ -63,8 +63,16 @@ a, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 
 .card {
-    background-color: #10151B !important
+    background-color: #10151B !important;
 
+}
+
+.vote-warning {
+    background-color: #10151B;
+}
+
+.table {
+    color: white;
 }
 
 body {

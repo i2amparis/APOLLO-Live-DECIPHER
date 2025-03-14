@@ -24,14 +24,14 @@
                             <a class="nav-link" asp-area="Moderator" asp-page="/Workspaces/Index">Workspaces</a>
                         </li>
                     }
-
+<!--
                     @if (User.IsInRole(Topsis.Domain.Contracts.RoleNames.Stakeholder))
                     {
                         <li class="nav-item">
                             <a class="nav-link" asp-area="Guest" asp-page="/Index">Guest Account</a>
                         </li>
                     }
-
+-->
                     @if (User.IsInRole(Topsis.Domain.Contracts.RoleNames.Admin))
                     {
                         <li class="nav-item">

@@ -145,7 +145,7 @@
             
                 @foreach (var item in Model.CompareReport.Tips)
                 {
-                    <div class='p-3 mb-2 bg-primary text-light font-weight-bold'>Your vote on alternative [@item.AlternativeTitle] had the largest difference from the group solution.</div>
+                    <div class='p-3 mb-2 text-light font-weight-bold' style="background-color: #10151B;">Your vote on alternative [@item.AlternativeTitle] had the largest difference from the group solution.</div>
                 }
             
             </div>
@@ -202,6 +202,7 @@
 
     <script>
         Chart.defaults.datasets.bar.minBarLength = 7;
+        Chart.defaults.color = "#ff0000";
 
         // https://www.chartjs.org/docs/3.5.1/configuration/tooltip.html
         Chart.defaults.plugins.tooltip.enabled = false;
