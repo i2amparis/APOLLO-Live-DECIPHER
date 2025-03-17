@@ -7,7 +7,7 @@
     var altUpperValue = alternativeValues.Last();
 }
 <h2>@Model.ViewModel.WorkspaceTitle</h2>
-<p>@(Model.ViewModel.VoteFormTitle ?? "Please answer the following questions")</p>
+<p>@(Model.ViewModel.VoteFormTitle ?? "Please answer the following questions.")</p>
 
 <div class="row pt-2">
     <div class="col-md-8">
@@ -41,7 +41,7 @@
                                     var should_highlight = isMyTopsisAboveGroup.HasValue && (isMyTopsisAboveGroup == true ? loadedAnswerValue != altLowerValue : loadedAnswerValue != altUpperValue);
 
                                     <tr class="@(should_highlight ? (isMyTopsisAboveGroup == true ? "table-info" : "table-danger") : "")">
-                                        <th scope="row">
+                                        <th class="text-center" scope="row">
                                             @alternative.Value
                                             <input type="hidden" name="Data.Answers[@answerIndex].CriterionId" value="@criterion.Id" />
                                             <input type="hidden" name="Data.Answers[@answerIndex].AlternativeId" value="@alternative.Key" />
@@ -88,7 +88,7 @@
 
             <div class="card mt-3">
                 <div class="card-body">
-                    <h5 class="card-title">Overall, how relevant is the following category of indicators for you?</h5>
+                    <h5 class="card-title">Overall, how relevant is the following indicator category for you?</h5>
                     @{
                         var importanceIndex = 0;
 
@@ -96,7 +96,7 @@
                             <thead>
 
                                 <tr>
-                                    <th scope="col">&nbsp;</th>
+                                    <th class="text-center" scope="col">&nbsp;</th>
                                     @foreach (var importance in Model.ViewModel.CriteriaImportanceRange)
                                     {
                                         <th scope="col" class="text-center">@(importance.Name)</th>
@@ -110,7 +110,7 @@
                                     var errorId = $"importance_error_{criterion.Id}";
 
                                     <tr class="">
-                                        <th scope="row">
+                                        <th scope="row" class="text-center">
                                             @criterion.Title
                                             <input type="hidden" name="Data.CriteriaImportance[@importanceIndex].Key" value="@criterion.Id" />
                                             <div class="text-danger field-validation-valid" data-valmsg-for="Data.CriteriaImportance[@importanceIndex].Value" data-valmsg-replace="true"></div>
