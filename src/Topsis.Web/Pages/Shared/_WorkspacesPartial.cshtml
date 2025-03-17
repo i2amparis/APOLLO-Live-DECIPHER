@@ -17,9 +17,9 @@
         return "~/img/Environmental Impact.jpg";
     }
 
-    string GetStatusImageUrlResources(Topsis.Application.Contracts.Database.StakeholderWorkspaceDto item)
+    string GetStatusImageUrlPolitical(Topsis.Application.Contracts.Database.StakeholderWorkspaceDto item)
     {
-        return "~/img/Resource Management.jpg";
+        return "~/img/Political Aspects.jpg";
     }
 
     string GetStatusImageUrlTech(Topsis.Application.Contracts.Database.StakeholderWorkspaceDto item)
@@ -45,19 +45,19 @@
 
     switch (@item.WorkspaceTitle)
     {
-        case "Environmental Impact":
+        case "Environmental Aspects":
             statusImage = GetStatusImageUrlEnvironmental(item);
             break;
-        case "Resource Management":
-            statusImage = GetStatusImageUrlResources(item);
+        case "Political Aspects":
+            statusImage = GetStatusImageUrlPolitical(item);
             break;
-        case "Technological and Cultural Aspects":
+        case "Innovation and Cultural Aspects":
             statusImage = GetStatusImageUrlTech(item);
             break;
         case "Social Human Development":
             statusImage = GetStatusImageUrlSocial(item);
             break;
-        case "Economic and Political Aspects":
+        case "Economic Aspects":
             statusImage = GetStatusImageUrlEconomic(item);
             break;
         default:
