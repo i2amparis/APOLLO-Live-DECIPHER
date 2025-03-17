@@ -7,7 +7,7 @@
     var altUpperValue = alternativeValues.Last();
 }
 <h2>@Model.ViewModel.WorkspaceTitle</h2>
-<h5>@(Model.ViewModel.VoteFormTitle ?? "Give us your feedback")</h5>
+<p>@(Model.ViewModel.VoteFormTitle ?? "Please answer the following questions")</p>
 
 <div class="row pt-2">
     <div class="col-md-8">
@@ -20,7 +20,7 @@
             {
                 <div class="card mt-3 text-white">
                     <div class="card-body">
-                        <h5 class="card-title">@criterion.Title</h5>
+                        <h5 class="card-title">How relevant are the following indicators for you?</h5>
 
                         <table class="card-text table table-striped">
                             <thead>
@@ -88,7 +88,7 @@
 
             <div class="card mt-3">
                 <div class="card-body">
-                    <h5 class="card-title">How important do you consider each of the following dimensions to be?</h5>
+                    <h5 class="card-title">Overall, how relevant is the following category of indicators for you?</h5>
                     @{
                         var importanceIndex = 0;
 
