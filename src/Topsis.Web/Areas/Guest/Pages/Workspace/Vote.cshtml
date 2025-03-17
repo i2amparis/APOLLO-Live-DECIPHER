@@ -41,7 +41,7 @@
                                     var should_highlight = isMyTopsisAboveGroup.HasValue && (isMyTopsisAboveGroup == true ? loadedAnswerValue != altLowerValue : loadedAnswerValue != altUpperValue);
 
                                     <tr class="@(should_highlight ? (isMyTopsisAboveGroup == true ? "table-info" : "table-danger") : "")">
-                                        <th class="text-center" scope="row">
+                                        <th scope="row">
                                             @alternative.Value
                                             <input type="hidden" name="Data.Answers[@answerIndex].CriterionId" value="@criterion.Id" />
                                             <input type="hidden" name="Data.Answers[@answerIndex].AlternativeId" value="@alternative.Key" />
@@ -96,10 +96,10 @@
                             <thead>
 
                                 <tr>
-                                    <th class="text-center" scope="col">&nbsp;</th>
+                                    <th scope="col">&nbsp;</th>
                                     @foreach (var importance in Model.ViewModel.CriteriaImportanceRange)
                                     {
-                                        <th scope="col" class="text-center">@(importance.Name)</th>
+                                        <th scope="col">@(importance.Name)</th>
                                     }
                                 </tr>
                             </thead>
@@ -110,7 +110,7 @@
                                     var errorId = $"importance_error_{criterion.Id}";
 
                                     <tr class="">
-                                        <th scope="row" class="text-center">
+                                        <th scope="row">
                                             @criterion.Title
                                             <input type="hidden" name="Data.CriteriaImportance[@importanceIndex].Key" value="@criterion.Id" />
                                             <div class="text-danger field-validation-valid" data-valmsg-for="Data.CriteriaImportance[@importanceIndex].Value" data-valmsg-replace="true"></div>

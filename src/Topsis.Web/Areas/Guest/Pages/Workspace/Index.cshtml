@@ -23,7 +23,7 @@
             {
                 noResultsMessage = reportCount > 0
                     ? $"Following the discussion and the tips provided, you can change your vote."
-                    : $"Your vote has been registered. Please stay on this page while the rest of the participants finish voting. Thank you for your participation!";
+                    : $"Your input has been submitted! You can provide feedback on other indicator categories by clicking the link below. If you have already provided input on all indicators, stay on this page until all respondents have finished.";
             }
             else
             {
@@ -67,7 +67,7 @@
         <p class="lead">@Model.Data.Workspace.Description</p>
         @if (hasReports == false)
         {
-            <p class="text-info">
+            <p>
                 @if (string.IsNullOrEmpty(icon) == false)
                 {
                     <span class="material-icons md-48">@icon</span>
@@ -80,8 +80,13 @@
         {
             @if(Model.Data.UserVoteId.HasValue)
             {
+                <p><a style="color: #E36246;" href="https://stakeholder-decipher.iamparis.eu">Go to homepage</a></p>
+            }
+            <!--
+            {
                 <p>Change your vote <a href="@Url.Page("Vote", new { id = Model.Data.Workspace.Id.Hash() })">here</a>.</p>
             }
+            -->
             else
             {
                 <p>You can vote <a href="@Url.Page("Vote", new { id = Model.Data.Workspace.Id.Hash() })">here</a>.</p>
@@ -119,18 +124,18 @@
 
         <div class="col-md-12">
             <h3>Prioritization</h3>
-            <p class="lead">The votes of all participants are merged to create a unique solution that represents the solution of the group. In this diagram you may see how your results compare to this “group solution” for each of the options. A higher rating for an option indicates a higher priority/importance. A large difference in the two bars indicates a large disagreement between your votes and those of the rest of the participants. In some cases, a large difference may trigger a suggestion to adapt your vote in the next voting round, depending on the other participants as well.</p>
+            <p class="lead">In this diagram you can see how your preferences compare to the average preferences of all respondents. A higher rating for an option indicates a higher relevance/importance.</p>
 
             <div class="col-md-5 float-md-right">
                 <h5>Consensus</h5>
-                <p class="text-secondary">The consensus indicates how close the results of the participants are. Hover over the shares for more information.</p>
+                <p class="text-secondary">The consensus indicates how close the results of the respondents are. Hover over the shares for more information.</p>
                 <p class="lead">
-                    <span title="Your personal consensus (“me”) expresses (%) how close your votes were to the votes of the rest of the group. If your personal consensus is lower than the average consensus you will receive a tip to adapt certain votes and improve your consensus."
+                    <span title="Your personal consensus (“me”) expresses (%) how close your preferences were to the preferences of the rest of the group."
                         class="badge @Model.CompareReport.MyBadgeCls"
                           data-toggle="tooltip" data-placement="auto"
                         >Me: @(Model.CompareReport.MyConsensus)%
                     </span>&nbsp;
-                    <span title="The average consensus (“avg”) expresses (%) how close the votes of all participants are to the group solution. A percentage above 85% usually represents a high consensus, between 70-85% an average consensus, and below 70% a low consensus among the group."
+                    <span title="The average consensus (“avg”) expresses (%) how close the preferences of all respondents are to the group average. A percentage above 85% usually represents a high consensus, between 70-85% an average consensus, and below 70% a low consensus among the group."
                         class="badge @Model.CompareReport.AverageBadgeCls"
                         data-toggle="tooltip" data-placement="auto"
                         >Avg: @(Model.CompareReport.AverageConsensus)%
@@ -160,7 +165,7 @@
     <div class="row mt-5">
         <div class="col-md-12">
             <h3>Consensus</h3>
-            <p class="lead">In this diagram you can observe how your personal consensus (first bar) compares to the rest of the participants (remaining bars) and the average consensus of all participants (red line). Please note that the votes are anonymized, so the rest of the participants will not be able to identify you.</p>
+            <p class="lead">In this diagram you can observe how your personal consensus (first bar) compares to the rest of the respondents (remaining bars) and the average consensus of all respondents (red line). Please note that the votes are anonymized, so the rest of the respondents will not be able to identify you.</p>
         </div>
         @*<div class="col-md-4">
             <canvas id="chCompareConsensus"></canvas>
@@ -175,7 +180,7 @@
     <div class="row mt-5">
         <div class="col-md-12">
             <h3>How stakeholders from different backgrounds compare</h3>
-            <p class="lead">Stakeholders are grouped together based on their working capacity background (e.g., academia) to create a unique solution for their group. The results for the different categories (5 largest groups) are compared to the “group vote” which is the result that includes the perceptions of all stakeholders. The diagram sheds light on how the viewpoints of different categories of stakeholders differ. </p>
+            <p class="lead">Here, stakeholders are grouped together based on their working capacity (e.g., academia, industry). The results for the different categories (5 largest groups) are compared to the group average which is the result that includes the perceptions of all stakeholders. The diagram sheds light on how the viewpoints of different categories of stakeholders differ. </p>
             <canvas id="chCategories"></canvas>
         </div>
     </div>
@@ -185,7 +190,7 @@
         <div class="row mt-5">
             <div class="col-md-12">
                 <h3>Comparison with the previous rounds</h3>
-                <p class="lead">In this diagram, you can see how the result of the “group solution” has changed between the rounds following the deliberations in between.</p>
+                <p class="lead">In this diagram, you can see how the result of the group average has changed between the rounds following the deliberations in between.</p>
                 <canvas id="chReportComparison"></canvas>
             </div>
         </div>
