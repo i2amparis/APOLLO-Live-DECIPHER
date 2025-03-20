@@ -7,7 +7,7 @@
     var altUpperValue = alternativeValues.Last();
 }
 <h2>@Model.ViewModel.WorkspaceTitle</h2>
-<h5>@(Model.ViewModel.VoteFormTitle ?? "Give us your feedback")</h5>
+<p>@(Model.ViewModel.VoteFormTitle ?? "Please answer the following questions.")</p>
 
 <div class="row pt-2">
     <div class="col-md-8">
@@ -18,9 +18,9 @@
 
             @foreach (var criterion in Model.ViewModel.CriteriaOrdered)
             {
-                <div class="card mt-3">
+                <div class="card mt-3 text-white">
                     <div class="card-body">
-                        <h5 class="card-title">@criterion.Title</h5>
+                        <h5 class="card-title">How relevant are the following dimensions to the impact assessment of energy, climate and environmental policies?</h5>
 
                         <table class="card-text table table-striped">
                             <thead>
@@ -88,7 +88,7 @@
 
             <div class="card mt-3">
                 <div class="card-body">
-                    <h5 class="card-title">How important do you consider each of the following dimensions to be?</h5>
+                    <h5 class="card-title">Overall, how relevant are the following aspects to the impact assessment of energy, climate and environmental policies?</h5>
                     @{
                         var importanceIndex = 0;
 
@@ -99,7 +99,7 @@
                                     <th scope="col">&nbsp;</th>
                                     @foreach (var importance in Model.ViewModel.CriteriaImportanceRange)
                                     {
-                                        <th scope="col" class="text-center">@(importance.Name)</th>
+                                        <th scope="col">@(importance.Name)</th>
                                     }
                                 </tr>
                             </thead>
@@ -146,7 +146,7 @@
             <div class="form-group pt-3">
                 <div asp-validation-summary="All" class="text-danger"></div>
 
-                <input type="submit" value="Submit" class="btn btn-primary float-right" />
+                <input type="submit" value="Submit" class="btn btn-dark float-right" />
             </div>
         </form>
     </div>

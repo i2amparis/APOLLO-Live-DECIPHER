@@ -1,8 +1,14 @@
 ﻿@model HeaderViewModel
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3 text-white">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark box-shadow mb-3 text-white">
         <div class="container">
-            <a class="navbar-brand" asp-area="" asp-page="/Index">Home</a>
+            <a class="navbar-brand" href="https://iamparis.eu/decipher">
+            <img
+              src="~/img/logo_decipher.png"
+              alt="Logo Icon"
+              style="height:50px;"
+                />
+                </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -15,21 +21,21 @@
                     @if (User.IsInRole(Topsis.Domain.Contracts.RoleNames.Moderator))
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Moderator" asp-page="/Workspaces/Index">Workspaces</a>
+                            <a class="nav-link" asp-area="Moderator" asp-page="/Workspaces/Index">Workspaces</a>
                         </li>
                     }
-
+<!--
                     @if (User.IsInRole(Topsis.Domain.Contracts.RoleNames.Stakeholder))
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Guest" asp-page="/Index">Guest Account</a>
+                            <a class="nav-link" asp-area="Guest" asp-page="/Index">Guest Account</a>
                         </li>
                     }
-
+-->
                     @if (User.IsInRole(Topsis.Domain.Contracts.RoleNames.Admin))
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-page="/Index">Users</a>
+                            <a class="nav-link" asp-area="Admin" asp-page="/Index">Users</a>
                         </li>
                     }
                 </ul>

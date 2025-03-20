@@ -11,16 +11,63 @@
         // https://pixabay.com/illustrations/maze-labyrinth-solution-lost-1804499/
         return "~/img/feedback.jpg";
     }
+
+    string GetStatusImageUrlEnvironmental(Topsis.Application.Contracts.Database.StakeholderWorkspaceDto item)
+    {
+        return "~/img/Environmental Impact.jpg";
+    }
+
+    string GetStatusImageUrlPolitical(Topsis.Application.Contracts.Database.StakeholderWorkspaceDto item)
+    {
+        return "~/img/Political Aspects.jpg";
+    }
+
+    string GetStatusImageUrlTech(Topsis.Application.Contracts.Database.StakeholderWorkspaceDto item)
+    {
+        return "~/img/Technological and Cultural Aspects.jpg";
+    }
+
+    string GetStatusImageUrlSocial(Topsis.Application.Contracts.Database.StakeholderWorkspaceDto item)
+    {
+        return "~/img/Social Human Development.jpg";
+    }
+
+    string GetStatusImageUrlEconomic(Topsis.Application.Contracts.Database.StakeholderWorkspaceDto item)
+    {
+        return "~/img/Economic and Political Aspects.jpg";
+    }
 }
 
 <div class="row mb-5">
 @foreach (var item in list)
 {
     var statusImage = GetStatusImageUrl(item);
+
+    switch (@item.WorkspaceTitle)
+    {
+        case "Environmental Aspects":
+            statusImage = GetStatusImageUrlEnvironmental(item);
+            break;
+        case "Political Aspects":
+            statusImage = GetStatusImageUrlPolitical(item);
+            break;
+        case "Innovation and Cultural Aspects":
+            statusImage = GetStatusImageUrlTech(item);
+            break;
+        case "Social Human Development":
+            statusImage = GetStatusImageUrlSocial(item);
+            break;
+        case "Economic Aspects":
+            statusImage = GetStatusImageUrlEconomic(item);
+            break;
+        default:
+            break;
+    }
+
     var isPublished = item.CurrentStatus == Domain.WorkspaceStatus.Published;
 
         <div class="col-md-4  d-flex align-items-stretch">
-        <div class="card mb-4 shadow-sm">
+        <div class="card mb-4 shadow-sm text-white">
             <img src="@(Url.Content(statusImage))" />
 
                 <div class="card-body d-flex flex-column justify-content-between">
@@ -51,7 +98,7 @@
                                 case Domain.WorkspaceStatus.AcceptingVotes:
                                     <a href="@(Url.Page("/Workspace/Vote", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
                                        role="button"
-                                       class="btn btn-block btn-primary">Vote</a>
+                                       class="btn btn-block btn-dark">Select</a>
                                     break;
                                 default:
                                     break;
@@ -97,7 +144,7 @@
             {
                 <a href="@(Url.Page("/Workspace/Index", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
                    role="button"
-                   class="btn btn-block btn-outline-success float-right">See Report</a>
+                   class="btn btn-block btn-outline-success float-right">See Results</a>
             }
             else
             {
@@ -116,7 +163,7 @@
                     case Domain.WorkspaceStatus.AcceptingVotes:
                         <a href="@(Url.Page("/Workspace/Vote", new { id = item.WorkspaceId.Hash(), area = "Guest" }))"
                            role="button"
-                           class="btn btn-block btn-primary float-right">Vote</a>
+                           class="btn btn-block btn-dark float-right">Vote</a>
                         break;
                     default:
                         break;
