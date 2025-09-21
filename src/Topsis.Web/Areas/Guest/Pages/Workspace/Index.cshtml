@@ -80,7 +80,13 @@
         {
             @if(Model.Data.UserVoteId.HasValue)
             {
-                <p><a style="color: #E36246;" href="https://stakeholder-decipher.iamparis.eu">Go to homepage</a></p>
+                <p>Your input has been submitted!</p>
+
+                <p>In the graphs below, you can view how your preferences compare to the average preferences of all respondents and how respondents from different organisations compare.</p>
+
+                <p>While these indicators can be potentially relevant for policy impact assessment, only some of them can be estimated by state-of-the-art models used for climatte policy support. Learn more about these indicators and view modelling results for DECIPHER in the following link.</p>
+
+                <p><a role="button" class="btn btn-block btn-outline-success" href="https://iamparis.eu/decipher/results/decipher-modelling-studies/policy_questions">View modelling results</a></p>
             }
             else
             {
@@ -118,40 +124,6 @@
     <div class="row">
 
         <div class="col-md-12">
-            <h3>Prioritization</h3>
-            <p class="lead">In this diagram you can see how your preferences compare to the average preferences of all respondents.</p>
-
-            <div class="col-md-5 float-md-right">
-                <h5>Consensus</h5>
-                <p class="text-secondary">The consensus indicates how close the results of the respondents are. Hover over the shares for more information.</p>
-                <p class="lead">
-                    <span title="Your personal consensus (“me”) expresses (%) how close your preferences were to the preferences of the rest of the group."
-                        class="badge @Model.CompareReport.MyBadgeCls"
-                          data-toggle="tooltip" data-placement="auto"
-                        >Me: @(Model.CompareReport.MyConsensus)%
-                    </span>&nbsp;
-                    <span title="The average consensus (“avg”) expresses (%) how close the preferences of all respondents are to the group average. A percentage above 85% usually represents a high consensus, between 70-85% an average consensus, and below 70% a low consensus among the group."
-                        class="badge @Model.CompareReport.AverageBadgeCls"
-                        data-toggle="tooltip" data-placement="auto"
-                        >Avg: @(Model.CompareReport.AverageConsensus)%
-                    </span>
-                </p>
-                
-            </div>
-
-            @if (Model.CompareReport.Tips.Any())
-            {
-            <div class="col-md-6 pt-2 text-center">
-            
-                @foreach (var item in Model.CompareReport.Tips)
-                {
-                    <div class='p-3 mb-2 text-light font-weight-bold' style="background-color: #10151B;">Your vote on alternative [@item.AlternativeTitle] had the largest difference from the group solution.</div>
-                }
-            
-            </div>
-            }
-
-            
             <canvas id="chAlternatives"></canvas>
         </div>
 
@@ -160,8 +132,6 @@
 
     <div class="row mt-5">
         <div class="col-md-12">
-            <h3>How stakeholders from different backgrounds compare</h3>
-            <p class="lead">Here, stakeholders are grouped together based on their working capacity (e.g., academia, industry). The results for the different categories (5 largest groups) are compared to the group average which is the result that includes the perceptions of all stakeholders. The diagram sheds light on how the viewpoints of different categories of stakeholders differ. </p>
             <canvas id="chCategories"></canvas>
         </div>
     </div>

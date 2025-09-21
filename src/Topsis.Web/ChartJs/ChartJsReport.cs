@@ -82,13 +82,13 @@ namespace Topsis.Web.ChartJs
                             new ChartJsDataset
                             {
                                 BackgroundColor = MyVoteColor,
-                                Label = "My Vote",
+                                Label = "My selection",
                                 Data = myData
                             },
                             new ChartJsDataset
                             {
                                 BackgroundColor = GroupVoteColor,
-                                Label = "Group Vote",
+                                Label = "All respondents",
                                 Data = groupData
                             }
                         }
