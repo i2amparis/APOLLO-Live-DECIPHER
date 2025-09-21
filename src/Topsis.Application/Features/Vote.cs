@@ -7,6 +7,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Topsis.Application.Contracts.Database;
+using Topsis.Application.Contracts.Results;
+using Topsis.Application.Contracts.Algorithm;
 using Topsis.Domain;
 using Topsis.Domain.Common;
 using Topsis.Domain.Contracts;
@@ -98,13 +100,29 @@ namespace Topsis.Application.Features
             private readonly IUserContext _userContext;
             private readonly IVoteRepository _votes;
             private readonly IReportService _reports;
+            private readonly IWorkspaceRepository _workspaces;
+            private readonly ICalculateResultsProcessor _calc;
 
-            public Handler(IUserContext userContext, IVoteRepository votes, IReportService reports)
+            public Handler(
+                IUserContext userContext,
+                IVoteRepository votes,
+                IReportService reports,
+                IWorkspaceRepository workspaces,
+                ICalculateResultsProcessor calc)
             {
                 _userContext = userContext;
                 _votes = votes;
                 _reports = reports;
+                _workspaces = workspaces;
+                _calc = calc;
             }
+
+            // public Handler(IUserContext userContext, IVoteRepository votes, IReportService reports)
+            // {
+            //     _userContext = userContext;
+            //     _votes = votes;
+            //     _reports = reports;
+            // }
 
             public async Task<string> Handle(Command command, CancellationToken cancellationToken)
             {
@@ -121,6 +139,15 @@ namespace Topsis.Application.Features
                 await _votes.UnitOfWork.SaveChangesAsync();
 
                 _reports.AddUserVoteToCache(vote);
+
+                // Create/update a "live" report for the current round and compute it now.
+                var workspace = await _workspaces.GetByIdForCalculationAsync(workspaceId);
+                var round = workspace.GetCurrentRound();   // First if none exists yet
+                var report = workspace.CreateOrUpdateReport(round);
+                await _workspaces.UnitOfWork.SaveChangesAsync();
+
+                await _calc.ProcessAsync(new WorkspaceReportKey(workspaceId, report.Id));
+                _reports.ClearWorkspaceCache(workspaceId);
 
                 return vote.Id.Hash();    
             }
