@@ -180,7 +180,7 @@ namespace Topsis.Web.ChartJs
             var suggestedMinY = Math.Max(0, (int)Math.Floor(datasets.Max(x => x.Data.Max()) - 0.2));
 
             var scales = new ChartJsDatasetOptions.ChartJsScales(
-                new ChartJsDatasetOptions.ChartJsAxes("Alternatives"),
+                new ChartJsDatasetOptions.ChartJsAxes("Indicators"),
                 new ChartJsDatasetOptions.ChartJsAxes("Evaluation", suggestedMin: suggestedMinY, suggestedMax: suggestedMaxY, stepSize: 1));
 
             return new ChartJsReport()
