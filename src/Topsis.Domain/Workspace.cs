@@ -236,7 +236,7 @@ namespace Topsis.Domain
 
         public bool HasReport()
         {
-            return IsFinalized() && Reports?.Any() == true;
+            return Reports?.Any() == true;
         }
 
         public FeedbackRound GetCurrentRound()
