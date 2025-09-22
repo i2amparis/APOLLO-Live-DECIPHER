@@ -70,7 +70,7 @@ namespace Topsis.Web.ChartJs
             var suggestedMinY = myData.Count > 0 ? (int)Math.Floor(Math.Round(Math.Max(0, groupData.Min() - 0.2), 1)) : 0;
 
             var scales = new ChartJsDatasetOptions.ChartJsScales(
-                new ChartJsDatasetOptions.ChartJsAxes("Alternatives"),
+                new ChartJsDatasetOptions.ChartJsAxes("Indicators"),
                 new ChartJsDatasetOptions.ChartJsAxes("Evaluation", suggestedMin: suggestedMinY, suggestedMax: suggestedMaxY, ticksMin: suggestedMinY, stepSize:1));
 
             return new ChartJsReport()
@@ -82,13 +82,13 @@ namespace Topsis.Web.ChartJs
                             new ChartJsDataset
                             {
                                 BackgroundColor = MyVoteColor,
-                                Label = "My Vote",
+                                Label = "My selection",
                                 Data = myData
                             },
                             new ChartJsDataset
                             {
                                 BackgroundColor = GroupVoteColor,
-                                Label = "Group Vote",
+                                Label = "All respondents",
                                 Data = groupData
                             }
                         }
@@ -162,7 +162,7 @@ namespace Topsis.Web.ChartJs
 
             var datasets = vm.ChartGroups.Select(x => new ChartJsDataset
             {
-                Label = x.Key == StakeholderTopsis.DefaultGroupName ? "Group Vote" : x.Key,
+                Label = x.Key == StakeholderTopsis.DefaultGroupName ? "All respondents" : x.Key,
                 BackgroundColor = GetRandomColor(),
                 Data = x.Value.OrderBy(x => alternativeDict[x.AlternativeId].Order).Select(x => x.Topsis).ToList()
             }).ToList();
@@ -180,7 +180,7 @@ namespace Topsis.Web.ChartJs
             var suggestedMinY = Math.Max(0, (int)Math.Floor(datasets.Max(x => x.Data.Max()) - 0.2));
 
             var scales = new ChartJsDatasetOptions.ChartJsScales(
-                new ChartJsDatasetOptions.ChartJsAxes("Alternatives"),
+                new ChartJsDatasetOptions.ChartJsAxes("Indicators"),
                 new ChartJsDatasetOptions.ChartJsAxes("Evaluation", suggestedMin: suggestedMinY, suggestedMax: suggestedMaxY, stepSize: 1));
 
             return new ChartJsReport()
@@ -333,7 +333,7 @@ namespace Topsis.Web.ChartJs
             var suggestedMinY = (int)Math.Floor(datasets.Select(x => x.Data.Min()).Min());
 
             var scales = new ChartJsDatasetOptions.ChartJsScales(
-                new ChartJsDatasetOptions.ChartJsAxes("Alternatives"),
+                new ChartJsDatasetOptions.ChartJsAxes("Indicators"),
                 new ChartJsDatasetOptions.ChartJsAxes("Evaluation", suggestedMin: suggestedMinY, suggestedMax: suggestedMaxY, ticksMin: suggestedMinY, stepSize: 1));
 
             return new ChartJsReport()

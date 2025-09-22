@@ -3,7 +3,7 @@
 @using Topsis.Domain.Common
 @{
     var currentStatus = Model.Data.Workspace.CurrentStatus;
-    var hasReports = Model.Data.Workspace.IsFinalized() && Model.Data.Workspace.Reports?.Any() == true;
+    var hasReports = Model.Data.Workspace.HasReport();
     var reportCount = Model.Data.Workspace.Reports?.Count() ?? 0;
     var noResultsMessage = string.Empty;
     var canVote = currentStatus == Domain.WorkspaceStatus.AcceptingVotes;
@@ -23,7 +23,7 @@
             {
                 noResultsMessage = reportCount > 0
                     ? $"Following the discussion and the tips provided, you can change your vote."
-                    : $"Your input has been submitted! You can provide feedback on other policy priorities by clicking the link below. If you have already provided input on all priorities, stay on this page until all respondents have finished.";
+                    : $"Your input has been submitted! While these indicators can be potentially relevant for policy impact assessment, only some of them can be estimated by state-of-the-art models used for climate policy support. Learn more about these indicators and view modelling results for DECIPHER in the following link.";
             }
             else
             {
@@ -62,7 +62,7 @@
 }
 
 <div class="row pb-2">
-    <div class="col-md-8">
+    <div class="col-md-12">
         <h2>@Model.Data.Workspace.Title</h2>
         <p class="lead">@Model.Data.Workspace.Description</p>
         @if (hasReports == false)
@@ -80,7 +80,13 @@
         {
             @if(Model.Data.UserVoteId.HasValue)
             {
-                <p><a style="color: #E36246;" href="https://stakeholder-decipher.iamparis.eu">Go to homepage</a></p>
+                <p>Your input has been submitted!</p>
+
+                <p>In the graphs below, you can view how your preferences compare to the average preferences of all respondents and how respondents from different organisations compare.</p>
+
+                <p>While these indicators can be potentially relevant for policy impact assessment, only some of them can be estimated by state-of-the-art models used for climate policy support. Learn more about these indicators and view modelling results for DECIPHER in the following link.</p>
+
+                <p><a role="button" class="btn btn-outline-success" href="https://iamparis.eu/decipher/results">View modelling results</a></p>
             }
             else
             {
@@ -95,22 +101,6 @@
             }
         }
     </div>
-    <div class="col-md-4">
-        <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
-            <div class="toast" style="position: absolute; top: 0; right: 0; min-width:150px;" data-autohide="false">
-                <div class="toast-header">
-                    <span class="material-icons">notifications</span>
-                    <strong class="mr-auto"><span id="notifyTitle"></span></strong>
-                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="toast-body">
-                    <span id="notifyMessage"></span>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 @if (hasReports)
@@ -118,64 +108,14 @@
     <div class="row">
 
         <div class="col-md-12">
-            <h3>Prioritization</h3>
-            <p class="lead">In this diagram you can see how your preferences compare to the average preferences of all respondents.</p>
-
-            <div class="col-md-5 float-md-right">
-                <h5>Consensus</h5>
-                <p class="text-secondary">The consensus indicates how close the results of the respondents are. Hover over the shares for more information.</p>
-                <p class="lead">
-                    <span title="Your personal consensus (“me”) expresses (%) how close your preferences were to the preferences of the rest of the group."
-                        class="badge @Model.CompareReport.MyBadgeCls"
-                          data-toggle="tooltip" data-placement="auto"
-                        >Me: @(Model.CompareReport.MyConsensus)%
-                    </span>&nbsp;
-                    <span title="The average consensus (“avg”) expresses (%) how close the preferences of all respondents are to the group average. A percentage above 85% usually represents a high consensus, between 70-85% an average consensus, and below 70% a low consensus among the group."
-                        class="badge @Model.CompareReport.AverageBadgeCls"
-                        data-toggle="tooltip" data-placement="auto"
-                        >Avg: @(Model.CompareReport.AverageConsensus)%
-                    </span>
-                </p>
-                
-            </div>
-
-            @if (Model.CompareReport.Tips.Any())
-            {
-            <div class="col-md-6 pt-2 text-center">
-            
-                @foreach (var item in Model.CompareReport.Tips)
-                {
-                    <div class='p-3 mb-2 text-light font-weight-bold' style="background-color: #10151B;">Your vote on alternative [@item.AlternativeTitle] had the largest difference from the group solution.</div>
-                }
-            
-            </div>
-            }
-
-            
             <canvas id="chAlternatives"></canvas>
         </div>
 
     </div>
 
-    <div class="row mt-5">
-        <div class="col-md-12">
-            <h3>Consensus</h3>
-            <p class="lead">In this diagram you can observe how your personal consensus (first bar) compares to the rest of the respondents (remaining bars) and the average consensus of all respondents (red line). Please note that the votes are anonymized, so the rest of the respondents will not be able to identify you.</p>
-        </div>
-        @*<div class="col-md-4">
-            <canvas id="chCompareConsensus"></canvas>
-        </div>*@
-
-        <div class="col-md-8">
-            <canvas id="chConsensus"></canvas>
-        </div>
-
-    </div>
 
     <div class="row mt-5">
         <div class="col-md-12">
-            <h3>How stakeholders from different backgrounds compare</h3>
-            <p class="lead">Here, stakeholders are grouped together based on their working capacity (e.g., academia, industry). The results for the different categories (5 largest groups) are compared to the group average which is the result that includes the perceptions of all stakeholders. The diagram sheds light on how the viewpoints of different categories of stakeholders differ. </p>
             <canvas id="chCategories"></canvas>
         </div>
     </div>
